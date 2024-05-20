@@ -11,8 +11,11 @@ const buttonVariants = cva(
          variant: {
             primary: "border-3 border-primary p-6 text-white font-bold",
             muted: "border p-3 border-muted text-muted",
-            highlight:
-               "border-3 border-primary p-6 text-black bg-white",
+            highlight: "border-3 border-primary p-6 text-black bg-white",
+            outline:
+               "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+            ghost: "hover:bg-accent hover:text-accent-foreground",
+            link: "text-primary underline-offset-4 hover:underline",
          },
       },
       defaultVariants: {
