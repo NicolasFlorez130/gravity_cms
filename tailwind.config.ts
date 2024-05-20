@@ -19,7 +19,7 @@ const config = {
       },
       extend: {
          colors: {
-            hero_bg: "#0b1e28c0",
+            bg_veil: "#0b1e28c0",
 
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",

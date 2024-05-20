@@ -29,7 +29,7 @@ export default function Hero({}: IHero) {
       ctx => {
          gsap.registerPlugin(ScrollTrigger);
 
-         gsap.to("#hero_bg", {
+         gsap.to("#bg_veil", {
             top: "-=50vh",
             ease: "none",
             scrollTrigger: {
@@ -44,8 +44,8 @@ export default function Hero({}: IHero) {
    );
 
    return (
-      <div ref={container} className="relative text-white">
-         <section className="to-hero_bg grid place-items-center gap-10 bg-gradient-to-b from-transparent from-20% to-80% pb-16 text-center">
+      <div ref={container} className="relative overflow-hidden text-white">
+         <section className="to-bg_veil grid place-items-center gap-10 bg-gradient-to-b from-transparent from-20% to-80% pb-16 text-center">
             <Header />
             <div className="relative aspect-square h-72">
                <Image
@@ -88,7 +88,7 @@ export default function Hero({}: IHero) {
                </p>
             </div>
          </section>
-         <section className="bg-hero_bg gap-18 grid">
+         <section className="bg-bg_veil gap-18 grid">
             <div className="mx-4 grid justify-items-center gap-7 text-center">
                <TitleLabel>EL SEGUNDO TÚNEL DE LATINOAMÉRICA</TitleLabel>
                <h2 className="font-epilogue text-3xl font-medium">
@@ -120,7 +120,7 @@ export default function Hero({}: IHero) {
                />
             </div>
          </section>
-         <section className="bg-hero_bg gap-18 py-18 grid">
+         <section className="bg-bg_veil gap-18 py-18 grid">
             <div className="relative aspect-[36/47]">
                <Image
                   alt="encourage highlight image"
@@ -154,7 +154,7 @@ export default function Hero({}: IHero) {
                </Link>
             </div>
          </section>
-         <section className="bg-hero_bg box-content px-4 pb-12">
+         <section className="bg-bg_veil box-content px-4 pb-12">
             <TitleLabel className="mb-8">
                TE ESPERAMOS CON TU FAMILIA Y AMIGOS
             </TitleLabel>
@@ -192,7 +192,7 @@ export default function Hero({}: IHero) {
                </Card>
             </div>
          </section>
-         <div id="hero_bg" className="fixed top-0 -z-10 h-[150vh] w-full">
+         <div id="bg_veil" className="fixed top-0 -z-10 h-[150vh] w-full">
             <Image
                fill
                alt="hero background"
