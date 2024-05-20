@@ -7,7 +7,7 @@ const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
 const dm_sans = DM_Sans({ subsets: ["latin"], variable: "--dm_sans" });
 const din_condensed = localFont({
-   src: "../../public/fonts/D-DINCondensed.ttf",
+   src: "../../public/fonts/D-DINCondensed.otf",
    variable: "--din_condensed",
 });
 
@@ -23,13 +23,14 @@ export default function RootLayout({
 }>) {
    return (
       <html lang="es">
+         <link rel="icon" href="/favicon.ico" sizes="any" />
          <body
             className={cn(
                epilogue.variable,
                inter.variable,
                dm_sans.variable,
                din_condensed.variable,
-               "font-inter",
+               "font-inter sm:hidden",
             )}
          >
             {children}

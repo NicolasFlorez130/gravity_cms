@@ -9,14 +9,14 @@ const buttonVariants = cva(
    {
       variants: {
          variant: {
-            primary: "border-3 border-primary p-6 text-primary-foreground",
-            secondary: "border p-3 border-secondary text-secondary",
+            primary: "border-3 border-primary p-6 text-white font-bold",
+            muted: "border p-3 border-muted text-muted",
             highlight:
-               "border-3 border-primary p-6 text-black bg-primary-foreground",
+               "border-3 border-primary p-6 text-black bg-white",
          },
       },
       defaultVariants: {
-         variant: "highlight",
+         variant: "primary",
       },
    },
 );

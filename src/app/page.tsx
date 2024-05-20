@@ -1,14 +1,13 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/landing/button";
+import FollowSign from "@/components/ui/landing/follow_sign";
+import Hero from "./sections/hero";
 
 export default function Home() {
    return (
       <>
-         <Button>test</Button>
-
-         <Card>
-            <p className="text-stroke text-3xl text-transparent">Hola</p>
-         </Card>
+         <FollowSign />
+         <main>
+            <Hero />
+         </main>
       </>
    );
 }

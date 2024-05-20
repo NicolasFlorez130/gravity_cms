@@ -19,6 +19,8 @@ const config = {
       },
       extend: {
          colors: {
+            hero_bg: "#0b1e28c0",
+
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",
             ring: "hsl(var(--ring))",
@@ -67,10 +69,19 @@ const config = {
                from: { height: "var(--radix-accordion-content-height)" },
                to: { height: "0" },
             },
+            jump: {
+               "0%, 40%, 80%": {
+                  transform: "translateY(0)",
+               },
+               "20%, 60%": {
+                  transform: "translateY(1rem)",
+               },
+            },
          },
          animation: {
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",
+            jump: "jump 3s ease-in-out infinite",
          },
          fontFamily: {
             epilogue: ["var(--epilogue)"],
@@ -80,6 +91,15 @@ const config = {
          },
          borderWidth: {
             3: "3px",
+         },
+         letterSpacing: {
+            din: ".16rem",
+         },
+         gap: {
+            18: "72px",
+         },
+         padding: {
+            18: "72px",
          },
       },
    },
