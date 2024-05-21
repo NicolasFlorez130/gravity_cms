@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config = {
    darkMode: ["class"],
@@ -92,6 +93,7 @@ const config = {
             inter: ["var(--inter)"],
             dm_sans: ["var(--dm_sans)"],
             din: ["var(--din_condensed)"],
+            din_alt: ["var(--din_alternate)"],
          },
          borderWidth: {
             3: "3px",
@@ -110,6 +112,20 @@ const config = {
    plugins: [
       require("tailwindcss-animate"),
       require("@designbycode/tailwindcss-text-stroke"),
+      plugin(({ addUtilities }) => {
+         const newUtilities = {
+            ".horizontal-tb": {
+               writingMode: "horizontal-tb",
+            },
+            ".vertical-rl": {
+               writingMode: "vertical-rl",
+            },
+            ".vertical-lr": {
+               writingMode: "vertical-lr",
+            },
+         };
+         addUtilities(newUtilities);
+      }),
    ],
 } satisfies Config;
 

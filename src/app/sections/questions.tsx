@@ -6,6 +6,7 @@ import {
    AccordionItem,
    AccordionTrigger,
 } from "@/components/ui/accordion";
+import QuestionsTitle from "@/components/ui/landing/questions_title";
 
 const questions = [
    {
@@ -71,6 +72,9 @@ interface IQuestions {}
 export default function Questions({}: IQuestions) {
    return (
       <section className="bg-bg_light py-8">
+         <div className="mb-14">
+            <QuestionsTitle />
+         </div>
          <div className="px-3">
             <Accordion type="multiple" className="grid w-full gap-3">
                {questions.map(({ question, answer }, i) => (

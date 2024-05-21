@@ -5,6 +5,8 @@ import Opinions from "./sections/opinions";
 import Comments from "./sections/comments";
 import Questions from "./sections/questions";
 import Footer from "@/components/ui/landing/footer";
+import GalleryCarousel from "./sections/gallery_carousel";
+import IgCarousel from "./sections/ig_carousel";
 
 export default function Home() {
    return (
@@ -14,8 +16,10 @@ export default function Home() {
             <Hero />
             <Booking />
             <Opinions />
+            <GalleryCarousel />
             <Comments />
             <Questions />
+            <IgCarousel />
          </main>
          <Footer />
       </>
