@@ -9,8 +9,8 @@ interface IFooter {}
 
 export default function Footer({}: IFooter) {
    return (
-      <footer className="gap-18 pt-18 grid bg-background p-4">
-         <div className="flex flex-col items-center gap-6">
+      <footer className="grid gap-18 bg-background p-3 pt-18 lg:px-36">
+         <div className="flex flex-col items-center gap-6 lg:flex-row lg:justify-between">
             <Logo />
             <div className="flex justify-center gap-6">
                <Link className="font-light text-primary" href="#">
@@ -24,9 +24,11 @@ export default function Footer({}: IFooter) {
                </Link>
             </div>
          </div>
-         <div className="text-center font-epilogue">
-            <p>
-               Ven a divertirte en el primer túnel de Colombia y experimenta la
+         <div className="text-center font-epilogue lg:flex lg:items-center lg:justify-between">
+            <p className="text-lg">
+               Ven a divertirte en el primer túnel de{" "}
+               <br className="hidden lg:block" /> Colombia y experimenta la{" "}
+               <br className="hidden lg:block" />
                experiencia de paracaidismo
             </p>
             <p className="mt-2 text-xs opacity-50">

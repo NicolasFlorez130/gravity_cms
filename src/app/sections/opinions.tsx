@@ -58,10 +58,10 @@ export default function Opinions({}: IOpinions) {
    }, [currentOpinion]);
 
    return (
-      <section className="grid w-full gap-6 bg-muted py-10">
+      <section className="grid w-full gap-6 bg-muted py-10 sm:grid-cols-[1fr_auto]">
          <div
             ref={carouselContainer}
-            className="flex max-w-full overflow-x-hidden"
+            className="flex w-full max-w-full overflow-x-hidden"
          >
             {opinions.map((opinion, i) => (
                <div
@@ -69,9 +69,9 @@ export default function Opinions({}: IOpinions) {
                   ref={el => {
                      carouselItems.current[i] = el;
                   }}
-                  className="grid w-screen flex-none justify-items-center gap-6"
+                  className="grid w-full flex-none items-center justify-items-center gap-6 sm:grid-cols-[1fr_2fr] sm:pl-4"
                >
-                  <div className="relative aspect-square w-1/2 overflow-hidden rounded-full">
+                  <div className="relative aspect-square w-1/2 overflow-hidden rounded-full sm:w-full">
                      <Image
                         alt={`${opinion.names} picture`}
                         src={opinion.image}
@@ -79,14 +79,16 @@ export default function Opinions({}: IOpinions) {
                         className="object-cover"
                      />
                   </div>
-                  <p className="px-8 text-center text-xl font-medium text-muted-foreground">
-                     {opinion.opinion}
-                  </p>
-                  <p className="text-2xl font-bold">{opinion.names}</p>
+                  <div className="grid place-items-center gap-6 lg:w-2/3">
+                     <p className="px-8 text-center text-xl font-medium text-muted-foreground">
+                        {opinion.opinion}
+                     </p>
+                     <p className="text-2xl font-bold">{opinion.names}</p>
+                  </div>
                </div>
             ))}
          </div>
-         <div className="flex justify-center">
+         <div className="flex justify-center sm:pr-4">
             <Button
                disabled={currentOpinion === 0 || !opinions.length}
                onClick={() =>

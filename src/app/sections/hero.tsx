@@ -36,7 +36,7 @@ export default function Hero({}: IHero) {
                scrub: true,
                trigger: container.current,
                start: "top top",
-               end: "bottom bottom",
+               end: "bottom top",
             },
          });
       },
@@ -45,19 +45,26 @@ export default function Hero({}: IHero) {
 
    return (
       <div ref={container} className="relative overflow-hidden text-white">
-         <section className="to-bg_veil grid place-items-center gap-10 bg-gradient-to-b from-transparent from-20% to-80% pb-16 text-center">
+         <section className="grid place-items-center gap-10 bg-gradient-to-b from-transparent from-20% to-bg_veil to-80% pb-16 text-center">
             <Header />
-            <div className="relative aspect-square h-72">
+            <div className="relative aspect-square h-72 sm:aspect-[389/144] sm:h-36">
                <Image
                   fill
                   alt="stop falling start flying"
                   src="/title/hero_title_xs.png"
-                  className="object-contain"
+                  className="object-contain sm:hidden"
+                  priority
+               />
+               <Image
+                  fill
+                  alt="stop falling start flying"
+                  src="/title/hero_title_sm.png"
+                  className="hidden object-contain sm:block"
                   priority
                />
             </div>
             <div className="grid place-items-center gap-2">
-               <p>
+               <p className="text-lg">
                   Descubre como volar sin <br /> saltar de un avión
                </p>
                <ArrowDown size={42} className="animate-jump" />
@@ -75,9 +82,10 @@ export default function Hero({}: IHero) {
             </div>
             <div className="m-4 mt-0 grid justify-items-center gap-4">
                <h1 className="text-2xl text-primary">
-                  El primer <i>túnel</i> de <br /> <i>viento</i> de COLOMBIA
+                  El primer <i>túnel</i> de <br className="sm:hidden" />{" "}
+                  <i>viento</i> de COLOMBIA
                </h1>
-               <p>
+               <p className="text-sm">
                   ¡Prepárate para una experiencia que te hará sentir como si
                   estuvieras volando sin alas! En nuestro túnel de viento, la
                   emoción alcanza nuevas alturas mientras te sumerges en una
@@ -88,13 +96,14 @@ export default function Hero({}: IHero) {
                </p>
             </div>
          </section>
-         <section className="bg-bg_veil gap-18 grid">
+         <section className="grid gap-18 bg-bg_veil">
             <div className="mx-4 grid justify-items-center gap-7 text-center">
                <TitleLabel>EL SEGUNDO TÚNEL DE LATINOAMÉRICA</TitleLabel>
                <h2 className="font-epilogue text-3xl font-medium">
-                  Puedes hacer <br /> paracaidismo sin <br /> saltar de un avion
+                  Puedes hacer <br className="sm:hidden" /> paracaidismo sin{" "}
+                  <br className="sm:hidden" /> saltar de un avion
                </h2>
-               <p>
+               <p className="text-sm">
                   ¡Prepárate para una experiencia que te hará sentir como si
                   estuvieras volando sin alas! En nuestro túnel de viento, la
                   emoción alcanza nuevas alturas mientras te sumerges en una
@@ -120,8 +129,8 @@ export default function Hero({}: IHero) {
                />
             </div>
          </section>
-         <section className="bg-bg_veil gap-18 py-18 grid">
-            <div className="relative aspect-[36/47]">
+         <section className="grid gap-18 bg-bg_veil py-18 sm:grid-cols-2 sm:gap-6 sm:px-3 lg:px-36">
+            <div className="relative aspect-[36/47] sm:self-center">
                <Image
                   alt="encourage highlight image"
                   fill
@@ -134,7 +143,7 @@ export default function Hero({}: IHero) {
                <h2 className="font-epilogue text-3xl font-medium">
                   Es un plan para toda <br /> la familia
                </h2>
-               <p>
+               <p className="text-sm">
                   Ya sea que seas un novato buscando emociones nuevas o un
                   veterano en busca de tu próxima dosis de adrenalina, nuestro
                   túnel de viento es el lugar perfecto para sumergirte en la
@@ -154,18 +163,20 @@ export default function Hero({}: IHero) {
                </Link>
             </div>
          </section>
-         <section className="bg-bg_veil box-content px-4 pb-12">
-            <TitleLabel className="mb-8">
-               TE ESPERAMOS CON TU FAMILIA Y AMIGOS
-            </TitleLabel>
-            <div className="relative mb-12 aspect-[328/624] w-80">
-               <Image
-                  fill
-                  alt="stop falling start flying"
-                  src="/title/contact_title_xs.png"
-                  className="object-contain"
-                  priority
-               />
+         <section className="box-content bg-bg_veil px-3 pb-12 sm:grid sm:grid-cols-2 sm:gap-6 lg:px-36">
+            <div>
+               <TitleLabel className="mb-8">
+                  TE ESPERAMOS CON TU FAMILIA Y AMIGOS
+               </TitleLabel>
+               <div className="relative mb-12 aspect-[328/624] w-80">
+                  <Image
+                     fill
+                     alt="stop falling start flying"
+                     src="/title/contact_title_xs.png"
+                     className="object-contain"
+                     priority
+                  />
+               </div>
             </div>
             <div className="grid gap-6">
                <Card className="grid gap-6">
@@ -175,9 +186,11 @@ export default function Hero({}: IHero) {
                      Whatsapp al{" "}
                      <i className="font-bold text-white">(310) 123 4567</i>
                   </p>
-                  <Button variant="muted">Abre WhatsApp</Button>
+                  <Button variant="muted" className="text-lg">
+                     Abre WhatsApp
+                  </Button>
                </Card>
-               <Button className="flex items-center justify-center gap-2">
+               <Button className="flex items-center justify-center gap-2 text-lg">
                   RESERVA AHORA
                   <ArrowRight size={20} />
                </Button>
@@ -188,7 +201,9 @@ export default function Hero({}: IHero) {
                      <i className="font-bold text-white">calle 170</i> autonorte
                      sentido norte sur
                   </p>
-                  <Button variant="muted">Abre mapa</Button>
+                  <Button variant="muted" className="text-lg">
+                     Abre mapa
+                  </Button>
                </Card>
             </div>
          </section>

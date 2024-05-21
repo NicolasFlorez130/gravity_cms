@@ -24,10 +24,10 @@ const comments = [
 
 export default function Comments({}: IComments) {
    return (
-      <section className="bg-bg_light flex flex-col gap-8 py-10">
+      <section className="flex flex-col gap-8 bg-bg_light py-10 sm:flex-row sm:px-3 lg:gap-12 lg:px-36">
          {comments.map((comment, i) => (
             <div key={i} className="grid place-items-center">
-               <div className="relative aspect-video w-2/3">
+               <div className="relative aspect-video w-2/3 sm:w-full">
                   <Image
                      alt={comment.name}
                      src={comment.image}
@@ -35,7 +35,9 @@ export default function Comments({}: IComments) {
                      className="object-contain"
                   />
                </div>
-               <p className="w-2/3 text-center text-primary">{comment.text}</p>
+               <p className="w-2/3 text-center text-lg text-primary sm:w-full">
+                  {comment.text}
+               </p>
             </div>
          ))}
       </section>

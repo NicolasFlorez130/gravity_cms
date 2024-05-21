@@ -4,10 +4,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { RefObject } from "react";
 
-interface IUseBasicCarousel {
-   container: RefObject<HTMLDivElement>;
-}
-
 export default function useBasicCarousel(container: RefObject<HTMLDivElement>) {
    return useGSAP(() => {
       gsap.to(container.current, {

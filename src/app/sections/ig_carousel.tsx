@@ -24,10 +24,10 @@ export default function IgCarousel({}: IIgCarousel) {
 
    function ImagesRow() {
       return (
-         <div className="flex flex-1 gap-10 px-5">
+         <div className="flex flex-1 gap-10 px-5 sm:gap-6 sm:px-3">
             {images.map((img, i) => (
                <Fragment key={i}>
-                  <div className="relative aspect-square w-screen flex-none">
+                  <div className="relative aspect-square w-screen flex-none sm:w-[calc(100vw/4)]">
                      <Image
                         alt={`carousel image ${i + 1}`}
                         fill
@@ -36,7 +36,7 @@ export default function IgCarousel({}: IIgCarousel) {
                      />
                   </div>
                   {i % 2 === 0 && (
-                     <p className="vertical-rl font-din_alt rotate-180 text-center text-4xl font-bold text-black">
+                     <p className="vertical-rl font-din_alt rotate-180 text-center text-4xl font-bold text-black sm:text-2xl">
                         @gravitytunnel
                      </p>
                   )}
@@ -47,7 +47,7 @@ export default function IgCarousel({}: IIgCarousel) {
    }
 
    return (
-      <section className="w-full overflow-hidden bg-primary py-10">
+      <section className="w-full overflow-hidden bg-primary py-10 sm:py-6">
          <div ref={container} className="relative left-0 flex w-max">
             <ImagesRow />
             <ImagesRow />

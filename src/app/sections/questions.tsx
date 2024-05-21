@@ -75,7 +75,7 @@ export default function Questions({}: IQuestions) {
          <div className="mb-14">
             <QuestionsTitle />
          </div>
-         <div className="px-3">
+         <div className="px-3 lg:px-36">
             <Accordion type="multiple" className="grid w-full gap-3">
                {questions.map(({ question, answer }, i) => (
                   <AccordionItem key={i} value={`item-${i}`}>

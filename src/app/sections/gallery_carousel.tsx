@@ -1,7 +1,6 @@
 "use client";
 
 import useBasicCarousel from "@/lib/hooks/useBasicCarousel";
-import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -25,11 +24,11 @@ export default function GalleryCarousel({}: IGalleryCarousel) {
 
    function ImagesRow() {
       return (
-         <div className="flex flex-1">
+         <div className="flex">
             {images.map((img, i) => (
                <div
                   key={i}
-                  className="relative aspect-[35/27] w-screen flex-none"
+                  className="relative aspect-[35/27] w-screen flex-none sm:w-[calc(100vw/3)]"
                >
                   <Image
                      alt={`carousel image ${i + 1}`}
