@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/landing/button";
 import { PhoneCall } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { es } from "date-fns/locale";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, translateDays } from "@/lib/utils";
 import { Day } from "date-fns";
 
 interface IBooking {}
@@ -42,7 +42,7 @@ const items = [
 export default function Booking({}: IBooking) {
    return (
       <section>
-         <div className="bg-bg_veil relative grid aspect-square w-full place-items-center">
+         <div className="relative grid aspect-square w-full place-items-center bg-bg_veil">
             <h2 className="text-center font-epilogue text-5xl font-light text-white">
                Reserva tu vuelo aquí
             </h2>
@@ -81,14 +81,7 @@ export default function Booking({}: IBooking) {
                               !highlight && "text-muted",
                            )}
                         >
-                           {item.days.map((day, i, { length }) => (
-                              <span key={day}>
-                                 {es.localize
-                                    .day(day as Day, { width: "wide" })
-                                    .toUpperCase()}
-                                 {i !== length - 1 && " - "}
-                              </span>
-                           ))}
+                           {translateDays(item.days, highlight)}
                         </p>
                         <p>{item.description}</p>
                         <p className="font-bold text-primary">
