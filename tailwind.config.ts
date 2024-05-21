@@ -21,6 +21,10 @@ const config = {
          colors: {
             bg_veil: "#0b1e28c0",
 
+            bg_light: "#052837",
+
+            bg_accordion: "#073042",
+
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",
             ring: "hsl(var(--ring))",
