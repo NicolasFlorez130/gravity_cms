@@ -30,6 +30,8 @@ export default function QuestionsTitle({}: IQuestionsTitle) {
             <TextsRow />
             <TextsRow />
             <TextsRow />
+            <TextsRow />
+            <TextsRow />
          </div>
       </section>
    );

@@ -20,7 +20,7 @@ const config = {
       },
       extend: {
          colors: {
-            bg_veil: "#0b1e28c0",
+            bg_veil: "hsl(200, 55%, 10%)",
 
             bg_light: "#052837",
 
@@ -106,6 +106,9 @@ const config = {
          },
          padding: {
             18: "72px",
+         },
+         screens: {
+            "3xl": "2560px",
          },
       },
    },

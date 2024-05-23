@@ -28,7 +28,7 @@ export default function GalleryCarousel({}: IGalleryCarousel) {
             {images.map((img, i) => (
                <div
                   key={i}
-                  className="relative aspect-[35/27] w-screen flex-none sm:w-[calc(100vw/3)]"
+                  className="relative aspect-[35/27] w-screen flex-none sm:w-[calc(100vw/4)]"
                >
                   <Image
                      alt={`carousel image ${i + 1}`}
@@ -45,6 +45,8 @@ export default function GalleryCarousel({}: IGalleryCarousel) {
    return (
       <section className="w-full overflow-hidden">
          <div ref={container} className="relative left-0 flex w-max">
+            <ImagesRow />
+            <ImagesRow />
             <ImagesRow />
             <ImagesRow />
          </div>

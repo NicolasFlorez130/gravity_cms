@@ -9,7 +9,10 @@ export default function TitleLabel({ className, ...props }: ITitleLabel) {
    return (
       <p
          {...props}
-         className={cn("tracking-din font-din text-muted", className)}
+         className={cn(
+            "font-din tracking-din text-muted xl:text-2xl",
+            className,
+         )}
       />
    );
 }

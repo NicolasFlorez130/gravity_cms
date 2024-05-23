@@ -41,8 +41,8 @@ const items = [
 
 export default function Booking({}: IBooking) {
    return (
-      <section>
-         <div className="relative grid aspect-square w-full place-items-center bg-bg_veil sm:aspect-[744/344] lg:aspect-[1024/344]">
+      <section className="relative xl:grid xl:grid-cols-[2fr_5fr] xl:bg-bg_veil/80 xl:p-36">
+         <div className="relative grid aspect-square w-full place-items-center bg-bg_veil/80 sm:aspect-[744/344] lg:aspect-[1024/344] xl:static xl:aspect-auto xl:bg-transparent">
             <h2 className="text-center font-epilogue text-5xl font-light text-white">
                Reserva tu <br className="hidden sm:block" /> vuelo aquí
             </h2>
@@ -53,7 +53,7 @@ export default function Booking({}: IBooking) {
                className="-z-10 object-cover"
             />
          </div>
-         <div className="grid gap-5 bg-background px-3 py-10 sm:grid-cols-2 lg:px-36">
+         <div className="grid gap-5 bg-background px-3 py-10 sm:grid-cols-2 lg:px-36 xl:gap-14 xl:bg-transparent xl:px-0">
             {items.map((item, i) => {
                const highlight = item.days.some(day => day === 0 || day === 6);
 

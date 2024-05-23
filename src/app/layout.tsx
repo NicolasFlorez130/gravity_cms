@@ -36,7 +36,7 @@ export default function RootLayout({
                dm_sans.variable,
                din_condensed.variable,
                din_alternate.variable,
-               " font-inter xl:hidden",
+               "font-inter",
             )}
          >
             {children}

@@ -38,6 +38,26 @@ const opinions = [
       `,
       image: "https://placedog.net/400/400?random",
    },
+   {
+      names: "Luis Perez 4",
+      opinion: `
+      Lorem ipsum dolor sit amet, 
+      consectetur adipiscing elit, 
+      sed do eiusmod tempor 
+      incididunt ut labore et dolore 
+      `,
+      image: "https://placedog.net/400/400?random",
+   },
+   {
+      names: "Luis Perez 5",
+      opinion: `
+      Lorem ipsum dolor sit amet, 
+      consectetur adipiscing elit, 
+      sed do eiusmod tempor 
+      incididunt ut labore et dolore 
+      `,
+      image: "https://placedog.net/400/400?random",
+   },
 ];
 
 export default function Opinions({}: IOpinions) {
@@ -58,10 +78,10 @@ export default function Opinions({}: IOpinions) {
    }, [currentOpinion]);
 
    return (
-      <section className="grid w-full gap-6 bg-muted py-10 sm:grid-cols-[1fr_auto]">
+      <section className="grid w-full gap-6 bg-muted py-10 sm:grid-cols-[1fr_auto] xl:grid-cols-1 xl:justify-items-start xl:py-14">
          <div
             ref={carouselContainer}
-            className="flex w-full max-w-full overflow-x-hidden"
+            className="flex w-full overflow-x-hidden xl:gap-10"
          >
             {opinions.map((opinion, i) => (
                <div
@@ -69,9 +89,9 @@ export default function Opinions({}: IOpinions) {
                   ref={el => {
                      carouselItems.current[i] = el;
                   }}
-                  className="grid w-full flex-none items-center justify-items-center gap-6 sm:grid-cols-[1fr_2fr] sm:pl-4"
+                  className="grid w-full flex-none items-center justify-items-center gap-6 sm:grid-cols-[1fr_2fr] sm:pl-4 xl:w-auto xl:grid-cols-[1fr_0px]"
                >
-                  <div className="relative aspect-square w-1/2 overflow-hidden rounded-full sm:w-full">
+                  <div className="relative aspect-square w-1/2 overflow-hidden rounded-full sm:w-full xl:w-[calc(100vw/4)]">
                      <Image
                         alt={`${opinion.names} picture`}
                         src={opinion.image}
@@ -79,16 +99,19 @@ export default function Opinions({}: IOpinions) {
                         className="object-cover"
                      />
                   </div>
-                  <div className="grid place-items-center gap-6 lg:w-2/3">
-                     <p className="px-8 text-center text-xl font-medium text-muted-foreground">
+                  <div className="grid place-items-center gap-6 overflow-hidden lg:w-1/2">
+                     <p className="px-8 text-center text-xl font-medium text-muted-foreground xl:px-0 xl:text-start xl:text-4xl">
                         {opinion.opinion}
                      </p>
-                     <p className="text-2xl font-bold">{opinion.names}</p>
+                     <p className="text-2xl font-bold xl:text-start">
+                        {opinion.names}
+                     </p>
                   </div>
                </div>
             ))}
+            <div className="relative w-[100vw] flex-none" />
          </div>
-         <div className="flex justify-center sm:pr-4">
+         <div className="flex justify-center sm:pr-4 xl:pl-6">
             <Button
                disabled={currentOpinion === 0 || !opinions.length}
                onClick={() =>

@@ -45,9 +45,9 @@ export default function Hero({}: IHero) {
 
    return (
       <div ref={container} className="relative overflow-hidden text-white">
-         <section className="grid place-items-center gap-10 bg-gradient-to-b from-transparent from-20% to-bg_veil to-80% pb-16 text-center">
+         <section className="relative grid place-items-center gap-10 bg-gradient-to-b from-transparent from-20% to-bg_veil/80 to-80% pb-16 text-center lg:px-10">
             <Header />
-            <div className="relative aspect-square h-72 sm:aspect-[389/144] sm:h-36">
+            <div className="relative aspect-square h-72 sm:aspect-[389/144] sm:h-36 lg:h-64">
                <Image
                   fill
                   alt="stop falling start flying"
@@ -65,11 +65,12 @@ export default function Hero({}: IHero) {
             </div>
             <div className="grid place-items-center gap-2">
                <p className="text-lg">
-                  Descubre como volar sin <br /> saltar de un avión
+                  Descubre como volar sin <br className="lg:hidden" /> saltar de
+                  un avión
                </p>
-               <ArrowDown size={42} className="animate-jump" />
+               <ArrowDown size={42} className="animate-jump xl:hidden" />
             </div>
-            <div className="flex justify-center gap-6">
+            <div className="flex justify-center gap-6 xl:absolute xl:bottom-36 xl:left-8 xl:vertical-rl">
                <Link className="font-bold" href="#">
                   Follow us
                </Link>
@@ -80,12 +81,12 @@ export default function Hero({}: IHero) {
                   <XLogo size={24} />
                </Link>
             </div>
-            <div className="m-4 mt-0 grid justify-items-center gap-4">
-               <h1 className="text-2xl text-primary">
+            <div className="m-4 mt-0 grid justify-items-center gap-4 lg:w-11/12 lg:justify-self-end xl:bg-bg_veil/20 xl:px-14 xl:py-11">
+               <h1 className="text-2xl text-primary xl:text-5xl">
                   El primer <i>túnel</i> de <br className="sm:hidden" />{" "}
                   <i>viento</i> de COLOMBIA
                </h1>
-               <p className="text-sm">
+               <p className="text-sm xl:text-2xl">
                   ¡Prepárate para una experiencia que te hará sentir como si
                   estuvieras volando sin alas! En nuestro túnel de viento, la
                   emoción alcanza nuevas alturas mientras te sumerges en una
@@ -96,14 +97,14 @@ export default function Hero({}: IHero) {
                </p>
             </div>
          </section>
-         <section className="grid gap-18 bg-bg_veil">
-            <div className="mx-4 grid justify-items-center gap-7 text-center">
+         <section className="grid items-center gap-18 bg-bg_veil/80 lg:px-36 xl:grid-cols-[11fr_9fr] xl:gap-11">
+            <div className="mx-4 grid justify-items-center gap-7 text-center xl:my-8 xl:h-max xl:justify-items-start xl:text-start">
                <TitleLabel>EL SEGUNDO TÚNEL DE LATINOAMÉRICA</TitleLabel>
-               <h2 className="font-epilogue text-3xl font-medium">
+               <h2 className="font-epilogue text-3xl font-medium xl:text-6xl">
                   Puedes hacer <br className="sm:hidden" /> paracaidismo sin{" "}
                   <br className="sm:hidden" /> saltar de un avion
                </h2>
-               <p className="text-sm">
+               <p className="text-sm xl:text-lg">
                   ¡Prepárate para una experiencia que te hará sentir como si
                   estuvieras volando sin alas! En nuestro túnel de viento, la
                   emoción alcanza nuevas alturas mientras te sumerges en una
@@ -116,11 +117,11 @@ export default function Hero({}: IHero) {
                   href="#"
                   className="text-lg font-light leading-none text-secondary"
                >
-                  ¿Tienes preguntas? <br />
+                  ¿Tienes preguntas? <br className="sm:hidden" />
                   <span className="font-bold">Tenemos las respuestas</span>
                </Link>
             </div>
-            <div className="relative hidden aspect-[36/47] w-full">
+            <div className="3xl:max-h-[70vh] relative hidden aspect-[36/47] xl:block 2xl:max-h-[80vh]">
                <Image
                   alt="encourage highlight image"
                   fill
@@ -129,8 +130,8 @@ export default function Hero({}: IHero) {
                />
             </div>
          </section>
-         <section className="grid gap-18 bg-bg_veil py-18 sm:grid-cols-2 sm:gap-6 sm:px-3 lg:px-36">
-            <div className="relative aspect-[36/47] sm:self-center">
+         <section className="grid items-center gap-18 bg-bg_veil/80 py-18 sm:grid-cols-2 sm:gap-6 sm:px-3 lg:px-36 xl:grid-cols-[9fr_11fr] xl:gap-11 xl:pt-0">
+            <div className="3xl:max-h-[70vh] relative aspect-[36/47] sm:self-center 2xl:max-h-[80vh]">
                <Image
                   alt="encourage highlight image"
                   fill
@@ -138,12 +139,12 @@ export default function Hero({}: IHero) {
                   className="object-cover"
                />
             </div>
-            <div className="mx-4 grid justify-items-center gap-7 text-center">
+            <div className="mx-4 grid h-max justify-items-center gap-7 text-center xl:justify-items-start xl:text-start">
                <TitleLabel>ESTAMOS UBICADOS EN BOGOTÁ</TitleLabel>
-               <h2 className="font-epilogue text-3xl font-medium">
+               <h2 className="font-epilogue text-3xl font-medium xl:text-6xl">
                   Es un plan para toda <br /> la familia
                </h2>
-               <p className="text-sm">
+               <p className="text-sm xl:text-lg">
                   Ya sea que seas un novato buscando emociones nuevas o un
                   veterano en busca de tu próxima dosis de adrenalina, nuestro
                   túnel de viento es el lugar perfecto para sumergirte en la
@@ -163,22 +164,29 @@ export default function Hero({}: IHero) {
                </Link>
             </div>
          </section>
-         <section className="box-content bg-bg_veil px-3 pb-12 sm:grid sm:grid-cols-2 sm:gap-6 lg:px-36">
+         <section className="box-content bg-bg_veil/80 px-3 pb-12 sm:grid sm:grid-cols-2 sm:gap-6 lg:px-36 xl:grid-cols-[2fr_1fr] xl:items-center xl:px-64">
             <div>
                <TitleLabel className="mb-8">
                   TE ESPERAMOS CON TU FAMILIA Y AMIGOS
                </TitleLabel>
-               <div className="relative mb-12 aspect-[328/624] w-80">
+               <div className="relative mb-12 aspect-[328/624] w-80 xl:aspect-[468/520] xl:h-[32rem] xl:w-auto">
                   <Image
                      fill
                      alt="stop falling start flying"
                      src="/title/contact_title_xs.png"
-                     className="object-contain"
+                     className="object-contain xl:hidden"
+                     priority
+                  />
+                  <Image
+                     fill
+                     alt="stop falling start flying"
+                     src="/title/contact_title_xl.png"
+                     className="hidden object-contain xl:block"
                      priority
                   />
                </div>
             </div>
-            <div className="grid gap-6">
+            <div className="grid h-max gap-6">
                <Card className="grid gap-6">
                   <PhoneCall size={36} />
                   <p className="font-medium leading-loose text-muted">
@@ -207,7 +215,10 @@ export default function Hero({}: IHero) {
                </Card>
             </div>
          </section>
-         <div id="bg_veil" className="fixed top-0 -z-10 h-[150vh] w-full">
+         <div
+            id="bg_veil"
+            className="max-w-screen-3xl fixed top-0 -z-10 h-[150vh] w-full"
+         >
             <Image
                fill
                alt="hero background"

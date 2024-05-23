@@ -51,6 +51,8 @@ export default function IgCarousel({}: IIgCarousel) {
          <div ref={container} className="relative left-0 flex w-max">
             <ImagesRow />
             <ImagesRow />
+            <ImagesRow />
+            <ImagesRow />
          </div>
       </section>
    );
