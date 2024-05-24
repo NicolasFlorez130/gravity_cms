@@ -10,9 +10,12 @@ interface IHeader {}
 
 export default function Header({}: IHeader) {
    return (
-      <header className="flex w-full justify-center px-14 pb-8 pt-10 lg:justify-between lg:px-0">
+      <header className="flex w-full justify-center self-start px-14 pb-8 pt-10 lg:justify-between lg:px-10">
          <Logo />
-         <div className="hidden h-max items-stretch gap-5 lg:flex">
+         <nav
+            id="header_buttons"
+            className="hidden h-max items-stretch gap-5 lg:flex"
+         >
             <Link
                href="#"
                className={cn(buttonVariants({ variant: "primary" }), "w-max")}
@@ -22,7 +25,7 @@ export default function Header({}: IHeader) {
             <Button className="aspect-square h-max border-white p-4">
                <PushPin size={26} />
             </Button>
-         </div>
+         </nav>
       </header>
    );
 }

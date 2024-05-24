@@ -11,7 +11,7 @@ import IgCarousel from "./sections/ig_carousel";
 export default function Home() {
    return (
       <>
-         <main className="max-w-screen-3xl relative m-auto overflow-hidden">
+         <main className="relative m-auto max-w-screen-3xl overflow-hidden">
             <FollowSign />
             <Hero />
             <Booking />

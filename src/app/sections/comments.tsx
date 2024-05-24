@@ -24,7 +24,7 @@ const comments = [
 
 export default function Comments({}: IComments) {
    return (
-      <section className="flex flex-col gap-8 bg-bg_light py-10 sm:flex-row sm:px-3 lg:gap-12 lg:px-36">
+      <section className="flex flex-col gap-8 xl:gap-20 bg-bg_light py-10 sm:flex-row sm:px-3 lg:gap-12 lg:px-36">
          {comments.map((comment, i) => (
             <div key={i} className="grid place-items-center">
                <div className="relative aspect-video w-2/3 sm:w-full">

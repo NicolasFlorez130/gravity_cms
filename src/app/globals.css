@@ -33,6 +33,14 @@
       --ring: 222.2 84% 4.9%;
 
       --radius: 0.5rem;
+
+      @media (min-width: 2560px) {
+         font-size: 20px;
+      }
+
+      @media (min-width: 3840px) {
+         font-size: 24px;
+      }
    }
 
    /* .dark {

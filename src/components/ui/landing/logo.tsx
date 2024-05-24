@@ -6,7 +6,7 @@ interface ILogo {}
 
 export default function Logo({}: ILogo) {
    return (
-      <div className="flex items-center">
+      <div id="logo" className="flex items-center">
          <div className="relative aspect-square h-20">
             <Image
                alt="gravity logo"

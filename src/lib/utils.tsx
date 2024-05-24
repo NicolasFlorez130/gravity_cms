@@ -42,3 +42,36 @@ export function capitalize(str: string): string {
 export function formatCurrency(number: number) {
    return USDFormatter.format(number);
 }
+
+export function textSplitter(
+   el: HTMLElement | null,
+   letter_class?: string,
+   word_class?: string,
+) {
+   if (!el) return;
+
+   let words = el.textContent?.split(" ") ?? [];
+   words = words.map(word => {
+      let letters = word.split("");
+      letters = letters.map(
+         letter => `<div class="${letter_class ?? ""} inline">${letter}</div>`,
+      );
+      return letters.join("");
+   });
+   words = words.map(
+      word => `<span class="${word_class ?? ""}">${word}</span>`,
+   );
+   el.innerHTML = words.join(" ");
+}
+
+export function printAsSpans(text: string) {
+   return text.split("").map((char, i) =>
+      char === " " ? (
+         <span key={i} className="whitespace-normal"> </span>
+      ) : (
+         <span className="inline-block" key={i}>
+            {char}
+         </span>
+      ),
+   );
+}

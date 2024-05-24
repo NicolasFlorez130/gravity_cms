@@ -24,7 +24,7 @@ export default function Footer({}: IFooter) {
                </Link>
             </div>
          </div>
-         <div className="text-center font-epilogue lg:flex lg:items-center lg:justify-between lg:text-start">
+         <div className="text-center font-epilogue lg:flex lg:items-end lg:justify-between lg:text-start">
             <p className="text-lg">
                Ven a divertirte en el primer túnel de{" "}
                <br className="hidden lg:block" /> Colombia y experimenta la{" "}

@@ -108,6 +108,7 @@ const config = {
             18: "72px",
          },
          screens: {
+            fhd: "1920px",
             "3xl": "2560px",
          },
       },
