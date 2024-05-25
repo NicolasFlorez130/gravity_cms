@@ -30,6 +30,23 @@ export default function Hero({}: IHero) {
          ref={container}
          className="relative overflow-hidden text-white fhd:min-h-screen"
       >
+         <div
+            id="section_marker"
+            className="absolute bottom-0 right-8 top-0 my-auto hidden h-max w-max grid-cols-2 grid-rows-2 place-content-center gap-6 font-din text-2xl"
+         >
+            <div className="col-start-1 col-end-2 row-start-1 row-end-2">
+               01
+            </div>
+            <div className="col-start-1 col-end-2 row-start-2 row-end-3">
+               02
+            </div>
+            <div
+               id="section_marker_slider"
+               className="col-start-2 col-end-3 row-start-1 row-end-3 h-full w-1 rounded-full bg-stone-300"
+            >
+               <div className="h-1/2 w-full bg-white relative" />
+            </div>
+         </div>
          <section
             id="title"
             className="relative bg-gradient-to-b from-transparent from-20% to-bg_veil/80 to-80% pb-16 text-center lg:px-10 fhd:absolute fhd:hidden fhd:h-screen fhd:bg-transparent fhd:pb-10"

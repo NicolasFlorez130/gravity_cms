@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { MutableRefObject } from "react";
+import { MutableRefObject, useEffect } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { textSplitter } from "../utils";
 import gsap from "gsap";
@@ -10,6 +10,10 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
 
    const isXl = useMediaQuery("(min-width: 1280px)");
    const isFHD = useMediaQuery("(min-width: 1920px)");
+
+   useEffect(() => {
+      gsap.to("#veil", { yPercent: -100, duration: 0.2, ease: "none" });
+   }, []);
 
    useGSAP(
       () => {
@@ -36,13 +40,23 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                   gsap.fromTo(
                      "#logo",
                      { x: -200, opacity: 0 },
-                     { x: 0, opacity: 1, ease: "bounce.out", duration: 0.7 },
+                     {
+                        x: 0,
+                        opacity: 1,
+                        ease: "bounce.out",
+                        duration: 0.7,
+                     },
                   );
 
                   gsap.fromTo(
                      "#header_buttons",
                      { x: 200, opacity: 0 },
-                     { x: 0, opacity: 1, ease: "bounce.out", duration: 0.7 },
+                     {
+                        x: 0,
+                        opacity: 1,
+                        ease: "bounce.out",
+                        duration: 0.7,
+                     },
                   );
                }
 
@@ -200,6 +214,22 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                //in
                tl.set("#about", { display: "grid" }); //.2-
 
+               tl.fromTo(
+                  "#section_marker",
+                  {
+                     duration: 0.2,
+                     opacity: 0,
+                     x: 100,
+                     ease: "sine.out",
+                  },
+                  {
+                     opacity: 1,
+                     x: 0,
+                     display: "grid",
+                  },
+                  about,
+               ); //.2_
+
                tl.from(
                   "#about_image",
                   {
@@ -279,6 +309,13 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
 
                //out
                tl.to("#about", { opacity: 0, duration: 0.1 }, 1); //1.1
+
+               tl.fromTo(
+                  "#section_marker_slider > div",
+                  { yPercent: 0 },
+                  { yPercent: 100 },
+                  0.9,
+               ); //1.1
             }
 
             //encourage
@@ -371,6 +408,17 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
 
                //out
                tl.to("#encourage", { opacity: 0, duration: 0.1 }, 2); //2.1-
+
+               tl.to(
+                  "#section_marker",
+                  {
+                     duration: 0.2,
+                     opacity: 0,
+                     x: 100,
+                     ease: "sine.out",
+                  },
+                  1.9,
+               ); //.2_
             }
 
             //contact

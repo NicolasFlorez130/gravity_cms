@@ -7,10 +7,12 @@ import Questions from "./sections/questions";
 import Footer from "@/components/ui/landing/footer";
 import GalleryCarousel from "./sections/gallery_carousel";
 import IgCarousel from "./sections/ig_carousel";
+import Veil from "@/components/ui/landing/veil";
 
 export default function Home() {
    return (
       <>
+         <Veil />
          <main className="relative m-auto max-w-screen-3xl overflow-hidden">
             <FollowSign />
             <Hero />
