@@ -34,7 +34,7 @@ export default function Hero({}: IHero) {
             id="section_marker"
             className="absolute bottom-0 right-8 top-0 my-auto hidden h-max w-max grid-cols-2 grid-rows-2 place-content-center gap-6 font-din text-2xl"
          >
-            <div className="col-start-1 col-end-2 row-start-1 row-end-2">
+            <div className="col-start-1 col-end-2 row-start-1 row-end-2 font-light">
                01
             </div>
             <div className="col-start-1 col-end-2 row-start-2 row-end-3">
@@ -44,7 +44,7 @@ export default function Hero({}: IHero) {
                id="section_marker_slider"
                className="col-start-2 col-end-3 row-start-1 row-end-3 h-full w-1 rounded-full bg-stone-300"
             >
-               <div className="h-1/2 w-full bg-white relative" />
+               <div className="relative h-1/2 w-full bg-white" />
             </div>
          </div>
          <section
@@ -142,7 +142,7 @@ export default function Hero({}: IHero) {
          >
             <div
                id="about_text"
-               className="mx-4 grid justify-items-center gap-7 text-center xl:my-8 xl:h-max xl:justify-items-start xl:text-start"
+               className="mx-4 grid h-max justify-items-center gap-7 text-center xl:my-8 xl:h-max xl:justify-items-start xl:text-start"
             >
                <TitleLabel>
                   {printAsSpans("EL SEGUNDO TÚNEL DE LATINOAMÉRICA")}
@@ -176,7 +176,7 @@ export default function Hero({}: IHero) {
             </div>
             <div
                id="about_image"
-               className="relative hidden aspect-[36/47] xl:block fhd:h-full fhd:max-h-[80vh] 3xl:max-h-[70vh]"
+               className="relative hidden aspect-[36/47] xl:block fhd:max-h-[80vh] 3xl:max-h-[70vh]"
             >
                <Image
                   alt="encourage highlight image"
