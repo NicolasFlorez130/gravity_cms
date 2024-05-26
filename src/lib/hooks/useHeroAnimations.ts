@@ -6,13 +6,19 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 
 export function useHeroAnimations(container: MutableRefObject<null>) {
+   const veilMoveDuration = 0.3;
+
    const scrubHeight = "1000vh";
 
    const isXl = useMediaQuery("(min-width: 1280px)");
    const isFHD = useMediaQuery("(min-width: 1920px)");
 
    useEffect(() => {
-      gsap.to("#veil", { yPercent: -100, duration: 0.2, ease: "none" });
+      gsap.to("#veil", {
+         yPercent: -100,
+         duration: veilMoveDuration,
+         ease: "none",
+      });
    }, []);
 
    useGSAP(
@@ -33,13 +39,13 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
          if (isXl) {
             //initial
             {
-               gsap.to("#title", { display: "grid" });
+               gsap.to("#title", { delay: veilMoveDuration, display: "grid" });
 
                //header
                {
                   gsap.fromTo(
                      "#logo",
-                     { x: -200, opacity: 0 },
+                     { delay: veilMoveDuration, x: -200, opacity: 0 },
                      {
                         x: 0,
                         opacity: 1,
@@ -50,7 +56,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
 
                   gsap.fromTo(
                      "#header_buttons",
-                     { x: 200, opacity: 0 },
+                     { delay: veilMoveDuration, x: 200, opacity: 0 },
                      {
                         x: 0,
                         opacity: 1,
@@ -63,7 +69,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                //title
                {
                   gsap
-                     .timeline()
+                     .timeline({ delay: veilMoveDuration })
                      .fromTo(
                         "#title_container",
                         { height: 0 },
@@ -90,7 +96,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                //title_text
                {
                   gsap
-                     .timeline()
+                     .timeline({ delay: veilMoveDuration })
                      .from("#title_text_container", {
                         opacity: 0,
                         duration: 0.2,
@@ -149,7 +155,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                   );
 
                   gsap
-                     .timeline()
+                     .timeline({ delay: veilMoveDuration })
                      .from(".sub_title_letter", {
                         opacity: 0,
                         stagger: 0.02,
@@ -167,7 +173,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                {
                   gsap.fromTo(
                      "#social_media",
-                     { x: -200, opacity: 0 },
+                     { delay: veilMoveDuration, x: -200, opacity: 0 },
                      { x: 0, opacity: 1, ease: "sine.out" },
                   );
                }

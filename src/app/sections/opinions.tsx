@@ -134,7 +134,7 @@ export default function Opinions({}: IOpinions) {
                   className="opinions grid w-full flex-none items-center justify-items-center gap-6 overflow-hidden transition-all sm:grid-cols-[1fr_2fr] sm:pl-4 xl:w-auto xl:grid-cols-[1fr_auto] xl:gap-0"
                >
                   <div className="relative z-10 bg-muted">
-                     <div className="relative aspect-square w-1/2 overflow-hidden rounded-full sm:w-full xl:w-[calc(100vw/6)]">
+                     <div className="relative aspect-square w-1/2 max-w-screen-sm overflow-hidden rounded-full sm:w-full xl:w-[calc(100vw/6)]">
                         <Image
                            alt={`${opinion.names} picture`}
                            src={opinion.image}
@@ -144,7 +144,7 @@ export default function Opinions({}: IOpinions) {
                      </div>
                   </div>
                   <div className="opinion_text w-auto">
-                     <div className="relative z-0 grid place-items-center gap-6 overflow-hidden lg:w-1/2 xl:ml-10 xl:w-[calc(100vw/3)] xl:place-items-start">
+                     <div className="relative z-0 grid max-w-screen-xl place-items-center gap-6 overflow-hidden lg:w-1/2 xl:ml-10 xl:w-[calc(100vw/3)] xl:place-items-start">
                         <p className="px-8 text-center text-xl font-medium text-muted-foreground xl:px-0 xl:text-start xl:text-4xl">
                            {opinion.opinion}
                         </p>
@@ -157,7 +157,7 @@ export default function Opinions({}: IOpinions) {
             ))}
             <div className="relative w-[100vw] flex-none" />
          </div>
-         <div className="flex justify-center sm:pr-4 xl:ml-[calc(100vw/6+3.5rem)]">
+         <div className="flex justify-center sm:pr-4 xl:ml-[calc(min(26rem,100vw/6)+3.5rem)]">
             <Button
                disabled={!opinions.length || isScrolling}
                onClick={() =>
