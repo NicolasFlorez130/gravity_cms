@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import {
    index,
    integer,
+   pgEnum,
    pgTableCreator,
    primaryKey,
    serial,
@@ -11,32 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
 export const createTable = pgTableCreator(name => `gravity_${name}`);
-
-export const posts = createTable(
-   "post",
-   {
-      id: serial("id").primaryKey(),
-      name: varchar("name", { length: 256 }),
-      createdById: varchar("createdById", { length: 255 })
-         .notNull()
-         .references(() => users.id),
-      createdAt: timestamp("created_at", { withTimezone: true })
-         .default(sql`CURRENT_TIMESTAMP`)
-         .notNull(),
-      updatedAt: timestamp("updatedAt", { withTimezone: true }),
-   },
-   example => ({
-      createdByIdIdx: index("createdById_idx").on(example.createdById),
-      nameIndex: index("name_idx").on(example.name),
-   }),
-);
 
 export const users = createTable("user", {
    id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -123,3 +99,18 @@ export const verificationTokens = createTable(
       compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
    }),
 );
+
+export const imageCategory = pgEnum("images_category", [
+   "gallery",
+   "instagram_posts",
+]);
+
+export const images = createTable("images", {
+   id: serial("id").primaryKey(),
+   url: text("url").notNull(),
+   category: imageCategory("category"),
+   createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+   updatedAt: timestamp("updatedAt", { withTimezone: true }),
+});

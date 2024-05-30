@@ -3,21 +3,13 @@
 import useBasicCarousel from "~/lib/hooks/useBasicCarousel";
 import Image from "next/image";
 import { useRef } from "react";
+import { type IImage } from "~/types/images";
 
-const images = [
-   "https://placedog.net/400/400?random",
-   "https://placedog.net/300/300?random",
-   "https://placedog.net/500/500?random",
-   "https://placedog.net/600/600?random",
-   "https://placedog.net/700/700?random",
-   "https://placedog.net/800/800?random",
-   "https://placedog.net/900/900?random",
-   "https://placedog.net/1000/1000?random",
-];
+interface IGalleryCarousel {
+   images: IImage[];
+}
 
-interface IGalleryCarousel {}
-
-export default function GalleryCarousel({}: IGalleryCarousel) {
+export default function GalleryCarousel({ images }: IGalleryCarousel) {
    const container = useRef<HTMLDivElement>(null);
 
    useBasicCarousel(container);
@@ -25,15 +17,15 @@ export default function GalleryCarousel({}: IGalleryCarousel) {
    function ImagesRow() {
       return (
          <div className="flex">
-            {images.map((img, i) => (
+            {images.map(({ id, url }) => (
                <div
-                  key={i}
+                  key={id}
                   className="relative aspect-[35/27] w-screen flex-none sm:w-[calc(100vw/4)]"
                >
                   <Image
-                     alt={`carousel image ${i + 1}`}
+                     alt={`carousel image ${id}`}
                      fill
-                     src={img}
+                     src={url}
                      className="object-cover"
                   />
                </div>

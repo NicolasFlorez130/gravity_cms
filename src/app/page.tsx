@@ -8,8 +8,11 @@ import Footer from "~/components/ui/landing/footer";
 import GalleryCarousel from "./sections/gallery_carousel";
 import IgCarousel from "./sections/ig_carousel";
 import Veil from "~/components/ui/landing/veil";
+import { api } from "~/trpc/server";
 
-export default function Home() {
+export default async function Home() {
+   const gallery_images = await api.images.getAll();
+
    return (
       <>
          <Veil />
@@ -18,7 +21,7 @@ export default function Home() {
             <Hero />
             <Booking />
             <Opinions />
-            <GalleryCarousel />
+            <GalleryCarousel images={gallery_images} />
             <Comments />
             <Questions />
             <IgCarousel />
