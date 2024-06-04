@@ -1,9 +1,9 @@
 import { type ClassValue, clsx } from "clsx";
-import { Day } from "date-fns";
+import { type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 
-export function translateDays(days: number[], highlight: boolean) {
+export function translateDays(days: number[]) {
    const workDay = [1, 2, 3, 4, 5]; // Lunes a Viernes
    const everyday = [0, 1, 2, 3, 4, 5, 6]; // Domingo a Sábado
 
@@ -67,7 +67,9 @@ export function textSplitter(
 export function printAsSpans(text: string) {
    return text.split("").map((char, i) =>
       char === " " ? (
-         <span key={i} className="whitespace-normal"> </span>
+         <span key={i} className="whitespace-normal">
+            {" "}
+         </span>
       ) : (
          <span className="inline-block" key={i}>
             {char}
