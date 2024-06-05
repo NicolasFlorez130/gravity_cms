@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import { MutableRefObject, useEffect } from "react";
+import { type MutableRefObject, useEffect } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { textSplitter } from "../utils";
 import gsap from "gsap";
@@ -11,7 +11,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
    const scrubHeight = "1000vh";
 
    const isXl = useMediaQuery("(min-width: 1280px)");
-   const isFHD = useMediaQuery("(min-width: 1920px)");
+   const isFHD = useMediaQuery("(min-width: 1900px)");
 
    useEffect(() => {
       gsap.to("#veil", {
@@ -413,7 +413,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                ); //1.3_
 
                //out
-               tl.to("#encourage", { opacity: 0, duration: 0.1 }, 2); //2.1-
+               tl.to("#encourage", { opacity: 0, duration: 0.1 }, 2.3); //2.1-
 
                tl.to(
                   "#section_marker",
@@ -423,7 +423,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
                      x: 100,
                      ease: "sine.out",
                   },
-                  1.9,
+                  2.1,
                ); //.2_
             }
 

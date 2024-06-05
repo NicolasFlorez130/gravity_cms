@@ -3,47 +3,52 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 200 55% 10%;
-    --foreground: 0, 0%, 100%;
+   :root {
+      --background: 200 55% 10%;
+      --foreground: 0, 0%, 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 184, 100%, 50%, 1;
-    --primary-foreground: 200, 55%, 10%, 1;
+      --primary: 184, 100%, 50%, 1;
+      --primary-foreground: 200, 55%, 10%, 1;
 
-    --secondary: 190, 67%, 52%;
-    --secondary-foreground: 0, 0%, 100%;
+      --secondary: 190, 67%, 52%;
+      --secondary-foreground: 0, 0%, 100%;
 
-    --muted: 192, 61%, 65%;
-    --muted-foreground: 218, 15%, 11%, 1;
+      --muted: 192, 61%, 65%;
+      --muted-foreground: 218, 15%, 11%, 1;
 
-    --accent: 42, 94%, 75%, 1;
-    --accent-foreground: 222.2 47.4% 11.2%;
+      --accent: 42, 94%, 75%, 1;
+      --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+      --radius: 0.5rem;
 
-    @media (min-width: 2560px) {
-      font-size: 20px;
-    }
+      --bo-blue-light: 208 100% 95%;
+      --bo-blue: 215 53% 45%;
 
-    @media (min-width: 3840px) {
-      font-size: 24px;
-    }
-  }
+      --bo-violet: 240 85% 68%;
 
-  /* .dark {
+      @media (min-width: 2560px) {
+         font-size: 20px;
+      }
+
+      @media (min-width: 3840px) {
+         font-size: 24px;
+      }
+   }
+
+   /* .dark {
       --background: 222.2 84% 4.9%;
       --foreground: 210 40% 98%;
 
@@ -75,11 +80,11 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+   * {
+      @apply border-border;
+   }
 
-  body {
-    @apply bg-background text-foreground;
-  }
+   body {
+      @apply bg-background text-foreground;
+   }
 }
