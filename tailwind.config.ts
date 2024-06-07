@@ -67,6 +67,10 @@ const config = {
                violet: {
                   DEFAULT: "hsl(var(--bo-violet))",
                },
+               secondary: {
+                  DEFAULT: "hsl(var(--bo-secondary))",
+                  foreground: "hsl(var(--bo-secondary-foreground))",
+               },
             },
          },
          borderRadius: {

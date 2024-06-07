@@ -32,9 +32,9 @@ export default function Sidebar({ navButtons }: ISidebar) {
          <Link
             className={cn(
                buttonVariants({ variant: "ghost" }),
-               "hover:bg-bo-blue-light/60 flex w-full justify-start gap-2 truncate",
+               "flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60",
                isThisRoute &&
-                  "bg-bo-blue-light hover:bg-bo-blue-light text-bo-blue hover:text-bo-blue",
+                  "bg-bo-blue-light text-bo-blue hover:bg-bo-blue-light hover:text-bo-blue",
             )}
             href={url}
          >
@@ -48,7 +48,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
       return (
          <Button
             variant="ghost"
-            className="hover:bg-bo-blue-light/60 flex w-full justify-start gap-2 truncate"
+            className="flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60"
             onClick={action}
          >
             {icon}
@@ -65,7 +65,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
             <Button
                variant="ghost"
                className={cn(
-                  "hover:bg-bo-blue-light/60 flex w-full items-center justify-between gap-2 truncate",
+                  "flex w-full items-center justify-between gap-2 truncate hover:bg-bo-blue-light/60",
                   isOpen && "opacity-50",
                )}
                onClick={() => setIsOpen(!isOpen)}
@@ -74,7 +74,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
                   {icon}
                   {isExpanded && label}
                </span>
-               {isExpanded && isOpen ? <CaretUp /> : <CaretDown />}
+               {isExpanded && (isOpen ? <CaretUp /> : <CaretDown />)}
             </Button>
             {isOpen && items.map((el, i) => <ItemButton key={i} {...el} />)}
          </>
@@ -86,8 +86,8 @@ export default function Sidebar({ navButtons }: ISidebar) {
    return (
       <div
          className={cn(
-            "grid grid-rows-[auto_auto_1fr_auto] gap-5 p-2",
-            isExpanded ? "w-60" : "justify-items w-14 justify-items-center",
+            "sticky top-0 grid max-h-screen grid-rows-[auto_auto_1fr_auto] gap-5 p-4",
+            isExpanded ? "w-60" : "justify-items w-auto justify-items-center",
          )}
       >
          <div className="flex gap-2">

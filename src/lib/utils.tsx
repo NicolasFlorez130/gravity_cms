@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
+import { type Appointment } from "~/app/bo/dashboard/mock/dashboard_mocks";
 
 export function translateDays(days: number[]) {
    const workDay = [1, 2, 3, 4, 5]; // Lunes a Viernes
@@ -76,4 +77,32 @@ export function printAsSpans(text: string) {
          </span>
       ),
    );
+}
+
+export function getMonthlyTotals(transactions: Appointment[]) {
+   const monthlyTotals: Record<string, { sum: number; date: Date }> = {};
+
+   transactions.forEach(transaction => {
+      const year = transaction.date.getFullYear();
+      const month = transaction.date.getMonth() + 1;
+      const monthYear = `${year}-${month.toString().padStart(2, "0")}`;
+
+      if (!monthlyTotals[monthYear]) {
+         monthlyTotals[monthYear] = {
+            sum: 0,
+            date: new Date(year, month - 1, 1), // Create a Date object with the first day of the month
+         };
+      }
+
+      monthlyTotals[monthYear]!.sum += transaction.totalAmount;
+   });
+
+   return Object.entries(monthlyTotals).map(([key, value]) => {
+      const month = value.date.toLocaleString("default", { month: "long" });
+      return {
+         name: month,
+         sum: value.sum,
+         date: value.date,
+      };
+   });
 }

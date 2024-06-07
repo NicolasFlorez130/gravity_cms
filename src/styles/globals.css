@@ -39,6 +39,9 @@
 
       --bo-violet: 240 85% 68%;
 
+      --bo-secondary: 240 4% 95%;
+      --bo-secondary-foreground: 218 12% 13%;
+
       @media (min-width: 2560px) {
          font-size: 20px;
       }
