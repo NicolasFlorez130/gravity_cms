@@ -2,17 +2,13 @@ import { relations, sql } from "drizzle-orm";
 import {
    index,
    integer,
-   pgEnum,
-   pgTableCreator,
    primaryKey,
-   serial,
    text,
    timestamp,
    varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
-
-export const createTable = pgTableCreator(name => `gravity_${name}`);
+import { createTable } from "../utils";
 
 export const users = createTable("user", {
    id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -99,18 +95,3 @@ export const verificationTokens = createTable(
       compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
    }),
 );
-
-export const imageCategory = pgEnum("images_category", [
-   "gallery",
-   "instagram_posts",
-]);
-
-export const images = createTable("images", {
-   id: serial("id").primaryKey(),
-   url: text("url").notNull(),
-   category: imageCategory("category"),
-   createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-   updatedAt: timestamp("updatedAt", { withTimezone: true }),
-});

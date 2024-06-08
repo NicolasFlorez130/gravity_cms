@@ -1,6 +1,6 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { Separator } from "~/components/bo/ui/separator";
 import Sidebar from "~/components/bo/ui/sidebar";
 import routes, {

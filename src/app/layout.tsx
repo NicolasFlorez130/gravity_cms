@@ -2,6 +2,7 @@ import { Inter, DM_Sans, Epilogue } from "next/font/google";
 import localFont from "next/font/local";
 import "../styles/globals.css";
 import { cn } from "~/lib/utils";
+import { TRPCReactProvider } from "~/trpc/react";
 
 const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
@@ -39,7 +40,7 @@ export default function RootLayout({
                "font-inter",
             )}
          >
-            {children}
+            <TRPCReactProvider>{children}</TRPCReactProvider>
          </body>
       </html>
    );

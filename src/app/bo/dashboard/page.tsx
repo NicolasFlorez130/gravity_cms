@@ -54,7 +54,7 @@ export default function Page({}: IPage) {
                <DashboardCard className="grid gap-2">
                   <h2 className="text-gray-700">Rendimiento mensual</h2>
                   <div className="h-80">
-                     <AppointmentsChart appointments={appointments} />
+                     {/* <AppointmentsChart appointments={appointments} /> */}
                   </div>
                </DashboardCard>
             </section>

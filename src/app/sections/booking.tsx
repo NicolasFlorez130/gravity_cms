@@ -4,9 +4,9 @@ import { Card } from "~/components/ui/card";
 import { Button } from "~/components/ui/landing/button";
 import { PhoneCall } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
-import { es } from "date-fns/locale";
 import { cn, formatCurrency, translateDays } from "~/lib/utils";
-import { Day } from "date-fns";
+import { useEffect } from "react";
+import { api } from "~/trpc/react";
 
 interface IBooking {}
 
@@ -40,6 +40,12 @@ const items = [
 ];
 
 export default function Booking({}: IBooking) {
+   const { data } = api.packages.getAll.useQuery();
+
+   useEffect(() => {
+      console.log(data);
+   }, [data]);
+
    return (
       <section className="relative xl:grid xl:grid-cols-[2fr_5fr] xl:bg-bg_veil/80 xl:p-36">
          <div className="relative grid aspect-square w-full place-items-center bg-bg_veil/80 sm:aspect-[744/344] lg:aspect-[1024/344] xl:static xl:aspect-auto xl:bg-transparent">
@@ -81,7 +87,7 @@ export default function Booking({}: IBooking) {
                               !highlight && "text-muted",
                            )}
                         >
-                           {translateDays(item.days, highlight)}
+                           {translateDays(item.days)}
                         </p>
                         <p>{item.description}</p>
                         <p className="font-bold text-primary">
