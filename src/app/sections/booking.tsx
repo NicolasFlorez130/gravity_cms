@@ -40,7 +40,7 @@ const items = [
 ];
 
 export default function Booking({}: IBooking) {
-   const { data } = api.packages.getAll.useQuery();
+   const { data } = api.appointments.getAll.useQuery();
 
    useEffect(() => {
       console.log(data);

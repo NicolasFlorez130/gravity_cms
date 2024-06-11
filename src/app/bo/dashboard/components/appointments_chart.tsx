@@ -2,15 +2,15 @@
 
 import { Chart, type UserSerie, type AxisOptions } from "react-charts";
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { type Appointment } from "../mock/dashboard_mocks";
+import { type Appointment } from "~/types/appointments";
 
-interface IAppointmentsChart {
+interface IDailyAppointmentsChart {
    appointments: Appointment[];
 }
 
-export default function AppointmentsChart({
+export default function DailyAppointmentsChart({
    appointments,
-}: IAppointmentsChart) {
+}: IDailyAppointmentsChart) {
    const [isSorting, startTransition] = useTransition();
 
    const [landingAppointments, setLandingAppointments] = useState(appointments);
@@ -23,16 +23,16 @@ export default function AppointmentsChart({
          const onlineAux: Appointment[] = [];
          const onSiteAux: Appointment[] = [];
 
-         appointments.forEach(transaction => {
-            switch (transaction.paymentMethod) {
+         appointments.forEach(appointment => {
+            switch (appointment.paymentMethod) {
                case "LANDING":
-                  landingAux.push(transaction);
+                  landingAux.push(appointment);
                   break;
                case "ONLINE":
-                  onlineAux.push(transaction);
+                  onlineAux.push(appointment);
                   break;
                default:
-                  onSiteAux.push(transaction);
+                  onSiteAux.push(appointment);
                   break;
             }
          });
@@ -40,14 +40,14 @@ export default function AppointmentsChart({
          setOnlineAppointments(onlineAux);
          setOnSiteAppointments(onSiteAux);
       });
-   }, []);
+   }, [appointments]);
 
    const primaryAxis = useMemo<AxisOptions<Appointment>>(
       () => ({
          getValue: datum => datum.date,
-         formatters: {
-            scale: (datum: Date) => datum.getMonth().toString(),
-         },
+         // formatters: {
+         // scale: (datum: Date) => new Date(datum).getMonth().toString(),
+         // },
       }),
       [],
    );
@@ -63,26 +63,28 @@ export default function AppointmentsChart({
 
    const data: UserSerie<Appointment>[] = [
       {
-         label: "Reservas",
+         label: "Landing",
          data: landingAppointments,
       },
       {
-         label: "Reservas1",
+         label: "Dashboard",
          data: onlineAppointments,
       },
       {
-         label: "Reservas2",
+         label: "En sitio",
          data: onSiteAppointments,
       },
    ];
 
    return (
-      <Chart
-         options={{
-            data,
-            primaryAxis,
-            secondaryAxes,
-         }}
-      />
+      !isSorting && (
+         <Chart
+            options={{
+               data,
+               primaryAxis,
+               secondaryAxes,
+            }}
+         />
+      )
    );
 }

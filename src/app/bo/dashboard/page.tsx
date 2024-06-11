@@ -4,13 +4,31 @@ import DashboardCard from "./components/dashboard_card";
 import { CaretDown, CaretUp } from "@phosphor-icons/react/dist/ssr";
 import { Separator } from "~/components/bo/ui/separator";
 import { Button } from "~/components/bo/ui/button";
-import { metrics, appointments } from "./mock/dashboard_mocks";
+import { metrics } from "./mock/dashboard_mocks";
 import RecentAppointmentsTable from "./components/recent_appointments_table";
-import AppointmentsChart from "./components/appointments_chart";
+import DailyAppointmentsChart from "./components/appointments_chart";
+import { useStore } from "~/lib/features/store";
+import { useState } from "react";
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue,
+} from "~/components/bo/ui/select";
+
+enum ChartMode {
+   monthly,
+   daily,
+}
 
 interface IPage {}
 
 export default function Page({}: IPage) {
+   const [chartMode, setChartMode] = useState(ChartMode.daily);
+
+   const appointments = useStore.use.appointments();
+
    return (
       <div className="grid min-h-full grid-cols-[1fr_auto_auto]">
          <div className="grid h-max gap-5 px-12 py-10">
@@ -39,22 +57,46 @@ export default function Page({}: IPage) {
                      </h2>
                      <Button variant="secondary">Ver todos</Button>
                   </div>
-                  <RecentAppointmentsTable
-                     transactions={appointments
-                        .sort(
-                           ({ date: date_1 }, { date: date_2 }) =>
-                              new Date(date_2).getTime() -
-                              new Date(date_1).getTime(),
-                        )
-                        .slice(0, 4)}
-                  />
+                  <RecentAppointmentsTable />
                </DashboardCard>
             </section>
             <section>
                <DashboardCard className="grid gap-2">
-                  <h2 className="text-gray-700">Rendimiento mensual</h2>
+                  <div className="flex justify-between">
+                     <h2 className="text-gray-700">Rendimiento mensual</h2>
+                     <div>
+                        <Select
+                           value={chartMode.toString()}
+                           onValueChange={val => setChartMode(Number(val))}
+                        >
+                           <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Selecciona un modo" />
+                           </SelectTrigger>
+                           <SelectContent>
+                              <SelectItem value={ChartMode.daily.toString()}>
+                                 Diario
+                              </SelectItem>
+                              <SelectItem value={ChartMode.monthly.toString()}>
+                                 Mensual
+                              </SelectItem>
+                           </SelectContent>
+                        </Select>
+                     </div>
+                  </div>
                   <div className="h-80">
-                     {/* <AppointmentsChart appointments={appointments} /> */}
+                     {appointments.length ? (
+                        chartMode === ChartMode.daily ? (
+                           <DailyAppointmentsChart
+                              appointments={appointments}
+                           />
+                        ) : (
+                           <></>
+                        )
+                     ) : (
+                        <div className="grid h-full place-content-center">
+                           <p>No hay reservas para mostrar</p>
+                        </div>
+                     )}
                   </div>
                </DashboardCard>
             </section>
