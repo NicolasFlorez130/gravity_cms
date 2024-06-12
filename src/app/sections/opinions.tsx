@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "~/components/ui/landing/button";
+import { Button } from "~/components/landing/ui/button";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/all";
@@ -169,7 +169,7 @@ export default function Opinions({}: IOpinions) {
                         : undefined,
                   )
                }
-               className="h-max border-none p-0 disabled:text-background"
+               className="h-max border-none p-0 disabled:text-background-dark"
             >
                <ArrowLeft size={48} />
             </Button>
@@ -184,7 +184,7 @@ export default function Opinions({}: IOpinions) {
                         : undefined,
                   )
                }
-               className="h-max border-none p-0 disabled:text-background"
+               className="h-max border-none p-0 disabled:text-background-dark"
             >
                <ArrowRight size={48} />
             </Button>

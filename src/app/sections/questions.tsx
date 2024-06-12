@@ -5,8 +5,8 @@ import {
    AccordionContent,
    AccordionItem,
    AccordionTrigger,
-} from "~/components/ui/accordion";
-import QuestionsTitle from "~/components/ui/landing/questions_title";
+} from "~/components/landing/ui/accordion";
+import QuestionsTitle from "~/components/landing/ui/questions_title";
 
 const questions = [
    {

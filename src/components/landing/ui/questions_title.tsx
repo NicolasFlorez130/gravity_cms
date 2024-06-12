@@ -1,7 +1,6 @@
 "use client";
 
 import useBasicCarousel from "~/lib/hooks/useBasicCarousel";
-import { useGSAP } from "@gsap/react";
 import { Question } from "@phosphor-icons/react/dist/ssr";
 import { useRef } from "react";
 

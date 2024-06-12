@@ -6,7 +6,7 @@ import { Separator } from "~/components/bo/ui/separator";
 import { Button } from "~/components/bo/ui/button";
 import { metrics } from "./mock/dashboard_mocks";
 import RecentAppointmentsTable from "./components/recent_appointments_table";
-import DailyAppointmentsChart from "./components/appointments_chart";
+import DailyAppointmentsChart from "./components/daily_appointments_chart";
 import { useStore } from "~/lib/features/store";
 import { useState } from "react";
 import {
@@ -16,6 +16,10 @@ import {
    SelectTrigger,
    SelectValue,
 } from "~/components/bo/ui/select";
+import { DateRangePicker } from "~/components/bo/ui/date_range_picker";
+import { type DateRange } from "react-day-picker";
+import { subDays } from "date-fns";
+import MonthlyAppointmentsChart from "./components/monthly_appointments_chart";
 
 enum ChartMode {
    monthly,
@@ -25,9 +29,13 @@ enum ChartMode {
 interface IPage {}
 
 export default function Page({}: IPage) {
-   const [chartMode, setChartMode] = useState(ChartMode.daily);
-
    const appointments = useStore.use.appointments();
+
+   const [chartMode, setChartMode] = useState(ChartMode.monthly);
+   const [dates, setDates] = useState<DateRange | undefined>({
+      from: subDays(new Date(), 180),
+      to: new Date(),
+   });
 
    return (
       <div className="grid min-h-full grid-cols-[1fr_auto_auto]">
@@ -63,8 +71,8 @@ export default function Page({}: IPage) {
             <section>
                <DashboardCard className="grid gap-2">
                   <div className="flex justify-between">
-                     <h2 className="text-gray-700">Rendimiento mensual</h2>
-                     <div>
+                     <h2 className="text-gray-700">Rendimiento</h2>
+                     <div className="flex gap-4">
                         <Select
                            value={chartMode.toString()}
                            onValueChange={val => setChartMode(Number(val))}
@@ -81,21 +89,34 @@ export default function Page({}: IPage) {
                               </SelectItem>
                            </SelectContent>
                         </Select>
+                        <DateRangePicker dates={dates} setDates={setDates} />
                      </div>
                   </div>
                   <div className="h-80">
-                     {appointments.length ? (
-                        chartMode === ChartMode.daily ? (
-                           <DailyAppointmentsChart
-                              appointments={appointments}
-                           />
+                     {(arr =>
+                        arr.length ? (
+                           chartMode === ChartMode.daily ? (
+                              <DailyAppointmentsChart
+                                 appointments={arr}
+                                 dates={dates}
+                              />
+                           ) : (
+                              <MonthlyAppointmentsChart
+                                 appointments={arr}
+                                 dates={dates}
+                              />
+                           )
                         ) : (
-                           <></>
-                        )
-                     ) : (
-                        <div className="grid h-full place-content-center">
-                           <p>No hay reservas para mostrar</p>
-                        </div>
+                           <div className="grid h-full place-content-center">
+                              <p>No hay reservas para mostrar</p>
+                           </div>
+                        ))(
+                        appointments.filter(
+                           ({ date }) =>
+                              !dates ||
+                              ((!dates.from || date >= dates.from) &&
+                                 (!dates.to || date <= dates.to)),
+                        ),
                      )}
                   </div>
                </DashboardCard>

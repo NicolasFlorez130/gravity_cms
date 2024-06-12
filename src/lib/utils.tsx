@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
-import { type Appointment } from "~/app/bo/dashboard/mock/dashboard_mocks";
+import { type Appointment } from "~/types/appointments";
 
 export function translateDays(days: number[]) {
    const workDay = [1, 2, 3, 4, 5]; // Lunes a Viernes
@@ -97,7 +97,7 @@ export function getMonthlyTotals(transactions: Appointment[]) {
       monthlyTotals[monthYear]!.sum += transaction.totalAmount;
    });
 
-   return Object.entries(monthlyTotals).map(([key, value]) => {
+   return Object.entries(monthlyTotals).map(([_key, value]) => {
       const month = value.date.toLocaleString("default", { month: "long" });
       return {
          name: month,
@@ -105,4 +105,22 @@ export function getMonthlyTotals(transactions: Appointment[]) {
          date: value.date,
       };
    });
+}
+
+export type MonthlyTotals = ReturnType<typeof getMonthlyTotals>[number];
+
+export const landingLineColor = "#f98600";
+export const onSiteLineColor = "#0085ff";
+export const dashboardLineColor = "#00ba34";
+
+export function generateDates(startDate: Date, endDate: Date): Date[] {
+   const dateArray: Date[] = [];
+   const currentDate = new Date(startDate);
+
+   while (currentDate <= endDate) {
+      dateArray.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+   }
+
+   return dateArray;
 }

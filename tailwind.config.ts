@@ -29,7 +29,10 @@ const config = {
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",
             ring: "hsl(var(--ring))",
-            background: "hsl(var(--background))",
+            background: {
+               DEFAULT: "hsl(var(--background))",
+               dark: "hsl(var(--background-dark))",
+            },
             foreground: "hsl(var(--foreground))",
             primary: {
                DEFAULT: "hsl(var(--primary))",
@@ -50,6 +53,10 @@ const config = {
             accent: {
                DEFAULT: "hsl(var(--accent))",
                foreground: "hsl(var(--accent-foreground))",
+            },
+            highlight: {
+               DEFAULT: "hsl(var(--highlight))",
+               foreground: "hsl(var(--highlight-foreground))",
             },
             popover: {
                DEFAULT: "hsl(var(--popover))",

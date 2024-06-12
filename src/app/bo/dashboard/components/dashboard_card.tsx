@@ -1,7 +1,7 @@
 "use client";
 
 import { type HTMLAttributes } from "react";
-import { Card } from "~/components/ui/card";
+import { Card } from "~/components/landing/ui/card";
 import { cn } from "~/lib/utils";
 
 interface IDashboardCard extends HTMLAttributes<HTMLDivElement> {}

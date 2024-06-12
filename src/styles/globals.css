@@ -4,7 +4,9 @@
 
 @layer base {
    :root {
-      --background: 200 55% 10%;
+      --background-dark: 200 55% 10%;
+
+      --background: 0 0% 100%;
       --foreground: 0, 0%, 100%;
 
       --card: 0 0% 100%;
@@ -22,8 +24,11 @@
       --muted: 192, 61%, 65%;
       --muted-foreground: 218, 15%, 11%, 1;
 
-      --accent: 42, 94%, 75%, 1;
-      --accent-foreground: 222.2 47.4% 11.2%;
+      --accent: 60 4.8% 95.9%;
+      --accent-foreground: 24 9.8% 10%;
+
+      --highlight: 42, 94%, 75%, 1;
+      --highlight-foreground: 222.2 47.4% 11.2%;
 
       --destructive: 0 84.2% 60.2%;
       --destructive-foreground: 210 40% 98%;

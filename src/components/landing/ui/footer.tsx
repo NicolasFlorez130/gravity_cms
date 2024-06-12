@@ -9,7 +9,7 @@ interface IFooter {}
 
 export default function Footer({}: IFooter) {
    return (
-      <footer className="grid gap-18 bg-background p-3 pt-18 lg:px-36">
+      <footer className="grid gap-18 bg-background-dark p-3 pt-18 lg:px-36">
          <div className="flex flex-col items-center gap-6 lg:flex-row lg:justify-between">
             <Logo />
             <div className="flex justify-center gap-6">

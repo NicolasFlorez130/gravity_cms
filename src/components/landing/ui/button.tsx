@@ -15,7 +15,7 @@ const buttonVariants = cva(
             highlight:
                "tracking-widest border-3 border-primary py-4 px-6 font-bold text-black bg-white",
             outline:
-               "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+               "border border-input bg-background-dark hover:bg-accent hover:text-accent-foreground",
             ghost: "hover:bg-accent hover:text-accent-foreground",
             link: "text-primary underline-offset-4 hover:underline",
          },

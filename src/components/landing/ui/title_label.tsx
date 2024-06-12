@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "~/lib/utils";
-import { HTMLAttributes, ReactNode } from "react";
+import { type HTMLAttributes } from "react";
 
 interface ITitleLabel extends HTMLAttributes<HTMLParagraphElement> {}
 

@@ -37,7 +37,7 @@ export default function RootLayout({
                dm_sans.variable,
                din_condensed.variable,
                din_alternate.variable,
-               "font-inter",
+               "font-inter bg-background-dark",
             )}
          >
             <TRPCReactProvider>{children}</TRPCReactProvider>

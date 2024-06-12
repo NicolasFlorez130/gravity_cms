@@ -23,23 +23,26 @@ export default function RecentAppointmentsTable({}: IRecentAppointmentsTable) {
                <TableHead>Cliente</TableHead>
                <TableHead>Fecha</TableHead>
                <TableHead>Total pagado</TableHead>
+               <TableHead>Fecha de creación</TableHead>
             </TableRow>
          </TableHeader>
          <TableBody>
             {appointments
+               .filter(({ paymentMethod }) => paymentMethod === "LANDING")
                .sort(
-                  ({ date: date_1 }, { date: date_2 }) =>
-                     new Date(date_2).getTime() - new Date(date_1).getTime(),
+                  ({ createdAt: date_1 }, { createdAt: date_2 }) =>
+                     date_2.getTime() - date_1.getTime(),
                )
                .slice(0, 4)
-               .map(transaction => (
-                  <TableRow key={transaction.id}>
-                     <TableCell>{transaction.clientNames}</TableCell>
+               .map(appointment => (
+                  <TableRow key={appointment.id}>
+                     <TableCell>{appointment.clientNames}</TableCell>
+                     <TableCell>{appointment.date.toDateString()}</TableCell>
                      <TableCell>
-                        {new Date(transaction.date).toDateString()}
+                        {formatCurrency(appointment.totalAmount)}
                      </TableCell>
                      <TableCell>
-                        {formatCurrency(transaction.totalAmount)}
+                        {appointment.createdAt.toDateString()}
                      </TableCell>
                   </TableRow>
                ))}

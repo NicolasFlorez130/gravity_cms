@@ -1,7 +1,7 @@
 "use client";
 
-import { Card } from "~/components/ui/card";
-import { Button } from "~/components/ui/landing/button";
+import { Card } from "~/components/landing/ui/card";
+import { Button } from "~/components/landing/ui/button";
 import { PhoneCall } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { cn, formatCurrency, translateDays } from "~/lib/utils";
@@ -59,7 +59,7 @@ export default function Booking({}: IBooking) {
                className="-z-10 object-cover"
             />
          </div>
-         <div className="grid gap-5 bg-background px-3 py-10 sm:grid-cols-2 lg:px-36 xl:gap-14 xl:bg-transparent xl:px-0">
+         <div className="bg-background-dark grid gap-5 px-3 py-10 sm:grid-cols-2 lg:px-36 xl:gap-14 xl:bg-transparent xl:px-0">
             {items.map((item, i) => {
                const highlight = item.days.some(day => day === 0 || day === 6);
 
@@ -73,7 +73,7 @@ export default function Booking({}: IBooking) {
                   >
                      <div className="flex items-center justify-between">
                         <PhoneCall size={41} className="text-white" />
-                        <p className="font-epilogue text-xs text-accent">
+                        <p className="text-highlight font-epilogue text-xs">
                            {item.label}
                         </p>
                      </div>
