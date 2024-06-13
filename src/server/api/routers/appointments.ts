@@ -15,8 +15,8 @@ export const appointmentsRouter = createTRPCRouter({
       .input(z.number())
       .query(({ ctx, input }) =>
          ctx.db.query.appointments.findMany({
-            where: ({ date, status }, { gt, and, eq, not }) =>
-               and(gt(date, new Date()), not(eq(status, "ATTENDED"))),
+            where: ({ date, status }, { gt, and, eq }) =>
+               and(gt(date, new Date()), eq(status, "PAID")),
             orderBy: ({ date }, { asc }) => asc(date),
             limit: input,
          }),

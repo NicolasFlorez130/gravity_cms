@@ -87,6 +87,10 @@ const config = {
                green: {
                   DEFAULT: "hsl(var(--bo-green))",
                },
+               card: {
+                  background: "#f9f8ff",
+                  border: "#e6e4f0",
+               },
             },
          },
          borderRadius: {

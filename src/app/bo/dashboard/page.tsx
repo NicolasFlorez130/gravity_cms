@@ -20,6 +20,7 @@ import { type DateRange } from "react-day-picker";
 import { subDays } from "date-fns";
 import MonthlyAppointmentsChart from "./components/charts/monthly_appointments_chart";
 import AppointmentsDialog from "./components/dialogs/appointments_dialog";
+import NextAppointments from "./components/common/next_appointments";
 
 enum ChartMode {
    monthly,
@@ -38,7 +39,7 @@ export default function Page({}: IPage) {
    });
 
    return (
-      <div className="grid min-h-full grid-cols-[1fr_auto_auto]">
+      <div className="relative grid min-h-full grid-cols-[1fr_auto_auto]">
          <div className="grid h-max gap-5 px-12 py-10">
             <h2 className="text-4xl font-medium">Métricas generales</h2>
             <section className="grid grid-cols-3 gap-5">
@@ -123,7 +124,9 @@ export default function Page({}: IPage) {
             </section>
          </div>
          <Separator orientation="vertical" />
-         <div className="px-10"></div>
+         <div className="px-4 py-7">
+            <NextAppointments />
+         </div>
       </div>
    );
 }

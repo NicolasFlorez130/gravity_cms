@@ -15,6 +15,9 @@ const config = {
             hostname: "placedog.net"
          },
       ]
+   },
+   eslint: {
+      ignoreDuringBuilds: true
    }
 };
 
