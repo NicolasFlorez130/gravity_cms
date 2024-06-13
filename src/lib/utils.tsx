@@ -1,8 +1,11 @@
+import type { Row } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
 import { type Day } from "date-fns";
 import { es } from "date-fns/locale";
+import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
 import { type Appointment } from "~/types/appointments";
+import * as XLSX from "xlsx";
 
 export function translateDays(days: number[]) {
    const workDay = [1, 2, 3, 4, 5]; // Lunes a Viernes
@@ -123,4 +126,58 @@ export function generateDates(startDate: Date, endDate: Date): Date[] {
    }
 
    return dateArray;
+}
+
+export function dateFilterFunction(
+   row: Row<Appointment>,
+   column: string,
+   { from, to }: DateRange,
+) {
+   const date = new Date(row.getValue(column));
+
+   if ((from ?? to) && !date) return false;
+
+   if (from && !to) {
+      return date.getTime() >= from.getTime();
+   } else if (!from && to) {
+      return date.getTime() <= to.getTime();
+   } else if (from && to) {
+      return date.getTime() >= from.getTime() && date.getTime() <= to.getTime();
+   } else return true;
+}
+
+export function convertAppointmentsToExcel(
+   appointments: Appointment[],
+   fileName: string,
+   dates?: DateRange,
+) {
+   const filteredAppointments = appointments.filter(
+      record =>
+         (!dates?.from || record.date >= dates.from) &&
+         (!dates?.to || record.date <= dates.to),
+   );
+
+   // Convert records to a format that can be used by xlsx
+   const formattedRecords = filteredAppointments.map(record => ({
+      date: record.date.toISOString(),
+      id: record.id,
+      clientNames: record.clientNames,
+      clientEmail: record.clientEmail,
+      clientPhoneNumber: record.clientPhoneNumber,
+      totalAmount: record.totalAmount,
+      status: record.status,
+      paymentMethod: record.paymentMethod,
+      reference: record.reference,
+      createdAt: record.createdAt.toISOString(),
+   }));
+
+   // Create a worksheet from the records
+   const worksheet = XLSX.utils.json_to_sheet(formattedRecords);
+
+   // Create a workbook and add the worksheet
+   const workbook = XLSX.utils.book_new();
+   XLSX.utils.book_append_sheet(workbook, worksheet, "Records");
+
+   // Write the workbook to a file
+   XLSX.writeFile(workbook, fileName);
 }

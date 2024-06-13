@@ -15,9 +15,7 @@ export default function Header({ title }: IHeader) {
             <Button variant="link">
                <Bell size={20} />
             </Button>
-            <Button className="bg-bo-violet hover:bg-bo-violet/80 text-white">
-               Crear reserva
-            </Button>
+            <Button variant="purple">Crear reserva</Button>
          </div>
       </header>
    );

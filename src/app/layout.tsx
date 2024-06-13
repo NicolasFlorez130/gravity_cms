@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "../styles/globals.css";
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
+import Body from "~/components/shared/body";
 
 const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
@@ -30,18 +31,18 @@ export default function RootLayout({
    return (
       <html lang="es">
          <link rel="icon" href="/favicon.ico" sizes="any" />
-         <body
+         <Body
             className={cn(
                epilogue.variable,
                inter.variable,
                dm_sans.variable,
                din_condensed.variable,
                din_alternate.variable,
-               "font-inter bg-background-dark",
+               "font-inter",
             )}
          >
             <TRPCReactProvider>{children}</TRPCReactProvider>
-         </body>
+         </Body>
       </html>
    );
 }

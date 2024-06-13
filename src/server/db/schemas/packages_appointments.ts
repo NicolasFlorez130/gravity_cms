@@ -8,12 +8,14 @@ import {
    uuid,
 } from "drizzle-orm/pg-core";
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
+import { createInsertSchema } from "drizzle-zod";
 
-export const statusEnum = pgEnum("status", ["PAID", "PENDING"]);
+export const statusEnum = pgEnum("status", ["PAID", "PENDING", "ATTENDED"]);
 export const paymentMethodEnum = pgEnum("payment_method", [
    "ONLINE",
    "ON_SITE",
    "LANDING",
+   "COURTESY",
 ]);
 
 export const appointments = createTable("appointment", {
@@ -42,7 +44,7 @@ export const packages = createTable("package", {
    createdAt: createdAtColumn,
 });
 
-export const appointmentsPackage = createTable("appointment_pack", {
+export const appointmentsPackages = createTable("appointment_pack", {
    id: uuidColumn,
 
    appointmentId: uuid("app_id")
@@ -55,3 +57,8 @@ export const appointmentsPackage = createTable("appointment_pack", {
 
    createdAt: createdAtColumn,
 });
+
+export const insertAppointmentSchema = createInsertSchema(appointments);
+export const insertPackageSchema = createInsertSchema(packages);
+export const insertAppointmentPackageSchema =
+   createInsertSchema(appointmentsPackages);

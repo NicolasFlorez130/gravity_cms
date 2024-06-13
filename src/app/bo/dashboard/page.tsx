@@ -1,12 +1,11 @@
 "use client";
 
-import DashboardCard from "./components/dashboard_card";
+import DashboardCard from "./components/cards/dashboard_card";
 import { CaretDown, CaretUp } from "@phosphor-icons/react/dist/ssr";
 import { Separator } from "~/components/bo/ui/separator";
-import { Button } from "~/components/bo/ui/button";
 import { metrics } from "./mock/dashboard_mocks";
-import RecentAppointmentsTable from "./components/recent_appointments_table";
-import DailyAppointmentsChart from "./components/daily_appointments_chart";
+import RecentAppointmentsTable from "./components/tables/recent_appointments_table";
+import DailyAppointmentsChart from "./components/charts/daily_appointments_chart";
 import { useStore } from "~/lib/features/store";
 import { useState } from "react";
 import {
@@ -19,7 +18,8 @@ import {
 import { DateRangePicker } from "~/components/bo/ui/date_range_picker";
 import { type DateRange } from "react-day-picker";
 import { subDays } from "date-fns";
-import MonthlyAppointmentsChart from "./components/monthly_appointments_chart";
+import MonthlyAppointmentsChart from "./components/charts/monthly_appointments_chart";
+import AppointmentsDialog from "./components/dialogs/appointments_dialog";
 
 enum ChartMode {
    monthly,
@@ -63,7 +63,7 @@ export default function Page({}: IPage) {
                      <h2 className="text-gray-700">
                         Reservas recientes (online)
                      </h2>
-                     <Button variant="secondary">Ver todos</Button>
+                     <AppointmentsDialog />
                   </div>
                   <RecentAppointmentsTable />
                </DashboardCard>

@@ -5,8 +5,6 @@ import { Button } from "~/components/landing/ui/button";
 import { PhoneCall } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { cn, formatCurrency, translateDays } from "~/lib/utils";
-import { useEffect } from "react";
-import { api } from "~/trpc/react";
 
 interface IBooking {}
 
@@ -40,12 +38,6 @@ const items = [
 ];
 
 export default function Booking({}: IBooking) {
-   const { data } = api.appointments.getAll.useQuery();
-
-   useEffect(() => {
-      console.log(data);
-   }, [data]);
-
    return (
       <section className="relative xl:grid xl:grid-cols-[2fr_5fr] xl:bg-bg_veil/80 xl:p-36">
          <div className="relative grid aspect-square w-full place-items-center bg-bg_veil/80 sm:aspect-[744/344] lg:aspect-[1024/344] xl:static xl:aspect-auto xl:bg-transparent">
@@ -59,7 +51,7 @@ export default function Booking({}: IBooking) {
                className="-z-10 object-cover"
             />
          </div>
-         <div className="bg-background-dark grid gap-5 px-3 py-10 sm:grid-cols-2 lg:px-36 xl:gap-14 xl:bg-transparent xl:px-0">
+         <div className="grid gap-5 bg-background-dark px-3 py-10 sm:grid-cols-2 lg:px-36 xl:gap-14 xl:bg-transparent xl:px-0">
             {items.map((item, i) => {
                const highlight = item.days.some(day => day === 0 || day === 6);
 
@@ -73,7 +65,7 @@ export default function Booking({}: IBooking) {
                   >
                      <div className="flex items-center justify-between">
                         <PhoneCall size={41} className="text-white" />
-                        <p className="text-highlight font-epilogue text-xs">
+                        <p className="font-epilogue text-xs text-highlight">
                            {item.label}
                         </p>
                      </div>

@@ -43,9 +43,14 @@
       --bo-blue: 215 53% 45%;
 
       --bo-violet: 240 85% 68%;
+      --bo-violet-light: 249 100% 99%;
 
       --bo-secondary: 240 4% 95%;
       --bo-secondary-foreground: 218 12% 13%;
+
+      --bo-red: 3 91% 43%;
+
+      --bo-green: 160 84% 29%;
 
       @media (min-width: 2560px) {
          font-size: 20px;

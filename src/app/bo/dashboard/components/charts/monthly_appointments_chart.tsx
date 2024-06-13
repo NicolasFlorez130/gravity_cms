@@ -123,7 +123,7 @@ export default function MonthlyAppointmentsChart({
    }, [appointments, days]);
 
    const data = {
-      labels: monthlyEarnings.map(({ monthDate }) => format(monthDate, "MMM yy")),
+      labels: monthlyEarnings.map(({ monthDate }) => format(monthDate, "MMM yyyy")),
       datasets: [
          {
             label: "Landing",

@@ -26,6 +26,8 @@ const config = {
 
             bg_accordion: "#073042",
 
+            bo_close: "#6e7178",
+
             border: "hsl(var(--border))",
             input: "hsl(var(--input))",
             ring: "hsl(var(--ring))",
@@ -73,10 +75,17 @@ const config = {
                },
                violet: {
                   DEFAULT: "hsl(var(--bo-violet))",
+                  light: "hsl(var(--bo-violet-light))",
                },
                secondary: {
                   DEFAULT: "hsl(var(--bo-secondary))",
                   foreground: "hsl(var(--bo-secondary-foreground))",
+               },
+               red: {
+                  DEFAULT: "hsl(var(--bo-red))",
+               },
+               green: {
+                  DEFAULT: "hsl(var(--bo-green))",
                },
             },
          },
