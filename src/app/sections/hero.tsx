@@ -28,7 +28,7 @@ export default function Hero({}: IHero) {
    return (
       <div
          ref={container}
-         className="relative overflow-hidden text-white fhd:min-h-screen z-10"
+         className="relative overflow-hidden text-white fhd:min-h-screen"
       >
          <div className="z-10">
             <div
