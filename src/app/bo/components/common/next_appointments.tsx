@@ -9,12 +9,12 @@ interface INextAppointments {}
 
 export default function NextAppointments({}: INextAppointments) {
    const { data, refetch, isFetching, isRefetching } =
-      api.appointments.getNextAppointments.useQuery(7, {
+      api.appointments.getNextAppointments.useQuery(4, {
          refetchOnWindowFocus: false,
       });
 
    return (
-      <div className="grid w-60 gap-4">
+      <div className="grid gap-4 w-full h-max">
          <div>
             <h2 className="mb-1 font-medium text-gray-700 underline">
                Próximos vuelos
@@ -22,7 +22,7 @@ export default function NextAppointments({}: INextAppointments) {
             <Separator />
          </div>
 
-         <div className="grid gap-2">
+         <div className="grid gap-2 place-items-center">
             {isFetching && !isRefetching ? (
                <Loading />
             ) : data ? (

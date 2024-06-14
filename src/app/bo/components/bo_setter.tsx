@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useStore } from "~/lib/features/store";
 import type { Appointment } from "~/types/appointments";
 
@@ -10,7 +11,10 @@ interface IBoSetter {
 export default function BoSetter({ appointments }: IBoSetter) {
    const setAppointments = useStore.use.setAppointments();
 
-   setAppointments(appointments);
+   useEffect(() => {
+      setAppointments(appointments);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [appointments]);
 
    return true;
 }

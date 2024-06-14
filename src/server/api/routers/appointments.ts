@@ -26,7 +26,7 @@ export const appointmentsRouter = createTRPCRouter({
       .input(
          z.object({
             id: z.string(),
-            status: z.enum(["PAID", "PENDING", "ATTENDED"]),
+            status: z.enum(["PAID", "PENDING", "ATTENDED", "CANCELED"]),
          }),
       )
       .mutation(({ ctx, input: { id, status } }) =>

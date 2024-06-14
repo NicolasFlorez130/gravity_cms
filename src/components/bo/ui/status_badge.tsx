@@ -15,8 +15,10 @@ export default function StatusBadge({ status }: IStatusBadge) {
             return "Atendido";
          case "PAID":
             return "Pagado";
-         default:
+         case "PENDING":
             return "Pendiente";
+         case "CANCELED":
+            return "Cancelado";
       }
    })();
 
@@ -30,8 +32,10 @@ export default function StatusBadge({ status }: IStatusBadge) {
                      return "border-bo-red text-bo-red";
                   case "PAID":
                      return "border-bo-green text-bo-green";
-                  default:
+                  case "ATTENDED":
                      return "border-gray-500 text-gray-500";
+                  case "CANCELED":
+                     return "border-yellow-300 text-yellow-300";
                }
             })(),
          )}

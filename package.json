@@ -18,6 +18,7 @@
     "@auth/drizzle-adapter": "^1.1.0",
     "@designbycode/tailwindcss-text-stroke": "^1.2.1",
     "@gsap/react": "^2.1.1",
+    "@hookform/resolvers": "^3.6.0",
     "@next/env": "^14.2.3",
     "@phosphor-icons/react": "^2.1.5",
     "@radix-ui/react-accordion": "^1.1.2",
@@ -54,6 +55,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.0",
+    "react-hook-form": "^7.51.5",
     "server-only": "^0.0.1",
     "sharp": "^0.33.4",
     "superjson": "^2.2.1",
@@ -62,7 +64,7 @@
     "usehooks-ts": "^3.1.0",
     "vaul": "^0.9.1",
     "xlsx": "^0.18.5",
-    "zod": "^3.23.3",
+    "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

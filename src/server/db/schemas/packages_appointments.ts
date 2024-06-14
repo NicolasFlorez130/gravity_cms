@@ -10,7 +10,12 @@ import {
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 
-export const statusEnum = pgEnum("status", ["PAID", "PENDING", "ATTENDED"]);
+export const statusEnum = pgEnum("status", [
+   "PAID",
+   "PENDING",
+   "ATTENDED",
+   "CANCELED",
+]);
 export const paymentMethodEnum = pgEnum("payment_method", [
    "ONLINE",
    "ON_SITE",

@@ -38,6 +38,7 @@ import {
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
+   DropdownMenuLabel,
    DropdownMenuTrigger,
 } from "~/components/bo/ui/dropdown-menu";
 import { api } from "~/trpc/react";
@@ -53,12 +54,10 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
    const [changingState, setChangingState] = useState<string>();
 
    const { mutate } = api.appointments.updateStatus.useMutation({
+      onError: () => setChangingState(undefined),
       onSuccess: async () => {
-         try {
-            await refresh();
-         } finally {
-            setChangingState(undefined);
-         }
+         await refresh();
+         setChangingState(undefined);
       },
    });
 
@@ -155,16 +154,26 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                      </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                     <DropdownMenuLabel>Cambiar estado</DropdownMenuLabel>
                      {status !== "ATTENDED" && (
-                        <DropdownMenuItem
-                           onClick={() => {
-                              setChangingState(id);
-                              mutate({ id, status: nextStatus });
-                           }}
-                        >
-                           Cambiar a &quot;
-                           {status === "PENDING" ? "pagado" : "atendido"}&quot;
-                        </DropdownMenuItem>
+                        <>
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 setChangingState(id);
+                                 mutate({ id, status: nextStatus });
+                              }}
+                           >
+                              {status === "PENDING" ? "Pagado" : "Atendido"}
+                           </DropdownMenuItem>
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 setChangingState(id);
+                                 mutate({ id, status: "CANCELED" });
+                              }}
+                           >
+                              Cancelado
+                           </DropdownMenuItem>
+                        </>
                      )}
                   </DropdownMenuContent>
                </DropdownMenu>
