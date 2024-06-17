@@ -9,12 +9,14 @@ import {
    CaretDown,
    CaretUp,
 } from "@phosphor-icons/react/dist/ssr";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "~/lib/utils";
 import type { Group, ItemButton, ItemLink } from "~/lib/routes";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import gsap from "gsap";
+import { Flip } from "gsap/Flip";
 
 interface ISidebar {
    navButtons: (ItemLink | ItemButton | Group)[];
@@ -25,6 +27,32 @@ export default function Sidebar({ navButtons }: ISidebar) {
 
    const [isExpanded, setIsExpanded] = useState(true);
 
+   const flipState = useRef<ReturnType<typeof Flip.getState>>();
+
+   useEffect(() => {
+      gsap.registerPlugin(Flip);
+   }, []);
+
+   function toggleExpansion() {
+      const elements: Parameters<typeof Flip.getState>[0] =
+         gsap.utils.toArray(".expandable");
+
+      flipState.current = Flip.getState(elements);
+
+      setIsExpanded(prev => !prev);
+   }
+
+   useEffect(() => {
+      if (!flipState.current) return;
+
+      Flip.from(flipState.current, {
+         duration: 0.2,
+         ease: "none",
+      });
+
+      flipState.current = undefined;
+   }, [isExpanded]);
+
    function ItemLink({ icon, label, url }: ItemLink) {
       const isThisRoute = pathname === url;
 
@@ -32,13 +60,13 @@ export default function Sidebar({ navButtons }: ISidebar) {
          <Link
             className={cn(
                buttonVariants({ variant: "ghost" }),
-               "flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60",
+               "expandable flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60",
                isThisRoute &&
                   "bg-bo-blue-light text-bo-blue hover:bg-bo-blue-light hover:text-bo-blue",
             )}
             href={url}
          >
-            {icon}
+            <span className="flex-none">{icon}</span>
             {isExpanded && label}
          </Link>
       );
@@ -48,10 +76,10 @@ export default function Sidebar({ navButtons }: ISidebar) {
       return (
          <Button
             variant="ghost"
-            className="flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60"
+            className="expandable flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60"
             onClick={action}
          >
-            {icon}
+            <span className="flex-none">{icon}</span>
             {isExpanded && label}
          </Button>
       );
@@ -65,7 +93,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
             <Button
                variant="ghost"
                className={cn(
-                  "flex w-full items-center justify-between gap-2 truncate hover:bg-bo-blue-light/60",
+                  "expandable flex w-full items-center justify-between gap-2 truncate hover:bg-bo-blue-light/60",
                   isOpen && "opacity-50",
                )}
                onClick={() => setIsOpen(!isOpen)}
@@ -86,28 +114,33 @@ export default function Sidebar({ navButtons }: ISidebar) {
    return (
       <div
          className={cn(
-            "sticky top-0 grid max-h-screen grid-rows-[auto_auto_1fr_auto] gap-5 p-4",
-            isExpanded ? "w-60" : "justify-items w-auto justify-items-center",
+            "expandable sticky top-0 grid max-h-screen gap-5 p-4",
+            isExpanded
+               ? "w-60 grid-rows-[auto_auto_1fr_auto]"
+               : "w-auto grid-rows-[auto_1fr_auto] justify-items-center",
          )}
       >
-         <div className="flex gap-2">
+         <div className="expandable flex gap-2">
             <Image
                alt="backoffice logo"
                src="/icons/backoffice_logo.svg"
                height={25}
                width={25}
+               className="expandable"
             />
             {isExpanded && (
                <p className="w-full truncate font-semibold">Gravity</p>
             )}
          </div>
-         <Input
-            value={search}
-            onChange={({ target: { value } }) => setSearch(value)}
-            placeholder="Buscar"
-            className={cn(!isExpanded && "invisible w-0")}
-         />
-         <nav className="grid h-max">
+         {isExpanded && (
+            <Input
+               value={search}
+               onChange={({ target: { value } }) => setSearch(value)}
+               placeholder="Buscar"
+               className="expandable"
+            />
+         )}
+         <nav className="expandable grid h-max">
             {navButtons
                .filter(
                   el =>
@@ -131,9 +164,9 @@ export default function Sidebar({ navButtons }: ISidebar) {
                )}
          </nav>
          <Button
-            className="flex items-center justify-end gap-2"
-            onClick={() => setIsExpanded(prev => !prev)}
-            variant="link"
+            className="expandable flex items-center justify-end gap-2"
+            onClick={toggleExpansion}
+            variant="ghost"
          >
             {isExpanded ? (
                <>
