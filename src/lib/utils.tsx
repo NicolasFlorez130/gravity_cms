@@ -7,6 +7,11 @@ import { twMerge } from "tailwind-merge";
 import { type Appointment } from "~/types/appointments";
 import * as XLSX from "xlsx";
 
+/**
+ * Translates an array of day indices to a human-readable string or JSX elements.
+ * @param days Array of day indices (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
+ * @returns A string for common patterns (e.g., "TODOS LOS DÍAS") or JSX elements for specific days.
+ */
 export function translateDays(days: number[]) {
    const workDay = [1, 2, 3, 4, 5]; // Lunes a Viernes
    const everyday = [0, 1, 2, 3, 4, 5, 6]; // Domingo a Sábado
@@ -28,6 +33,9 @@ export function translateDays(days: number[]) {
    }
 }
 
+/**
+ * Formats a number as a currency string in USD format.
+ */
 const USDFormatter = new Intl.NumberFormat("en-US", {
    style: "currency",
    currency: "USD",
@@ -35,18 +43,39 @@ const USDFormatter = new Intl.NumberFormat("en-US", {
    maximumFractionDigits: 2,
 });
 
+/**
+ * Combines multiple class names into a single string with deduplication.
+ * @param inputs Array of class values to combine.
+ * @returns A string with merged class names.
+ */
 export function cn(...inputs: ClassValue[]) {
    return twMerge(clsx(inputs));
 }
 
+/**
+ * Capitalizes the first letter of a string.
+ * @param str The string to capitalize.
+ * @returns The capitalized string.
+ */
 export function capitalize(str: string): string {
    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/**
+ * Formats a number into a currency string using USD formatting.
+ * @param number The number to format.
+ * @returns The formatted currency string.
+ */
 export function formatCurrency(number: number) {
    return USDFormatter.format(number);
 }
 
+/**
+ * Splits text content of an HTML element into spans, optionally applying classes to each letter and word.
+ * @param el The HTML element whose text content will be split.
+ * @param letter_class Optional class to apply to each letter.
+ * @param word_class Optional class to apply to each word.
+ */
 export function textSplitter(
    el: HTMLElement | null,
    letter_class?: string,
@@ -68,6 +97,11 @@ export function textSplitter(
    el.innerHTML = words.join(" ");
 }
 
+/**
+ * Converts a string into an array of span elements, treating each character as a separate span.
+ * @param text The string to convert.
+ * @returns An array of span elements.
+ */
 export function printAsSpans(text: string) {
    return text.split("").map((char, i) =>
       char === " " ? (
@@ -82,6 +116,11 @@ export function printAsSpans(text: string) {
    );
 }
 
+/**
+ * Calculates monthly totals from a list of appointments.
+ * @param transactions An array of appointments.
+ * @returns An array of objects each representing a month with total sum and date.
+ */
 export function getMonthlyTotals(transactions: Appointment[]) {
    const monthlyTotals: Record<string, { sum: number; date: Date }> = {};
 
@@ -116,6 +155,12 @@ export const landingLineColor = "#f98600";
 export const onSiteLineColor = "#0085ff";
 export const dashboardLineColor = "#00ba34";
 
+/**
+ * Generates an array of dates between two dates.
+ * @param startDate The start date.
+ * @param endDate The end date.
+ * @returns An array of dates from start to end.
+ */
 export function generateDates(startDate: Date, endDate: Date): Date[] {
    const dateArray: Date[] = [];
    const currentDate = new Date(startDate);
@@ -128,6 +173,13 @@ export function generateDates(startDate: Date, endDate: Date): Date[] {
    return dateArray;
 }
 
+/**
+ * Filters rows based on a date range.
+ * @param row The row to check.
+ * @param column The column identifier which holds the date value.
+ * @param dateRange The range { from, to } within which the date should fall.
+ * @returns True if the row's date falls within the range, false otherwise.
+ */
 export function dateFilterFunction(
    row: Row<Appointment>,
    column: string,
@@ -146,6 +198,12 @@ export function dateFilterFunction(
    } else return true;
 }
 
+/**
+ * Converts an array of appointments to an Excel file.
+ * @param appointments The appointments to convert.
+ * @param fileName The name of the resulting Excel file.
+ * @param dates Optional date range to filter appointments.
+ */
 export function convertAppointmentsToExcel(
    appointments: Appointment[],
    fileName: string,

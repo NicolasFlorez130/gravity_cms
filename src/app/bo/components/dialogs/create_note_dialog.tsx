@@ -116,7 +116,11 @@ export default function CreateNoteDialog({ refetch }: ICreateNoteDialog) {
                            </FormItem>
                         )}
                      />
-                     <Button type="submit" variant="purple">
+                     <Button
+                        disabled={isPending}
+                        type="submit"
+                        variant="purple"
+                     >
                         {isPending ? <Loading /> : <>Crear</>}
                      </Button>
                   </form>
