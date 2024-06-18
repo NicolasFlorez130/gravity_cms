@@ -96,7 +96,7 @@ export default function NoteCard({ data, refetch }: INoteCard) {
                <Content />
             </Card>
          </DialogTrigger>
-         <DialogContent>
+         <DialogContent className="p-6">
             <Content isDialog />
          </DialogContent>
       </Dialog>
