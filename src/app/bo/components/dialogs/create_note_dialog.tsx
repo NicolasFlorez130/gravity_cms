@@ -27,6 +27,7 @@ import Loading from "~/components/shared/loading";
 import { Input } from "~/components/bo/ui/input";
 import { Textarea } from "~/components/bo/ui/textarea";
 import { insertNoteSchema } from "~/server/db/schemas/notes";
+import { parseDateToMidnight } from "~/lib/utils";
 
 interface ICreateNoteDialog {
    refetch: () => Promise<any>;
@@ -52,17 +53,18 @@ export default function CreateNoteDialog({ refetch }: ICreateNoteDialog) {
    return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
-            <Button className="h-max bg-blue-200 p-1 text-blue-500 hover:bg-blue-100">
+            <Button
+               size="icon"
+               className="bg-blue-200 text-blue-500 hover:bg-blue-100"
+            >
                <Plus size={10} />
             </Button>
          </DialogTrigger>
-         <DialogContent className="grid h-max w-[30vw] max-w-lg gap-4 px-6 py-4 text-black">
-            <DialogHeader className="">
-               <DialogTitle className="text-xl font-semibold">
-                  Crear nota
-               </DialogTitle>
+         <DialogContent className="grid h-max w-[30vw] max-w-lg gap-6 text-black">
+            <DialogHeader>
+               <DialogTitle>Crear nota</DialogTitle>
             </DialogHeader>
-            <div className="grid">
+            <div className="grid p-6 pt-0">
                <Form {...form}>
                   <form
                      className="grid gap-5"
@@ -109,7 +111,9 @@ export default function CreateNoteDialog({ refetch }: ICreateNoteDialog) {
                                     disabled={field.disabled}
                                     className="w-full"
                                     date={field.value}
-                                    setDate={field.onChange}
+                                    setDate={parseDateToMidnight(
+                                       field.onChange,
+                                    )}
                                  />
                               </FormControl>
                               <FormMessage />

@@ -46,8 +46,8 @@ export default function Sidebar({ navButtons }: ISidebar) {
       if (!flipState.current) return;
 
       Flip.from(flipState.current, {
-         duration: 0.2,
-         ease: "none",
+         duration: .2,
+         ease: "sine.out",
       });
 
       flipState.current = undefined;
@@ -88,9 +88,15 @@ export default function Sidebar({ navButtons }: ISidebar) {
    function GroupButton({ icon, items, label }: Group) {
       const [isOpen, setIsOpen] = useState(false);
 
+      useEffect(() => {
+         !isExpanded && setIsOpen(false);
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isExpanded]);
+
       return (
          <>
             <Button
+               disabled={!isExpanded}
                variant="ghost"
                className={cn(
                   "expandable flex w-full items-center justify-between gap-2 truncate hover:bg-bo-blue-light/60",
@@ -104,7 +110,14 @@ export default function Sidebar({ navButtons }: ISidebar) {
                </span>
                {isExpanded && (isOpen ? <CaretUp /> : <CaretDown />)}
             </Button>
-            {isOpen && items.map((el, i) => <ItemButton key={i} {...el} />)}
+            {isOpen &&
+               items.map((el, i) =>
+                  el.type === "link" ? (
+                     <ItemLink key={i} {...el} />
+                  ) : (
+                     <ItemButton key={i} {...el} />
+                  ),
+               )}
          </>
       );
    }
@@ -126,7 +139,6 @@ export default function Sidebar({ navButtons }: ISidebar) {
                src="/icons/backoffice_logo.svg"
                height={25}
                width={25}
-               className="expandable"
             />
             {isExpanded && (
                <p className="w-full truncate font-semibold">Gravity</p>
@@ -140,7 +152,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
                className="expandable"
             />
          )}
-         <nav className="expandable grid h-max">
+         <nav className="expandable grid h-max gap-1">
             {navButtons
                .filter(
                   el =>

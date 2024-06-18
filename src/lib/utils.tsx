@@ -1,11 +1,13 @@
 import type { Row } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
-import { type Day } from "date-fns";
+import { set, type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
 import { type Appointment } from "~/types/appointments";
 import * as XLSX from "xlsx";
+import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { onlyNumbersAndEmpty } from "./regex";
 
 /**
  * Translates an array of day indices to a human-readable string or JSX elements.
@@ -239,3 +241,66 @@ export function convertAppointmentsToExcel(
    // Write the workbook to a file
    XLSX.writeFile(workbook, fileName);
 }
+
+/**
+ * Parses an event to extract a number value and calls the onChange function with the parsed number.
+ * @param onChange The function to call with the parsed number.
+ */
+export function parseEventForNumber(onChange: (...event: any[]) => void) {
+   return function ({
+      target: { value, ...target },
+      ...event
+   }: ChangeEvent<HTMLInputElement>) {
+      if (onlyNumbersAndEmpty.test(value)) {
+         onChange({
+            ...event,
+            target: {
+               value: value === "" ? undefined : Number(value),
+               ...target,
+            },
+         });
+      }
+   };
+}
+
+/**
+ * Parses a date to set the time to midnight (23:59:59.999) and calls the onChange function with the updated date.
+ * @param onChange The function to call with the updated date.
+ * @returns A function that sets the time of the date to midnight.
+ */
+export function parseDateToMidnight(
+   onChange: (...event: any[]) => void,
+): Dispatch<SetStateAction<Date | undefined>> {
+   return function (date) {
+      if (typeof date === "object") {
+         onChange(
+            set(date, {
+               hours: 23,
+               minutes: 59,
+               seconds: 59,
+               milliseconds: 999,
+            }),
+         );
+      } else {
+         onChange(date);
+      }
+   };
+}
+
+export const availabilityOptions = [
+   {
+      label: "Todos los días",
+      value: "EVERY_DAY",
+      colors: "bg-green-100 text-green-600",
+   },
+   {
+      label: "Fines de semana",
+      value: "WEEKEND",
+      colors: "bg-pink-100 text-pink-600",
+   },
+   {
+      label: "Entre semana",
+      value: "WORK_DAYS",
+      colors: "bg-yellow-100 text-yellow-600",
+   },
+] as const;

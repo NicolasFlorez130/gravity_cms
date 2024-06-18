@@ -29,6 +29,6 @@ export interface ItemButton {
 export interface Group {
    icon: JSX.Element;
    label: string;
-   items: ItemButton[];
+   items: (ItemButton | ItemLink)[];
    type: "group";
 }

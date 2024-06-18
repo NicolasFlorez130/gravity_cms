@@ -29,7 +29,6 @@ export default function Notes({}: INotes) {
                      size={12}
                   />
                   <h2 className="font-medium text-gray-700 underline">
-                     <span></span>
                      Notas especiales
                   </h2>
                </div>
@@ -41,12 +40,10 @@ export default function Notes({}: INotes) {
          <div className="grid w-full place-items-center gap-2">
             {isFetching && !isRefetching ? (
                <Loading />
-            ) : data ? (
-               data.map(note => (
+            ) : (
+               data?.map(note => (
                   <NoteCard key={note.id} data={note} refetch={refetch} />
                ))
-            ) : (
-               <></>
             )}
          </div>
       </div>

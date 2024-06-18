@@ -36,8 +36,8 @@ export default function AppointmentsDialog({}: IAppointmentsDialog) {
          <DialogTrigger asChild>
             <Button variant="secondary">Ver todos</Button>
          </DialogTrigger>
-         <DialogContent className="grid h-[90vh] w-[90vw] max-w-none grid-rows-[auto_auto_1fr_auto_auto] gap-0 overflow-auto p-0 text-black">
-            <DialogHeader className="px-6 py-4">
+         <DialogContent className="grid h-[90vh] w-[90vw] max-w-none grid-rows-[auto_auto_1fr_auto_auto] gap-0 overflow-auto text-black">
+            <DialogHeader>
                <DialogTitle className="text-base font-medium">
                   Listado completo de reservas
                </DialogTitle>

@@ -2,9 +2,9 @@
 
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { Badge } from "~/components/bo/ui/badge";
 import { Card, CardContent, CardTitle } from "~/components/bo/ui/card";
 import { Checkbox } from "~/components/bo/ui/checkbox";
+import { Chip } from "~/components/bo/ui/chip";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import type { Appointment } from "~/types/appointments";
@@ -27,7 +27,7 @@ export default function AppointmentCard({ data, refetch }: IAppointmentCard) {
    return (
       <Card
          className={cn(
-            "bg-bo-card-background border-bo-card-border grid w-full gap-2 p-3",
+            "grid w-full gap-2 border-bo-card-border bg-bo-card-background p-3",
             isPending && "opacity-50",
          )}
       >
@@ -47,9 +47,9 @@ export default function AppointmentCard({ data, refetch }: IAppointmentCard) {
             </p>
          </CardTitle>
          <CardContent className="flex items-baseline justify-between p-0">
-            <Badge className="text rounded-full bg-violet-200 text-violet-700 hover:bg-violet-200">
+            <Chip className="bg-violet-100 text-violet-600 text-xs">
                {format(data.date, "dd MMMM, yy")}
-            </Badge>
+            </Chip>
             <p className="text-xs text-gray-500">
                {format(data.createdAt, "dd MMMM, yy")}
             </p>
