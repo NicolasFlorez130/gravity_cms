@@ -1,5 +1,6 @@
 import { Inter, DM_Sans, Epilogue } from "next/font/google";
 import localFont from "next/font/local";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../styles/globals.css";
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";

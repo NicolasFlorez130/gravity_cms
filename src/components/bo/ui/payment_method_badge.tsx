@@ -2,6 +2,7 @@
 
 import type { AppointmentPaymentMethod } from "~/types/appointments";
 import { Badge } from "./badge";
+import { translatePaymentMethod } from "~/lib/utils";
 
 interface IPaymentMethodBadge {
    paymentMethod: AppointmentPaymentMethod;
@@ -10,18 +11,9 @@ interface IPaymentMethodBadge {
 export default function PaymentMethodBadge({
    paymentMethod,
 }: IPaymentMethodBadge) {
-   const translation = (() => {
-      switch (paymentMethod) {
-         case "COURTESY":
-            return "Cortesía";
-         case "LANDING":
-            return "Landing";
-         case "ONLINE":
-            return "Online";
-         default:
-            return "En sitio";
-      }
-   })();
-
-   return <Badge className="bg-accent">{translation}</Badge>;
+   return (
+      <Badge className="bg-accent">
+         {translatePaymentMethod(paymentMethod)}
+      </Badge>
+   );
 }

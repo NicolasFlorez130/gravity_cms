@@ -101,3 +101,28 @@
       @apply bg-background text-foreground;
    }
 }
+.rbc-date-cell {
+   @apply !text-start;
+
+   & .rbc-button-link {
+      @apply p-3 !rounded-br-xl mb-2;
+   }
+}
+
+.rbc-current {
+   & .rbc-button-link {
+      @apply !bg-blue-500 text-white;
+   }
+}
+
+.rbc-today {
+   @apply !bg-transparent;
+}
+
+.rbc-time-header-gutter {
+   @apply hidden;
+}
+
+.rbc-allday-cell {
+   @apply hidden;
+}

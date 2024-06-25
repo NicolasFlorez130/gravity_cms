@@ -4,7 +4,10 @@ import { set, type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
-import { type Appointment } from "~/types/appointments";
+import type {
+   AppointmentPaymentMethod,
+   Appointment,
+} from "~/types/appointments";
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { onlyNumbersAndEmpty } from "./regex";
@@ -263,6 +266,20 @@ export function parseEventForNumber(onChange: (...event: any[]) => void) {
    };
 }
 
+export function translatePaymentMethod(
+   paymentMethod: AppointmentPaymentMethod,
+) {
+   switch (paymentMethod) {
+      case "COURTESY":
+         return "Cortesía";
+      case "LANDING":
+         return "Landing";
+      case "ONLINE":
+         return "Online";
+      default:
+         return "En sitio";
+   }
+}
 /**
  * Parses a date to set the time to midnight (23:59:59.999) and calls the onChange function with the updated date.
  * @param onChange The function to call with the updated date.

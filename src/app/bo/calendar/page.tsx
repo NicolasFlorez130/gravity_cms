@@ -1,7 +1,11 @@
-"use client";
+import type { Metadata } from "next";
+import { BigCalendar } from "./sections/big_calendar";
 
-interface IPage {}
+export const metadata: Metadata = {
+   title: "",
+   description: "",
+};
 
-export default function Page({}: IPage) {
-   return <div>page</div>;
+export default function Page() {
+   return <BigCalendar />;
 }
