@@ -5,13 +5,14 @@ import {
    primaryKey,
    text,
    timestamp,
+   uuid,
    varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
-import { createTable } from "../utils";
+import { createTable, uuidColumn } from "../utils";
 
 export const users = createTable("user", {
-   id: varchar("id", { length: 255 }).notNull().primaryKey(),
+   id: uuidColumn,
    name: varchar("name", { length: 255 }),
    email: varchar("email", { length: 255 }).notNull(),
    emailVerified: timestamp("emailVerified", {
@@ -28,7 +29,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const accounts = createTable(
    "account",
    {
-      userId: varchar("userId", { length: 255 })
+      userId: uuid("userId")
          .notNull()
          .references(() => users.id),
       type: varchar("type", { length: 255 })
@@ -64,7 +65,7 @@ export const sessions = createTable(
       sessionToken: varchar("sessionToken", { length: 255 })
          .notNull()
          .primaryKey(),
-      userId: varchar("userId", { length: 255 })
+      userId: uuid("userId")
          .notNull()
          .references(() => users.id),
       expires: timestamp("expires", {

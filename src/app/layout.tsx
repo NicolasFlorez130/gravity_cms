@@ -5,6 +5,7 @@ import "../styles/globals.css";
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
 import Body from "~/components/shared/body";
+import AuthProvider from "~/components/shared/providers/auth_provider";
 
 const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
@@ -42,7 +43,9 @@ export default async function RootLayout({
                "font-inter",
             )}
          >
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <TRPCReactProvider>
+               <AuthProvider>{children}</AuthProvider>
+            </TRPCReactProvider>
          </Body>
       </html>
    );

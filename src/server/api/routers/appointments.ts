@@ -1,17 +1,16 @@
 import { appointments } from "~/server/db/schemas/packages_appointments";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-//TODO: Change all procedures to private ones
 export const appointmentsRouter = createTRPCRouter({
-   getAll: publicProcedure.query(({ ctx }) =>
+   getAll: protectedProcedure.query(({ ctx }) =>
       ctx.db.query.appointments.findMany({
          orderBy: ({ date }, { desc }) => desc(date),
       }),
    ),
 
-   getNextAppointments: publicProcedure
+   getNextAppointments: protectedProcedure
       .input(z.number())
       .query(({ ctx, input }) =>
          ctx.db.query.appointments.findMany({
@@ -22,7 +21,7 @@ export const appointmentsRouter = createTRPCRouter({
          }),
       ),
 
-   updateStatus: publicProcedure
+   updateStatus: protectedProcedure
       .input(
          z.object({
             id: z.string(),

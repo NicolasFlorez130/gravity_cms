@@ -40,7 +40,7 @@
     "@tanstack/react-table": "^8.17.3",
     "@trpc/client": "next",
     "@trpc/react-query": "next",
-    "@trpc/server": "next",
+    "@trpc/server": "^11.0.0-rc.396",
     "@vercel/postgres": "^0.8.0",
     "chart.js": "^4.4.3",
     "class-variance-authority": "^0.7.0",
