@@ -72,12 +72,13 @@ export default function Sidebar({ navButtons }: ISidebar) {
       );
    }
 
-   function ItemButton({ icon, label, action }: ItemButton) {
+   function ItemButton({ icon, label, action, disabled }: ItemButton) {
       return (
          <Button
             variant="ghost"
-            className="expandable flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60"
+            className="expandable disabled:text-gray-400 flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60"
             onClick={action}
+            disabled={disabled}
          >
             <span className="flex-none">{icon}</span>
             {isExpanded && label}

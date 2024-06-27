@@ -17,11 +17,21 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { usePathname } from "next/navigation";
 import Header from "~/components/bo/ui/header";
+import { useMutation } from "@tanstack/react-query";
+import { signOut } from "next-auth/react";
+import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 
 interface IBoLayout extends PropsWithChildren {}
 
 export default function BoLayout({ children }: IBoLayout) {
    const pathname = usePathname();
+
+   const { refresh } = useRouterRefresh();
+
+   const { mutate, isPending } = useMutation({
+      mutationFn: () => signOut(),
+      onSuccess: () => refresh(),
+   });
 
    const navButtons: (ItemLink | ItemButton | Group)[] = [
       {
@@ -42,25 +52,33 @@ export default function BoLayout({ children }: IBoLayout) {
          label: "Gestión de paquetes",
          type: "link",
       },
-      {
-         icon: <User size={14} />,
-         label: "Cuenta",
-         type: "group",
-         items: [
-            {
-               action: () => true,
-               icon: <Dot className="invisible" size={14} />,
-               label: "Cerrar sesión",
-               type: "button",
-            },
-            {
-               action: () => true,
-               icon: <Dot className="invisible" size={14} />,
-               label: "Cambiar contraseña",
-               type: "button",
-            },
-         ],
-      },
+      !isPending
+         ? {
+              icon: <User size={14} />,
+              label: "Cuenta",
+              type: "group",
+              items: [
+                 {
+                    action: mutate,
+                    icon: <Dot className="invisible" size={14} />,
+                    label: "Cerrar sesión",
+                    type: "button",
+                 },
+                 {
+                    action: () => true,
+                    icon: <Dot className="invisible" size={14} />,
+                    label: "Cambiar contraseña",
+                    type: "button",
+                 },
+              ],
+           }
+         : {
+              icon: <User size={14} />,
+              label: "Cerrando sesión...",
+              type: "button",
+              action: () => true,
+              disabled: isPending,
+           },
    ];
 
    return (
