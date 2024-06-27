@@ -55,6 +55,11 @@ export const accounts = createTable(
    }),
 );
 
+export const authorizedAccounts = createTable("authorized_account", {
+   id: uuidColumn,
+   accountEmail: text("account_email").notNull(),
+});
+
 export const accountsRelations = relations(accounts, ({ one }) => ({
    user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));

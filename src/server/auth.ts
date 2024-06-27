@@ -8,12 +8,14 @@ import { type Adapter } from "next-auth/adapters";
 import { db } from "~/server/db/index";
 import {
    accounts,
+   authorizedAccounts,
    sessions,
    users,
    verificationTokens,
 } from "~/server/db/schemas/_index";
 import Google from "next-auth/providers/google";
 import { env } from "~/env";
+import { eq } from "drizzle-orm";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -51,12 +53,15 @@ export const authOptions: NextAuthOptions = {
          },
       }),
       async signIn(data) {
-         if (data.user.email === "nmflorezr@gmail.com") {
+         const acc = await db.query.authorizedAccounts.findFirst({
+            where: eq(authorizedAccounts.accountEmail, data.user.email ?? ""),
+         });
+
+         if (acc !== undefined) {
             return true;
          }
          return false;
       },
-      
    },
    adapter: DrizzleAdapter(db, {
       usersTable: users,
