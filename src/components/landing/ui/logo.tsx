@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import { cn } from "~/lib/utils";
 
-interface ILogo {}
+interface ILogo {
+   className?: string;
+}
 
-export default function Logo({}: ILogo) {
+export default function Logo({ className }: ILogo) {
    return (
-      <div id="logo" className="flex items-center">
+      <div id="logo" className={cn("flex items-center", className)}>
          <div className="relative aspect-square h-20">
             <Image
                alt="gravity logo"
