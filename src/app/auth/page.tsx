@@ -5,10 +5,24 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { Card } from "~/components/landing/ui/card";
 import Logo from "~/components/landing/ui/logo";
+import { useSearchParams } from "next/navigation";
+import type { PropsWithChildren } from "react";
 
 interface IPage {}
 
 export default function Page({}: IPage) {
+   const searchParams = useSearchParams();
+
+   const error = searchParams.get("error");
+
+   function ErrorMessage({ children }: PropsWithChildren) {
+      return (
+         <p className="w-full text-center text-sm text-destructive">
+            {children}
+         </p>
+      );
+   }
+
    return (
       <div className="relative flex h-full min-h-screen w-full flex-col items-center justify-center gap-24">
          <Logo className="scale-150" />
@@ -19,12 +33,22 @@ export default function Page({}: IPage) {
                   Inicia sesión con tu cuenta de Google
                </p>
             </div>
-            <Button
-               className="w-max border-muted bg-muted px-18"
-               onClick={() => signIn("google")}
-            >
-               LOGIN
-            </Button>
+            <div className="flex flex-wrap justify-center gap-4">
+               <Button
+                  className="w-max border-muted bg-muted px-18"
+                  onClick={() => signIn("google")}
+               >
+                  LOGIN
+               </Button>
+               {!!error?.length &&
+                  (error === "AccessDenied" ? (
+                     <ErrorMessage>Tu cuenta no está autorizada</ErrorMessage>
+                  ) : error === "Callback" ? (
+                     <ErrorMessage>Ocurrió un error</ErrorMessage>
+                  ) : (
+                     <ErrorMessage>{error}</ErrorMessage>
+                  ))}
+            </div>
          </Card>
          <div className="fixed aspect-square h-screen opacity-5">
             <Image
