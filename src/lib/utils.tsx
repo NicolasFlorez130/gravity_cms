@@ -11,6 +11,7 @@ import type {
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { onlyNumbersAndEmpty } from "./regex";
+import type { PackageAvailability } from "~/types/packages";
 
 /**
  * Translates an array of day indices to a human-readable string or JSX elements.
@@ -36,6 +37,17 @@ export function translateDays(days: number[]) {
          </span>
       ));
    }
+}
+
+export function verifyAvailability(
+   availability: PackageAvailability,
+   weekDay: number,
+) {
+   return (
+      availability === "EVERY_DAY" ||
+      (availability === "WEEKEND" && [0, 6].includes(weekDay)) ||
+      (availability === "WORK_DAYS" && [1, 2, 3, 4, 5].includes(weekDay))
+   );
 }
 
 /**
@@ -249,7 +261,10 @@ export function convertAppointmentsToExcel(
  * Parses an event to extract a number value and calls the onChange function with the parsed number.
  * @param onChange The function to call with the parsed number.
  */
-export function parseEventForNumber(onChange: (...event: any[]) => void) {
+export function parseEventForNumber(
+   onChange: (...event: any[]) => void,
+   cb?: () => any,
+) {
    return function ({
       target: { value, ...target },
       ...event
@@ -263,6 +278,8 @@ export function parseEventForNumber(onChange: (...event: any[]) => void) {
             },
          });
       }
+
+      cb?.();
    };
 }
 
@@ -276,10 +293,11 @@ export function translatePaymentMethod(
          return "Landing";
       case "ONLINE":
          return "Online";
-      default:
+      case "ON_SITE":
          return "En sitio";
    }
 }
+
 /**
  * Parses a date to set the time to midnight (23:59:59.999) and calls the onChange function with the updated date.
  * @param onChange The function to call with the updated date.
@@ -287,6 +305,7 @@ export function translatePaymentMethod(
  */
 export function parseDateToMidnight(
    onChange: (...event: any[]) => void,
+   cb?: () => any,
 ): Dispatch<SetStateAction<Date | undefined>> {
    return function (date) {
       if (typeof date === "object") {
@@ -301,6 +320,35 @@ export function parseDateToMidnight(
       } else {
          onChange(date);
       }
+
+      cb?.();
+   };
+}
+
+/**
+ * Parses a date to set the time to midnight (00:00:00.000) and calls the onChange function with the updated date.
+ * @param onChange The function to call with the updated date.
+ * @returns A function that sets the time of the date to midnight.
+ */
+export function parseDateToMidnightStartOfDay(
+   onChange: (...event: any[]) => void,
+   cb?: () => any,
+): Dispatch<SetStateAction<Date | undefined>> {
+   return function (date) {
+      if (typeof date === "object") {
+         onChange(
+            set(date, {
+               hours: 0,
+               minutes: 0,
+               seconds: 0,
+               milliseconds: 0,
+            }),
+         );
+      } else {
+         onChange(date);
+      }
+
+      cb?.();
    };
 }
 

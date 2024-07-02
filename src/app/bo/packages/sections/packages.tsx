@@ -13,8 +13,7 @@ export const useRefetch = () => useContext(RefetchContext);
 interface IPackages {}
 
 export default function Packages({}: IPackages) {
-   const { data, refetch, isLoading } =
-      api.packages.getActivePackages.useQuery();
+   const { data, refetch, isLoading } = api.packages.getAll.useQuery();
 
    const activePackages = useMemo(
       () => data?.filter(pkg => pkg.active) ?? [],

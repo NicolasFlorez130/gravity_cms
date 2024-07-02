@@ -9,9 +9,15 @@ import { z } from "zod";
 import { withId } from "~/lib/zod_lang";
 
 export const packagesRouter = createTRPCRouter({
-   getActivePackages: publicProcedure.query(({ ctx }) =>
+   getAll: publicProcedure.query(({ ctx }) =>
       ctx.db.query.packages.findMany({
          where: ({ removed }, { eq }) => eq(removed, false),
+      }),
+   ),
+   getActivePackages: publicProcedure.query(({ ctx }) =>
+      ctx.db.query.packages.findMany({
+         where: ({ removed, active }, { eq, and }) =>
+            and(eq(removed, false), eq(active, true)),
       }),
    ),
    getTotalPurchased: protectedProcedure.query(({ ctx }) =>

@@ -2,6 +2,7 @@
 
 import { Bell } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "./button";
+import BookAppointmentDialog from "~/app/bo/components/dialogs/book_appointment_dialog";
 
 interface IHeader {
    title: string;
@@ -15,7 +16,7 @@ export default function Header({ title }: IHeader) {
             <Button variant="link">
                <Bell size={20} />
             </Button>
-            <Button variant="purple">Crear reserva</Button>
+            <BookAppointmentDialog />
          </div>
       </header>
    );

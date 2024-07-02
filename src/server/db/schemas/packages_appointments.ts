@@ -17,12 +17,15 @@ export const statusEnum = pgEnum("status", [
    "ATTENDED",
    "CANCELED",
 ]);
-export const paymentMethodEnum = pgEnum("payment_method", [
+
+export const paymentMethods = [
    "ONLINE",
    "ON_SITE",
    "LANDING",
    "COURTESY",
-]);
+] as const;
+
+export const paymentMethodEnum = pgEnum("payment_method", paymentMethods);
 export const packageAvailabilityEnum = pgEnum("availability", [
    "EVERY_DAY",
    "WORK_DAYS",
@@ -66,11 +69,14 @@ export const appointmentsPackages = createTable("appointment_pack", {
    packageId: uuid("pack_id")
       .references(() => packages.id)
       .notNull(),
+   extraMinutes: integer("extra_minutes").default(0),
 
    createdAt: createdAtColumn,
 });
 
-export const insertAppointmentSchema = createInsertSchema(appointments);
+export const insertAppointmentSchema = createInsertSchema(appointments, {
+   date: z.date().min(new Date()),
+});
 export const insertPackageSchema = createInsertSchema(packages, {
    name: z.string().min(1),
    price: z.number().min(0),
@@ -79,3 +85,8 @@ export const insertPackageSchema = createInsertSchema(packages, {
 });
 export const insertAppointmentPackageSchema =
    createInsertSchema(appointmentsPackages);
+export const bookAppointmentSchema = insertAppointmentSchema.extend({
+   packages: z.array(
+      insertAppointmentPackageSchema.omit({ appointmentId: true }),
+   ),
+});
