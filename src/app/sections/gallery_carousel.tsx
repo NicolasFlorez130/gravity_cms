@@ -17,13 +17,13 @@ export default function GalleryCarousel({ images }: IGalleryCarousel) {
    function ImagesRow() {
       return (
          <div className="flex">
-            {images.map(({ id, url }) => (
+            {images.map(({ id, url }, i) => (
                <div
                   key={id}
                   className="relative aspect-[35/27] w-screen flex-none sm:w-[calc(100vw/4)]"
                >
                   <Image
-                     alt={`carousel image ${id}`}
+                     alt={`gallery carousel image ${i + 1}`}
                      fill
                      src={url}
                      className="object-cover"

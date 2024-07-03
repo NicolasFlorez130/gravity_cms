@@ -383,3 +383,22 @@ export const availabilityOptions = [
       colors: "bg-yellow-100 text-yellow-600",
    },
 ] as const;
+
+/**
+ * Groups an array of objects by a specified key.
+ * @param array The array of objects to group.
+ * @param key The key to group the objects by.
+ * @returns An object where keys are unique values of the specified key and values are arrays of objects with that key value.
+ */
+export function groupBy<
+   T,
+   Y extends keyof T,
+   X extends T[Y] extends string ? T[Y] : string,
+>(array: T[], key: Y) {
+   return array.reduce((acc: Record<string, T[]>, obj: T) => {
+      const property = obj[key] as string;
+      acc[property] = acc[property] ?? [];
+      acc[property]?.push(obj);
+      return acc;
+   }, {}) as Record<X, T[]>;
+}
