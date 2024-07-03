@@ -21,11 +21,11 @@ import {
 import { availabilityOptions, parseEventForNumber } from "~/lib/utils";
 import { Switch } from "~/components/bo/ui/switch";
 import type { UseFormReturn } from "react-hook-form";
-import type { Package } from "~/types/packages";
+import type { IPackage } from "~/types/packages";
 import type { FormEventHandler } from "react";
 
 interface IPackageForm {
-   form: UseFormReturn<Package>;
+   form: UseFormReturn<IPackage>;
    isPending: boolean;
    onSubmit: FormEventHandler<HTMLFormElement> | undefined;
    submitText: string;
@@ -47,6 +47,23 @@ export default function PackageForm({
                   render={({ field }) => (
                      <FormItem>
                         <FormLabel>Nombre</FormLabel>
+                        <FormControl>
+                           <Input
+                              {...field}
+                              value={field.value}
+                              onChange={field.onChange}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+               <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Descripción</FormLabel>
                         <FormControl>
                            <Input
                               {...field}

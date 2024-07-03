@@ -1,6 +1,6 @@
 import FollowSign from "~/components/landing/ui/follow_sign";
 import Hero from "./sections/hero";
-import Booking from "./sections/booking";
+import Packages from "./sections/packages";
 import Opinions from "./sections/opinions";
 import Comments from "./sections/comments";
 import Questions from "./sections/questions";
@@ -12,9 +12,10 @@ import Footer from "~/components/landing/ui/footer";
 import { groupBy } from "~/lib/utils";
 
 export default async function Home() {
-   const [images, opinions] = await Promise.all([
+   const [images, opinions, packages] = await Promise.all([
       api.images.getAll(),
       api.opinions.getAll(),
+      api.packages.getActivePackages(),
    ]);
 
    const groupedImages = groupBy(images, "category");
@@ -25,7 +26,7 @@ export default async function Home() {
          <main className="relative m-auto max-w-screen-3xl overflow-hidden">
             <FollowSign />
             <Hero />
-            <Booking />
+            <Packages packages={packages} />
             <Opinions
                images={groupedImages.PROFILE_PICTURES ?? []}
                opinions={opinions}

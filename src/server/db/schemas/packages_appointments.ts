@@ -50,13 +50,13 @@ export const packages = createTable("package", {
    id: uuidColumn,
    name: text("name").notNull(),
    price: real("price").notNull(),
-   // imageUrl: text("image_url").notNull(),
    active: boolean("active").notNull(),
    minutePrice: real("minute_price").notNull(),
    availability: packageAvailabilityEnum("availability").notNull(),
    removed: boolean("removed").default(false),
    usersQuantity: integer("users_quantity").notNull(),
    forChildren: boolean("for_children").notNull(),
+   description: text("description").notNull(),
 
    createdAt: createdAtColumn,
 });

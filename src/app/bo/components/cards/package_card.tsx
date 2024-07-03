@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Card } from "~/components/bo/ui/card";
 import { cn, formatCurrency } from "~/lib/utils";
-import type { Package } from "~/types/packages";
+import type { IPackage } from "~/types/packages";
 import AvailabilityChip from "../chips/availability_chip";
 import { Chip } from "~/components/bo/ui/chip";
 import { api } from "~/trpc/react";
@@ -20,7 +20,7 @@ import { useRefetch } from "../../packages/sections/packages";
 import UpdatePackageDialog from "../dialogs/update_package_dialog";
 
 interface IPackageCard {
-   pkg: Package;
+   pkg: IPackage;
 }
 
 export default function PackageCard({ pkg }: IPackageCard) {
@@ -57,7 +57,7 @@ export default function PackageCard({ pkg }: IPackageCard) {
                   </Chip>
                )}
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
                <Switch
                   disabled={isLoading}
                   checked={pkg.active}
