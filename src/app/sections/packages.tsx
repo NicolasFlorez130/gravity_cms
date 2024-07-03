@@ -43,7 +43,7 @@ export default function Packages({ packages }: IPackages) {
                   new Date(),
                );
 
-               const Icon = (() => {
+               const UsersIcon = (() => {
                   switch (pkg.usersQuantity) {
                      case 1:
                         return User;
@@ -65,7 +65,7 @@ export default function Packages({ packages }: IPackages) {
                      )}
                   >
                      <div className="flex gap-4">
-                        <Icon size={41} className="text-white" />
+                        <UsersIcon size={41} className="text-white" />
                         {pkg.forChildren && (
                            <Baby size={41} className="text-white" />
                         )}

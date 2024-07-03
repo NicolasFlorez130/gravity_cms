@@ -14,7 +14,7 @@ import {
 import { api } from "~/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertPackageSchema } from "~/server/db/schemas/packages_appointments";
-import type { Package } from "~/types/packages";
+import type { IPackage } from "~/types/packages";
 import PackageForm from "../common/package_form";
 import { useRefetch } from "../../packages/sections/packages";
 
@@ -35,7 +35,7 @@ export default function CreatePackageDialog({ active }: ICreatePackageDialog) {
       },
    });
 
-   const form = useForm<Package>({
+   const form = useForm<IPackage>({
       resolver: zodResolver(insertPackageSchema),
       disabled: isPending,
       defaultValues: {

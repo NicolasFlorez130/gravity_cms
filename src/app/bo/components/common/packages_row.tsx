@@ -3,12 +3,12 @@
 import { cn } from "~/lib/utils";
 import CreatePackageDialog from "../dialogs/create_package_dialog";
 import PackageCard from "../cards/package_card";
-import type { Package } from "~/types/packages";
+import type { IPackage } from "~/types/packages";
 
 interface IPackagesRow {
    title: string;
    active: boolean;
-   packages: Package[];
+   packages: IPackage[];
 }
 
 export default function PackagesRow({ title, active, packages }: IPackagesRow) {

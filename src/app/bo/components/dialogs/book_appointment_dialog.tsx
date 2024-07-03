@@ -46,7 +46,7 @@ import {
    paymentMethods,
 } from "~/server/db/schemas/packages_appointments";
 import { api } from "~/trpc/react";
-import type { Package } from "~/types/packages";
+import type { IPackage } from "~/types/packages";
 
 interface IBookAppointmentDialog {}
 
@@ -86,7 +86,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
    const [totalSum, setTotalSum] = useState(0);
 
    function updateTotalSum() {
-      const pkgs = new Map<string, Package>();
+      const pkgs = new Map<string, IPackage>();
 
       packages?.map(pkg => pkgs.set(pkg.id, pkg));
 
