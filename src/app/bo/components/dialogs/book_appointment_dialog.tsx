@@ -81,7 +81,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       name: "packages",
    });
 
-   const [weekDaySelected, setWeekDaySelected] = useState<number>();
+   const [daySelected, setDaySelected] = useState<Date>();
 
    const [totalSum, setTotalSum] = useState(0);
 
@@ -102,7 +102,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
    }
 
    function updateDaySelected() {
-      setWeekDaySelected(form.getValues().date?.getDay());
+      setDaySelected(form.getValues().date);
 
       fields.forEach((_, i) => form.setValue(`packages.${i}.packageId`, ""));
    }
@@ -233,7 +233,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                                           defaultValue={field.value}
                                           disabled={
                                              isLoading ||
-                                             !weekDaySelected ||
+                                             !daySelected ||
                                              field.disabled
                                           }
                                        >
@@ -246,10 +246,10 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                                              {packages
                                                 ?.filter(
                                                    ({ availability }) =>
-                                                      weekDaySelected &&
+                                                      daySelected &&
                                                       verifyAvailability(
                                                          availability,
-                                                         weekDaySelected,
+                                                         daySelected,
                                                       ),
                                                 )
                                                 .map(pkg => (

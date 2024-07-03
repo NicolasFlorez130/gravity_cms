@@ -12,6 +12,7 @@ import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { onlyNumbersAndEmpty } from "./regex";
 import type { PackageAvailability } from "~/types/packages";
+import { isHoliday } from "colombian-holidays/lib/utils/isHoliday";
 
 /**
  * Translates an array of day indices to a human-readable string or JSX elements.
@@ -39,14 +40,27 @@ export function translateDays(days: number[]) {
    }
 }
 
+/**
+ * Verifies if a package is available on a specific day based on its availability settings.
+ * @param availability The availability setting of the package.
+ * @param weekDay The day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday).
+ * @returns A boolean indicating if the package is available on the specified day.
+ */
 export function verifyAvailability(
    availability: PackageAvailability,
-   weekDay: number,
+   date: Date,
 ) {
+   if (availability === "EVERY_DAY") {
+      return true;
+   }
+
+   const weekDay = date.getDay();
+
+   const aux = isHoliday(date);
+
    return (
-      availability === "EVERY_DAY" ||
-      (availability === "WEEKEND" && [0, 6].includes(weekDay)) ||
-      (availability === "WORK_DAYS" && [1, 2, 3, 4, 5].includes(weekDay))
+      (availability === "WEEKEND" && (aux || [0, 5, 6].includes(weekDay))) ||
+      (availability === "WORK_DAYS" && [1, 2, 3, 4].includes(weekDay) && !aux)
    );
 }
 
