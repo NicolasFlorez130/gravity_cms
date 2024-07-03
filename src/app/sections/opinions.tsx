@@ -7,63 +7,15 @@ import { ScrollToPlugin } from "gsap/all";
 import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import type { IImage } from "~/types/images";
+import type { IOpinion } from "~/types/opinions";
 
-interface IOpinions {}
+interface IOpinions {
+   opinions: IOpinion[];
+   images: IImage[];
+}
 
-const opinions = [
-   {
-      names: "Luis Perez",
-      opinion: `
-      Lorem ipsum dolor sit amet, 
-      consectetur adipiscing elit, 
-      sed do eiusmod tempor 
-      incididunt ut labore et dolore 
-      `,
-      image: "https://placedog.net/400/401?random",
-   },
-   {
-      names: "Luis Perez 2",
-      opinion: `
-      Lorem ipsum dolor sit amet, 
-      consectetur adipiscing elit, 
-      sed do eiusmod tempor 
-      incididunt ut labore et dolore 
-      `,
-      image: "https://placedog.net/400/402?random",
-   },
-   {
-      names: "Luis Perez 3",
-      opinion: `
-      Lorem ipsum dolor sit amet, 
-      consectetur adipiscing elit, 
-      sed do eiusmod tempor 
-      incididunt ut labore et dolore 
-      `,
-      image: "https://placedog.net/400/403?random",
-   },
-   {
-      names: "Luis Perez 4",
-      opinion: `
-      Lorem ipsum dolor sit amet, 
-      consectetur adipiscing elit, 
-      sed do eiusmod tempor 
-      incididunt ut labore et dolore 
-      `,
-      image: "https://placedog.net/400/404?random",
-   },
-   {
-      names: "Luis Perez 5",
-      opinion: `
-      Lorem ipsum dolor sit amet, 
-      consectetur adipiscing elit, 
-      sed do eiusmod tempor 
-      incididunt ut labore et dolore 
-      `,
-      image: "https://placedog.net/400/405?random",
-   },
-];
-
-export default function Opinions({}: IOpinions) {
+export default function Opinions({ images, opinions }: IOpinions) {
    const isXL = useMediaQuery("(min-width: 1280px)");
 
    const [currentOpinion, setCurrentOpinion] = useState(
@@ -118,7 +70,7 @@ export default function Opinions({}: IOpinions) {
    }, [currentOpinion, isXL]);
 
    return (
-      <section className="grid w-full gap-6 bg-muted py-10 sm:grid-cols-[1fr_auto] xl:grid-cols-1 xl:justify-items-start xl:py-14">
+      <section className="grid w-full gap-6 bg-background-dark py-10 sm:grid-cols-[1fr_auto] xl:grid-cols-1 xl:justify-items-start xl:py-14">
          <div
             id="opinions_carousel_container"
             ref={carouselContainer}
@@ -133,11 +85,15 @@ export default function Opinions({}: IOpinions) {
                   }}
                   className="opinions grid w-full flex-none items-center justify-items-center gap-6 overflow-hidden transition-all sm:grid-cols-[1fr_2fr] sm:pl-4 xl:w-auto xl:grid-cols-[1fr_auto] xl:gap-0"
                >
-                  <div className="relative z-10 bg-muted">
+                  <div className="relative z-10 bg-background-dark">
                      <div className="relative aspect-square w-1/2 max-w-screen-sm overflow-hidden rounded-full sm:w-full xl:w-[calc(100vw/6)]">
                         <Image
-                           alt={`${opinion.names} picture`}
-                           src={opinion.image}
+                           alt={`${opinion.name} picture`}
+                           src={
+                              images.find(
+                                 ({ id }) => id === opinion.profilePicture,
+                              )?.url ?? ""
+                           }
                            fill
                            className="object-cover"
                         />
@@ -145,11 +101,11 @@ export default function Opinions({}: IOpinions) {
                   </div>
                   <div className="opinion_text w-auto">
                      <div className="relative z-0 grid max-w-screen-xl place-items-center gap-6 overflow-hidden lg:w-1/2 xl:ml-10 xl:w-[calc(100vw/3)] xl:place-items-start">
-                        <p className="px-8 text-center text-xl font-medium text-muted-foreground xl:px-0 xl:text-start xl:text-4xl">
-                           {opinion.opinion}
+                        <p className="px-8 text-center text-xl font-medium text-primary xl:px-0 xl:text-start xl:text-4xl">
+                           {opinion.text}
                         </p>
                         <p className="text-2xl font-bold xl:text-start">
-                           {opinion.names}
+                           {opinion.name}
                         </p>
                      </div>
                   </div>
@@ -169,7 +125,7 @@ export default function Opinions({}: IOpinions) {
                         : undefined,
                   )
                }
-               className="h-max border-none p-0 disabled:text-background-dark"
+               className="h-max border-none p-0 hover:text-primary disabled:opacity-60 disabled:hover:text-white"
             >
                <ArrowLeft size={48} />
             </Button>
@@ -184,7 +140,7 @@ export default function Opinions({}: IOpinions) {
                         : undefined,
                   )
                }
-               className="h-max border-none p-0 disabled:text-background-dark"
+               className="h-max border-none p-0 hover:text-primary disabled:opacity-60 disabled:hover:text-white"
             >
                <ArrowRight size={48} />
             </Button>

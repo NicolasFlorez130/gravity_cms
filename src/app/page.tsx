@@ -12,7 +12,10 @@ import Footer from "~/components/landing/ui/footer";
 import { groupBy } from "~/lib/utils";
 
 export default async function Home() {
-   const images = await api.images.getAll();
+   const [images, opinions] = await Promise.all([
+      api.images.getAll(),
+      api.opinions.getAll(),
+   ]);
 
    const groupedImages = groupBy(images, "category");
 
@@ -23,11 +26,14 @@ export default async function Home() {
             <FollowSign />
             <Hero />
             <Booking />
-            <Opinions />
-            <GalleryCarousel images={groupedImages.GALLERY} />
+            <Opinions
+               images={groupedImages.PROFILE_PICTURES ?? []}
+               opinions={opinions}
+            />
+            <GalleryCarousel images={groupedImages.GALLERY ?? []} />
             <Comments />
             <Questions />
-            <IgCarousel images={groupedImages.INSTAGRAM_POSTS} />
+            <IgCarousel images={groupedImages.INSTAGRAM_POSTS ?? []} />
          </main>
          <Footer />
       </>
