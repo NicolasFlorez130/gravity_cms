@@ -70,7 +70,10 @@ export default function Packages({ packages }: IPackages) {
                            <Baby size={41} className="text-white" />
                         )}
                      </div>
-                     <Button variant={highlight ? "highlight" : "primary"}>
+                     <Button
+                        className="w-full truncate"
+                        variant={highlight ? "highlight" : "primary"}
+                     >
                         {pkg.name.toUpperCase()}
                      </Button>
                      <div className="grid gap-3 text-white">
