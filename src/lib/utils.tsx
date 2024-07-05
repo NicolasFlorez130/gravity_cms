@@ -6,7 +6,7 @@ import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
 import type {
    AppointmentPaymentMethod,
-   Appointment,
+   PopulatedAppointment,
 } from "~/types/appointments";
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
@@ -152,12 +152,12 @@ export function printAsSpans(text: string) {
  * @param transactions An array of appointments.
  * @returns An array of objects each representing a month with total sum and date.
  */
-export function getMonthlyTotals(transactions: Appointment[]) {
+export function getMonthlyTotals(transactions: PopulatedAppointment[]) {
    const monthlyTotals: Record<string, { sum: number; date: Date }> = {};
 
-   transactions.forEach(transaction => {
-      const year = transaction.date.getFullYear();
-      const month = transaction.date.getMonth() + 1;
+   transactions.forEach(({ appointment: { totalAmount, createdAt } }) => {
+      const year = createdAt.getFullYear();
+      const month = createdAt.getMonth() + 1;
       const monthYear = `${year}-${month.toString().padStart(2, "0")}`;
 
       if (!monthlyTotals[monthYear]) {
@@ -167,7 +167,7 @@ export function getMonthlyTotals(transactions: Appointment[]) {
          };
       }
 
-      monthlyTotals[monthYear]!.sum += transaction.totalAmount;
+      monthlyTotals[monthYear]!.sum += totalAmount;
    });
 
    return Object.entries(monthlyTotals).map(([_key, value]) => {
@@ -212,7 +212,7 @@ export function generateDates(startDate: Date, endDate: Date): Date[] {
  * @returns True if the row's date falls within the range, false otherwise.
  */
 export function dateFilterFunction(
-   row: Row<Appointment>,
+   row: Row<PopulatedAppointment>,
    column: string,
    { from, to }: DateRange,
 ) {
@@ -236,29 +236,31 @@ export function dateFilterFunction(
  * @param dates Optional date range to filter appointments.
  */
 export function convertAppointmentsToExcel(
-   appointments: Appointment[],
+   appointments: PopulatedAppointment[],
    fileName: string,
    dates?: DateRange,
 ) {
    const filteredAppointments = appointments.filter(
-      record =>
-         (!dates?.from || record.date >= dates.from) &&
-         (!dates?.to || record.date <= dates.to),
+      ({ appointment_pack: { date } }) =>
+         (!dates?.from || date >= dates.from) &&
+         (!dates?.to || date <= dates.to),
    );
 
    // Convert records to a format that can be used by xlsx
-   const formattedRecords = filteredAppointments.map(record => ({
-      date: record.date.toISOString(),
-      id: record.id,
-      clientNames: record.clientNames,
-      clientEmail: record.clientEmail,
-      clientPhoneNumber: record.clientPhoneNumber,
-      totalAmount: record.totalAmount,
-      status: record.status,
-      paymentMethod: record.paymentMethod,
-      reference: record.reference,
-      createdAt: record.createdAt.toISOString(),
-   }));
+   const formattedRecords = filteredAppointments.map(
+      ({ appointment, appointment_pack }) => ({
+         date: appointment_pack.date.toISOString(),
+         id: appointment.id,
+         clientNames: appointment.clientNames,
+         clientEmail: appointment.clientEmail,
+         clientPhoneNumber: appointment.clientPhoneNumber,
+         totalAmount: appointment.totalAmount,
+         status: appointment.status,
+         paymentMethod: appointment.paymentMethod,
+         reference: appointment.reference,
+         createdAt: appointment.createdAt.toISOString(),
+      }),
+   );
 
    // Create a worksheet from the records
    const worksheet = XLSX.utils.json_to_sheet(formattedRecords);

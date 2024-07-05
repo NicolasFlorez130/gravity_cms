@@ -26,10 +26,10 @@ export default function NextAppointments({}: INextAppointments) {
             {isFetching && !isRefetching ? (
                <Loading />
             ) : (
-               data?.map(appointment => (
+               data?.map((el) => (
                   <AppointmentCard
-                     key={appointment.id}
-                     data={appointment}
+                     key={el.appointment_pack.id}
+                     data={el}
                      refetch={refetch}
                   />
                ))

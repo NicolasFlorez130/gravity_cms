@@ -44,8 +44,8 @@ function preprocessAppointments(
       { landingSum: number; onlineSum: number; onsiteSum: number }
    > = {};
 
-   appointments.forEach(({ date, paymentMethod, totalAmount }) => {
-      const dateString = date.toISOString().split("T")[0]!; // Format date as YYYY-MM-DD
+   appointments.forEach(({ paymentMethod, totalAmount, createdAt }) => {
+      const dateString = createdAt.toISOString().split("T")[0]!; // Format date as YYYY-MM-DD
 
       if (!earnings[dateString]) {
          earnings[dateString] = {

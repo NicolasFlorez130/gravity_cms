@@ -4,26 +4,39 @@ import {
    bookAppointmentSchema,
 } from "~/server/db/schemas/packages_appointments";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { eq } from "drizzle-orm";
+import { and, asc, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 export const appointmentsRouter = createTRPCRouter({
    getAll: protectedProcedure.query(({ ctx }) =>
-      ctx.db.query.appointments.findMany({
-         orderBy: ({ date }, { desc }) => desc(date),
-      }),
+      ctx.db.query.appointments.findMany(),
+   ),
+
+   getAllPopulated: protectedProcedure.query(({ ctx }) =>
+      ctx.db
+         .select()
+         .from(appointmentsPackages)
+         .innerJoin(
+            appointments,
+            eq(appointmentsPackages.appointmentId, appointments.id),
+         )
+         .orderBy(asc(appointmentsPackages.date)),
    ),
 
    getNextAppointments: protectedProcedure
       .input(z.number())
       .query(({ ctx, input }) =>
-         ctx.db.query.appointments.findMany({
-            where: ({ date, status }, { gt, and, eq }) =>
-               and(gt(date, new Date()), eq(status, "PAID")),
-            orderBy: ({ date }, { asc }) => asc(date),
-            limit: input,
-         }),
+         ctx.db
+            .select()
+            .from(appointmentsPackages)
+            .innerJoin(
+               appointments,
+               eq(appointmentsPackages.appointmentId, appointments.id),
+            )
+            .where(and(gt(appointmentsPackages.date, new Date())))
+            .orderBy(asc(appointmentsPackages.date))
+            .limit(input),
       ),
 
    book: protectedProcedure
@@ -64,7 +77,7 @@ export const appointmentsRouter = createTRPCRouter({
       .input(
          z.object({
             id: z.string(),
-            status: z.enum(["PAID", "PENDING", "ATTENDED", "CANCELED"]),
+            status: z.enum(["PAID", "PENDING", "CANCELED"]),
          }),
       )
       .mutation(({ ctx, input: { id, status } }) =>
@@ -72,5 +85,14 @@ export const appointmentsRouter = createTRPCRouter({
             .update(appointments)
             .set({ status })
             .where(eq(appointments.id, id)),
+      ),
+
+   markAsAttended: protectedProcedure
+      .input(z.string())
+      .mutation(({ ctx, input }) =>
+         ctx.db
+            .update(appointmentsPackages)
+            .set({ attended: true })
+            .where(eq(appointments.id, input)),
       ),
 });

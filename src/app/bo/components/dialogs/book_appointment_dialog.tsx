@@ -71,7 +71,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       resolver: zodResolver(bookAppointmentSchema),
       defaultValues: {
          reference: "",
-         status: "PENDING",
+         status: "PENDING"
       },
       disabled: isPending,
    });
@@ -80,8 +80,6 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       control: form.control,
       name: "packages",
    });
-
-   const [daySelected, setDaySelected] = useState<Date>();
 
    const [totalSum, setTotalSum] = useState(0);
 
@@ -101,10 +99,8 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       setTotalSum(sum);
    }
 
-   function updateDaySelected() {
-      setDaySelected(form.getValues().date);
-
-      fields.forEach((_, i) => form.setValue(`packages.${i}.packageId`, ""));
+   function updateDaySelected(i: number) {
+      form.setValue(`packages.${i}.packageId`, "");
    }
 
    return (
@@ -165,27 +161,6 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                         </FormItem>
                      )}
                   />
-                  <FormField
-                     control={form.control}
-                     name="date"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel>Fecha</FormLabel>
-                           <FormControl>
-                              <DatePicker
-                                 disabled={field.disabled}
-                                 className="w-full"
-                                 date={field.value}
-                                 setDate={parseDateToMidnightStartOfDay(
-                                    field.onChange,
-                                    updateDaySelected,
-                                 )}
-                              />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
                   <div className="space-y-2">
                      <div className="flex items-center justify-between">
                         <Label>Paquetes</Label>
@@ -194,11 +169,11 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                            type="button"
                            variant="secondary"
                            size="icon"
-                           disabled={!form.getValues().date}
                            onClick={() =>
                               append({
                                  packageId: "",
                                  extraMinutes: undefined as unknown as number,
+                                 date: new Date(),
                               })
                            }
                         >
@@ -206,7 +181,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                         </Button>
                      </div>
                      <div className="grid gap-4 rounded-lg bg-gray-50 p-2">
-                        {fields.map((_, i) => (
+                        {fields.map((row, i) => (
                            <Card
                               key={i}
                               className="grid w-full grid-cols-[auto_1fr] gap-2 p-2"
@@ -221,6 +196,27 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                               </Button>
                               <FormField
                                  control={form.control}
+                                 name={`packages.${i}.date`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel>Fecha</FormLabel>
+                                       <FormControl>
+                                          <DatePicker
+                                             disabled={field.disabled}
+                                             className="w-full"
+                                             date={field.value}
+                                             setDate={parseDateToMidnightStartOfDay(
+                                                field.onChange,
+                                                () => updateDaySelected(i),
+                                             )}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+                              <FormField
+                                 control={form.control}
                                  name={`packages.${i}.packageId`}
                                  render={({ field }) => (
                                     <FormItem>
@@ -233,7 +229,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                                           defaultValue={field.value}
                                           disabled={
                                              isLoading ||
-                                             !daySelected ||
+                                             !row.date ||
                                              field.disabled
                                           }
                                        >
@@ -246,10 +242,10 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                                              {packages
                                                 ?.filter(
                                                    ({ availability }) =>
-                                                      daySelected &&
+                                                      row.date &&
                                                       verifyAvailability(
                                                          availability,
-                                                         daySelected,
+                                                         row.date,
                                                       ),
                                                 )
                                                 .map(pkg => (

@@ -114,10 +114,10 @@ export default function Page({}: IPage) {
                            </div>
                         ))(
                         appointments.filter(
-                           ({ date }) =>
+                           ({ createdAt }) =>
                               !dates ||
-                              ((!dates.from || date >= dates.from) &&
-                                 (!dates.to || date <= dates.to)),
+                              ((!dates.from || createdAt >= dates.from) &&
+                                 (!dates.to || createdAt <= dates.to)),
                         ),
                      )}
                   </div>

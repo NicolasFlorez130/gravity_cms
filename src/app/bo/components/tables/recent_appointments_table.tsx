@@ -14,7 +14,7 @@ import { useStore } from "~/lib/features/store";
 interface IRecentAppointmentsTable {}
 
 export default function RecentAppointmentsTable({}: IRecentAppointmentsTable) {
-   const appointments = useStore.use.appointments();
+   const appointments = useStore.use.populatedAppointments();
 
    return (
       <Table>
@@ -28,16 +28,21 @@ export default function RecentAppointmentsTable({}: IRecentAppointmentsTable) {
          </TableHeader>
          <TableBody>
             {appointments
-               .filter(({ paymentMethod }) => paymentMethod === "LANDING")
+               .filter(
+                  ({ appointment: { paymentMethod } }) =>
+                     paymentMethod === "LANDING",
+               )
                .sort(
-                  ({ createdAt: date_1 }, { createdAt: date_2 }) =>
-                     date_2.getTime() - date_1.getTime(),
+                  (
+                     { appointment_pack: { createdAt: date_1 } },
+                     { appointment_pack: { createdAt: date_2 } },
+                  ) => date_2.getTime() - date_1.getTime(),
                )
                .slice(0, 4)
-               .map(appointment => (
+               .map(({ appointment, appointment_pack: { date } }) => (
                   <TableRow key={appointment.id}>
                      <TableCell>{appointment.clientNames}</TableCell>
-                     <TableCell>{appointment.date.toDateString()}</TableCell>
+                     <TableCell>{date.toDateString()}</TableCell>
                      <TableCell>
                         {formatCurrency(appointment.totalAmount)}
                      </TableCell>

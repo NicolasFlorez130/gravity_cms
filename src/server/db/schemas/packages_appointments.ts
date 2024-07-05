@@ -14,7 +14,7 @@ import { z } from "~/lib/zod_lang";
 export const statusEnum = pgEnum("status", [
    "PAID",
    "PENDING",
-   "ATTENDED",
+   // "ATTENDED",
    "CANCELED",
 ]);
 
@@ -34,14 +34,13 @@ export const packageAvailabilityEnum = pgEnum("availability", [
 
 export const appointments = createTable("appointment", {
    id: uuidColumn,
-   date: timestamp("date", { withTimezone: true }).notNull(),
    clientNames: text("client_names").notNull(),
    clientEmail: text("client_email").notNull(),
    clientPhoneNumber: text("client_phone_number").notNull(),
    totalAmount: real("total_amount").notNull(),
-   status: statusEnum("status").notNull(),
    paymentMethod: paymentMethodEnum("payment_method").notNull(),
    reference: text("reference").notNull(),
+   status: statusEnum("status").notNull(),
 
    createdAt: createdAtColumn,
 });
@@ -70,21 +69,25 @@ export const appointmentsPackages = createTable("appointment_pack", {
       .references(() => packages.id)
       .notNull(),
    extraMinutes: integer("extra_minutes").default(0),
+   date: timestamp("date", { withTimezone: true }).notNull(),
+   attended: boolean("attended").default(false),
 
    createdAt: createdAtColumn,
 });
 
-export const insertAppointmentSchema = createInsertSchema(appointments, {
-   date: z.date().min(new Date()),
-});
+export const insertAppointmentSchema = createInsertSchema(appointments);
 export const insertPackageSchema = createInsertSchema(packages, {
    name: z.string().min(1),
    price: z.number().min(0),
    minutePrice: z.number().min(0),
    usersQuantity: z.number().min(1),
 });
-export const insertAppointmentPackageSchema =
-   createInsertSchema(appointmentsPackages);
+export const insertAppointmentPackageSchema = createInsertSchema(
+   appointmentsPackages,
+   {
+      date: z.date().min(new Date()),
+   },
+);
 export const bookAppointmentSchema = insertAppointmentSchema.extend({
    packages: z.array(
       insertAppointmentPackageSchema.omit({ appointmentId: true }),

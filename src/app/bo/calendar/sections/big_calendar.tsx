@@ -18,7 +18,7 @@ import { cn, translatePaymentMethod } from "~/lib/utils";
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
-   const appointments = useStore(state => state.appointments);
+   const appointments = useStore(state => state.populatedAppointments);
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
@@ -115,21 +115,23 @@ export function BigCalendar({}: IBigCalendar) {
          <Calendar
             toolbar={false}
             localizer={localizer}
-            events={appointments.map(appointment => ({
-               end: addHours(appointment.date, 2),
-               start: appointment.date,
-               title: translatePaymentMethod(appointment.paymentMethod),
-               className: cn(
-                  appointment.paymentMethod === "COURTESY" &&
-                     "bg-violet-100 text-violet-500",
-                  appointment.paymentMethod === "LANDING" &&
-                     "bg-blue-100 text-blue-500",
-                  appointment.paymentMethod === "ONLINE" &&
-                     "bg-orange-100 text-orange-500",
-                  appointment.paymentMethod === "ON_SITE" &&
-                     "bg-green-100 text-green-500",
-               ),
-            }))}
+            events={appointments.map(
+               ({ appointment, appointment_pack: { date } }) => ({
+                  end: addHours(date, 2),
+                  start: date,
+                  title: translatePaymentMethod(appointment.paymentMethod),
+                  className: cn(
+                     appointment.paymentMethod === "COURTESY" &&
+                        "bg-violet-100 text-violet-500",
+                     appointment.paymentMethod === "LANDING" &&
+                        "bg-blue-100 text-blue-500",
+                     appointment.paymentMethod === "ONLINE" &&
+                        "bg-orange-100 text-orange-500",
+                     appointment.paymentMethod === "ON_SITE" &&
+                        "bg-green-100 text-green-500",
+                  ),
+               }),
+            )}
             views={["day", "week", "month"]}
             startAccessor="start"
             view={view}

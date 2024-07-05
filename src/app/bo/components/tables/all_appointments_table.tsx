@@ -20,7 +20,7 @@ import {
    getSortedRowModel,
    useReactTable,
 } from "@tanstack/react-table";
-import type { Appointment } from "~/types/appointments";
+import type { PopulatedAppointment } from "~/types/appointments";
 import PaymentMethodBadge from "~/components/bo/ui/payment_method_badge";
 import StatusBadge from "~/components/bo/ui/status_badge";
 import { useEffect, useState } from "react";
@@ -61,92 +61,99 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
       },
    });
 
-   const columns: ColumnDef<Appointment>[] = [
+   const columns: ColumnDef<PopulatedAppointment>[] = [
       {
-         accessorKey: "clientNames",
+         accessorKey: "appointment.clientNames",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Cliente
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.getValue("clientNames")}</div>,
+         cell: ({ row }) => (
+            <div>{row.getValue("appointment.clientNames")}</div>
+         ),
       },
       {
-         accessorKey: "clientEmail",
+         accessorKey: "appointment.clientEmail",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Email
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.getValue("clientEmail")}</div>,
+         cell: ({ row }) => (
+            <div>{row.getValue("appointment.clientEmail")}</div>
+         ),
       },
       {
-         accessorKey: "date",
+         accessorKey: "appointment.createdAt",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
-               Fecha
+               Fecha de creación
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => (
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-            <div>{(row.getValue("date") as Date).toDateString()}</div>
+            <div>
+               {
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+                  (row.getValue("appointment.createdAt") as Date).toDateString()
+               }
+            </div>
          ),
          filterFn: dateFilterFunction,
       },
       {
-         accessorKey: "totalAmount",
+         accessorKey: "appointment.totalAmount",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Total pagado
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => (
-            <div>{formatCurrency(Number(row.getValue("totalAmount")))}</div>
+            <div>
+               {formatCurrency(Number(row.getValue("appointment.totalAmount")))}
+            </div>
          ),
       },
       {
-         accessorKey: "paymentMethod",
+         accessorKey: "appointment.paymentMethod",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Método de pago
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => (
-            <PaymentMethodBadge paymentMethod={row.getValue("paymentMethod")} />
+            <PaymentMethodBadge
+               paymentMethod={row.getValue("appointment.paymentMethod")}
+            />
          ),
       },
       {
-         accessorKey: "status",
+         accessorKey: "appointment.status",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Estado
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
+         cell: ({ row }) => (
+            <StatusBadge status={row.original.appointment.status} />
+         ),
       },
       {
          id: "actions",
          enableHiding: false,
          cell: ({
             row: {
-               original: { status, id },
+               original: {
+                  appointment: { status, id },
+               },
             },
          }) => {
-            const nextStatus = (() => {
-               switch (status) {
-                  case "PENDING":
-                     return "PAID";
-                  default:
-                     return "ATTENDED";
-               }
-            })();
-
             return (
                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                      <Button
                         variant="secondary"
-                        disabled={status === "ATTENDED" || id === changingState}
+                        disabled={status === "PAID" || id === changingState}
                         className="h-8 w-8 p-0"
                      >
                         <span className="sr-only">Abrir menú</span>
@@ -155,15 +162,15 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                      <DropdownMenuLabel>Cambiar estado</DropdownMenuLabel>
-                     {status !== "ATTENDED" && (
+                     {status !== "PAID" && (
                         <>
                            <DropdownMenuItem
                               onClick={() => {
                                  setChangingState(id);
-                                 mutate({ id, status: nextStatus });
+                                 mutate({ id, status: "PAID" });
                               }}
                            >
-                              {status === "PENDING" ? "Pagado" : "Atendido"}
+                              Pagado
                            </DropdownMenuItem>
                            <DropdownMenuItem
                               onClick={() => {
@@ -182,7 +189,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
       },
    ];
 
-   const data = useStore.use.appointments();
+   const data = useStore.use.populatedAppointments();
 
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
    const [sorting, setSorting] = useState<SortingState>([]);
@@ -239,7 +246,8 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                      <TableRow
                         key={row.id}
                         className={cn(
-                           row.original.id === changingState && "opacity-50",
+                           row.original.appointment.id === changingState &&
+                              "opacity-50",
                         )}
                      >
                         {row.getVisibleCells().map(cell => (

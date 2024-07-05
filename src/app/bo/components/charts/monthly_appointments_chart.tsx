@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { type Appointment } from "~/types/appointments";
+import type { Appointment } from "~/types/appointments";
 import {
    cn,
    dashboardLineColor,
@@ -39,8 +39,8 @@ function preprocessAppointments(appointments: Appointment[]) {
       { landingSum: number; onlineSum: number; onsiteSum: number }
    > = {};
 
-   appointments.forEach(({ date, paymentMethod, totalAmount }) => {
-      const yearMonth = `${date.getFullYear()}-${date.getMonth() + 1}`;
+   appointments.forEach(({ paymentMethod, totalAmount, createdAt }) => {
+      const yearMonth = `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}`;
 
       if (!earnings[yearMonth]) {
          earnings[yearMonth] = { landingSum: 0, onlineSum: 0, onsiteSum: 0 };
@@ -123,7 +123,9 @@ export default function MonthlyAppointmentsChart({
    }, [appointments, days]);
 
    const data = {
-      labels: monthlyEarnings.map(({ monthDate }) => format(monthDate, "MMM yyyy")),
+      labels: monthlyEarnings.map(({ monthDate }) =>
+         format(monthDate, "MMM yyyy"),
+      ),
       datasets: [
          {
             label: "Landing",

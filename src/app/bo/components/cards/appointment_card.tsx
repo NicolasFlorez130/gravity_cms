@@ -7,17 +7,20 @@ import { Checkbox } from "~/components/bo/ui/checkbox";
 import { Chip } from "~/components/bo/ui/chip";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import type { Appointment } from "~/types/appointments";
+import type { PopulatedAppointment } from "~/types/appointments";
 
 interface IAppointmentCard {
-   data: Appointment;
+   data: PopulatedAppointment;
    refetch: () => Promise<any>;
 }
 
-export default function AppointmentCard({ data, refetch }: IAppointmentCard) {
+export default function AppointmentCard({
+   data: { appointment, appointment_pack },
+   refetch,
+}: IAppointmentCard) {
    const router = useRouter();
 
-   const { mutate, isPending } = api.appointments.updateStatus.useMutation({
+   const { mutate, isPending } = api.appointments.markAsAttended.useMutation({
       onSuccess: async () => {
          router.refresh();
          await refetch();
@@ -34,7 +37,7 @@ export default function AppointmentCard({ data, refetch }: IAppointmentCard) {
          <CardTitle className="flex w-full items-center gap-2 truncate">
             <Checkbox
                disabled={isPending}
-               onClick={() => mutate({ id: data.id, status: "ATTENDED" })}
+               onClick={() => mutate(appointment.id)}
                className="border-2 border-gray-400 data-[state=checked]:border-indigo-500 data-[state=checked]:bg-indigo-500 [&_svg]:text-white"
             />
             <p
@@ -43,15 +46,15 @@ export default function AppointmentCard({ data, refetch }: IAppointmentCard) {
                   isPending && "text-indigo-500 line-through",
                )}
             >
-               {data.clientNames}
+               {appointment.clientNames}
             </p>
          </CardTitle>
          <CardContent className="flex items-baseline justify-between p-0">
-            <Chip className="bg-violet-100 text-violet-600 text-xs">
-               {format(data.date, "dd MMMM, yy")}
+            <Chip className="bg-violet-100 text-xs text-violet-600">
+               {format(appointment_pack.date, "dd MMMM, yy")}
             </Chip>
             <p className="text-xs text-gray-500">
-               {format(data.createdAt, "dd MMMM, yy")}
+               {format(appointment_pack.createdAt, "dd MMMM, yy")}
             </p>
          </CardContent>
       </Card>
