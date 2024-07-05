@@ -36,7 +36,10 @@ export const appointmentsRouter = createTRPCRouter({
                eq(appointmentsPackages.appointmentId, appointments.id),
             )
             .where(
-               and(gt(appointmentsPackages.date, setDateTimeTo0(new Date()))),
+               and(
+                  gt(appointmentsPackages.date, setDateTimeTo0(new Date())),
+                  eq(appointmentsPackages.attended, false),
+               ),
             )
             .orderBy(asc(appointmentsPackages.date))
             .limit(input),
@@ -96,6 +99,6 @@ export const appointmentsRouter = createTRPCRouter({
          ctx.db
             .update(appointmentsPackages)
             .set({ attended: true })
-            .where(eq(appointments.id, input)),
+            .where(eq(appointmentsPackages.id, input)),
       ),
 });

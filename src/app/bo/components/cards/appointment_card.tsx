@@ -37,7 +37,7 @@ export default function AppointmentCard({
          <CardTitle className="flex w-full items-center gap-2 truncate">
             <Checkbox
                disabled={isPending}
-               onClick={() => mutate(appointment.id)}
+               onClick={() => mutate(appointment_pack.id)}
                className="border-2 border-gray-400 data-[state=checked]:border-indigo-500 data-[state=checked]:bg-indigo-500 [&_svg]:text-white"
             />
             <p
