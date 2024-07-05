@@ -17,15 +17,12 @@ export default async function Layout({ children }: PropsWithChildren<unknown>) {
 
    try {
       const appointments = await api.appointments.getAll();
-      const populatedAppointments = await api.appointments.getAllPopulated();
+      const services = await api.appointments.getAllServices();
 
       return (
          <>
             <BoAuthObserver user={user} />
-            <BoSetter
-               appointments={appointments}
-               populatedAppointments={populatedAppointments}
-            />
+            <BoSetter appointments={appointments} services={services} />
             <BoLayout>{children}</BoLayout>
          </>
       );

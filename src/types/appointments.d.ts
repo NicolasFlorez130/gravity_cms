@@ -7,7 +7,7 @@ import type {
 type Appointment = InferSelectModel<typeof appointments>;
 type AppointmentsPackages = InferSelectModel<typeof appointmentsPackages>;
 
-type PopulatedAppointment = {
+type Service = {
    appointment_pack: AppointmentsPackages;
    appointment: Appointment;
 };

@@ -8,7 +8,7 @@ interface IActivity {}
 
 export default function Activity({}: IActivity) {
    const { data, isFetching, isRefetching } =
-      api.appointments.getNextAppointments.useQuery(0, {
+      api.appointments.getNextServices.useQuery(0, {
          // refetchOnWindowFocus: false,
       });
 

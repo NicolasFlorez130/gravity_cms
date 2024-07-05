@@ -2,26 +2,23 @@
 
 import { useEffect } from "react";
 import { useStore } from "~/lib/features/store";
-import type { Appointment, PopulatedAppointment } from "~/types/appointments";
+import type { Appointment, Service } from "~/types/appointments";
 
 interface IBoSetter {
    appointments: Appointment[];
-   populatedAppointments: PopulatedAppointment[];
+   services: Service[];
 }
 
-export default function BoSetter({
-   appointments,
-   populatedAppointments,
-}: IBoSetter) {
+export default function BoSetter({ appointments, services }: IBoSetter) {
    const setAll = useStore.use.setAll();
 
    useEffect(() => {
       setAll({
          appointments,
-         populatedAppointments,
+         services,
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [appointments, populatedAppointments]);
+   }, [appointments, services]);
 
    return true;
 }

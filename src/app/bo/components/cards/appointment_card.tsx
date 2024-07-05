@@ -7,10 +7,10 @@ import { Checkbox } from "~/components/bo/ui/checkbox";
 import { Chip } from "~/components/bo/ui/chip";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import type { PopulatedAppointment } from "~/types/appointments";
+import type { Service } from "~/types/appointments";
 
 interface IAppointmentCard {
-   data: PopulatedAppointment;
+   data: Service;
    refetch: () => Promise<any>;
 }
 
@@ -20,7 +20,7 @@ export default function AppointmentCard({
 }: IAppointmentCard) {
    const router = useRouter();
 
-   const { mutate, isPending } = api.appointments.markAsAttended.useMutation({
+   const { mutate, isPending } = api.appointments.markServiceAsAttended.useMutation({
       onSuccess: async () => {
          router.refresh();
          await refetch();

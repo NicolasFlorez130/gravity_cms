@@ -9,7 +9,7 @@ interface INextAppointments {}
 
 export default function NextAppointments({}: INextAppointments) {
    const { data, refetch, isFetching, isRefetching } =
-      api.appointments.getNextAppointments.useQuery(4, {
+      api.appointments.getNextServices.useQuery(4, {
          refetchOnWindowFocus: false,
       });
 

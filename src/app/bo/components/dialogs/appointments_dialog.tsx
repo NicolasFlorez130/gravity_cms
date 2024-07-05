@@ -19,7 +19,7 @@ import AllAppointmentsTable from "../tables/all_appointments_table";
 interface IAppointmentsDialog {}
 
 export default function AppointmentsDialog({}: IAppointmentsDialog) {
-   const appointments = useStore.use.populatedAppointments();
+   const services = useStore.use.services();
 
    const { data, isFetching, isError } =
       api.packages.getTotalPurchased.useQuery(undefined, {
@@ -59,7 +59,7 @@ export default function AppointmentsDialog({}: IAppointmentsDialog) {
                      variant="purple"
                      onClick={() =>
                         convertAppointmentsToExcel(
-                           appointments,
+                           services,
                            "appointments.xlsx",
                            dates,
                         )

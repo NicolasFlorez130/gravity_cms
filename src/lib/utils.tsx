@@ -6,7 +6,7 @@ import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
 import type {
    AppointmentPaymentMethod,
-   PopulatedAppointment,
+   Service,
 } from "~/types/appointments";
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
@@ -152,7 +152,7 @@ export function printAsSpans(text: string) {
  * @param transactions An array of appointments.
  * @returns An array of objects each representing a month with total sum and date.
  */
-export function getMonthlyTotals(transactions: PopulatedAppointment[]) {
+export function getMonthlyTotals(transactions: Service[]) {
    const monthlyTotals: Record<string, { sum: number; date: Date }> = {};
 
    transactions.forEach(({ appointment: { totalAmount, createdAt } }) => {
@@ -232,23 +232,23 @@ export function dateFilterFunction(
 
 /**
  * Converts an array of appointments to an Excel file.
- * @param appointments The appointments to convert.
+ * @param services The appointments to convert.
  * @param fileName The name of the resulting Excel file.
  * @param dates Optional date range to filter appointments.
  */
 export function convertAppointmentsToExcel(
-   appointments: PopulatedAppointment[],
+   services: Service[],
    fileName: string,
    dates?: DateRange,
 ) {
-   const filteredAppointments = appointments.filter(
+   const filteredServices = services.filter(
       ({ appointment_pack: { date } }) =>
          (!dates?.from || date >= dates.from) &&
          (!dates?.to || date <= dates.to),
    );
 
    // Convert records to a format that can be used by xlsx
-   const formattedRecords = filteredAppointments.map(
+   const formattedRecords = filteredServices.map(
       ({ appointment, appointment_pack }) => ({
          date: appointment_pack.date.toISOString(),
          id: appointment.id,
@@ -353,14 +353,7 @@ export function parseDateToMidnightStartOfDay(
 ): Dispatch<SetStateAction<Date | undefined>> {
    return function (date) {
       if (typeof date === "object") {
-         onChange(
-            set(date, {
-               hours: 0,
-               minutes: 0,
-               seconds: 0,
-               milliseconds: 0,
-            }),
-         );
+         onChange(setDateTimeTo0(date));
       } else {
          onChange(date);
       }
@@ -404,4 +397,13 @@ export function groupBy<
       acc[property]?.push(obj);
       return acc;
    }, {}) as Record<X, T[]>;
+}
+
+export function setDateTimeTo0(date: Date) {
+   return set(date, {
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+   });
 }

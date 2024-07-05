@@ -18,7 +18,7 @@ import { cn, translatePaymentMethod } from "~/lib/utils";
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
-   const appointments = useStore(state => state.populatedAppointments);
+   const services = useStore(state => state.services);
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
@@ -115,7 +115,7 @@ export function BigCalendar({}: IBigCalendar) {
          <Calendar
             toolbar={false}
             localizer={localizer}
-            events={appointments.map(
+            events={services.map(
                ({ appointment, appointment_pack: { date } }) => ({
                   end: addHours(date, 2),
                   start: date,

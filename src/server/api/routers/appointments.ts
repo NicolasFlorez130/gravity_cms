@@ -7,13 +7,14 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { and, asc, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { setDateTimeTo0 } from "~/lib/utils";
 
 export const appointmentsRouter = createTRPCRouter({
    getAll: protectedProcedure.query(({ ctx }) =>
       ctx.db.query.appointments.findMany(),
    ),
 
-   getAllPopulated: protectedProcedure.query(({ ctx }) =>
+   getAllServices: protectedProcedure.query(({ ctx }) =>
       ctx.db
          .select()
          .from(appointmentsPackages)
@@ -24,7 +25,7 @@ export const appointmentsRouter = createTRPCRouter({
          .orderBy(asc(appointmentsPackages.date)),
    ),
 
-   getNextAppointments: protectedProcedure
+   getNextServices: protectedProcedure
       .input(z.number())
       .query(({ ctx, input }) =>
          ctx.db
@@ -34,7 +35,9 @@ export const appointmentsRouter = createTRPCRouter({
                appointments,
                eq(appointmentsPackages.appointmentId, appointments.id),
             )
-            .where(and(gt(appointmentsPackages.date, new Date())))
+            .where(
+               and(gt(appointmentsPackages.date, setDateTimeTo0(new Date()))),
+            )
             .orderBy(asc(appointmentsPackages.date))
             .limit(input),
       ),
@@ -87,7 +90,7 @@ export const appointmentsRouter = createTRPCRouter({
             .where(eq(appointments.id, id)),
       ),
 
-   markAsAttended: protectedProcedure
+   markServiceAsAttended: protectedProcedure
       .input(z.string())
       .mutation(({ ctx, input }) =>
          ctx.db

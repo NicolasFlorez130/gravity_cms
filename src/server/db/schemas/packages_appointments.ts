@@ -10,8 +10,7 @@ import {
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "~/lib/zod_lang";
-import { parseDateToMidnightStartOfDay } from "~/lib/utils";
-import { set } from "date-fns";
+import { setDateTimeTo0 } from "~/lib/utils";
 
 export const statusEnum = pgEnum("status", [
    "PAID",
@@ -87,14 +86,7 @@ export const insertPackageSchema = createInsertSchema(packages, {
 export const insertAppointmentPackageSchema = createInsertSchema(
    appointmentsPackages,
    {
-      date: z.date().min(
-         set(new Date(), {
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            milliseconds: 0,
-         }),
-      ),
+      date: z.date().min(setDateTimeTo0(new Date())),
       extraMinutes: z.number(),
    },
 );
