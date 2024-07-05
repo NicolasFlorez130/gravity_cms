@@ -7,10 +7,14 @@ import {
    timestamp,
    uuid,
 } from "drizzle-orm/pg-core";
-import { createTable, createdAtColumn, uuidColumn } from "../utils";
+import {
+   createTable,
+   createdAtColumn,
+   setDateTimeTo0,
+   uuidColumn,
+} from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "~/lib/zod_lang";
-import { setDateTimeTo0 } from "~/lib/utils";
 
 export const statusEnum = pgEnum("status", [
    "PAID",
