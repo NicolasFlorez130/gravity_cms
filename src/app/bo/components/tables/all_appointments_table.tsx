@@ -69,9 +69,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                Cliente
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => (
-            <div>{row.getValue("appointment.clientNames")}</div>
-         ),
+         cell: ({ row }) => <div>{row.original.appointment.clientNames}</div>,
       },
       {
          accessorKey: "appointment.clientEmail",
@@ -80,9 +78,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                Email
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => (
-            <div>{row.getValue("appointment.clientEmail")}</div>
-         ),
+         cell: ({ row }) => <div>{row.original.appointment.clientEmail}</div>,
       },
       {
          accessorKey: "appointment.createdAt",
@@ -92,12 +88,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => (
-            <div>
-               {
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-                  (row.getValue("appointment.createdAt") as Date).toDateString()
-               }
-            </div>
+            <div>{row.original.appointment.createdAt.toDateString()}</div>
          ),
          filterFn: dateFilterFunction,
       },
@@ -110,7 +101,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({ row }) => (
             <div>
-               {formatCurrency(Number(row.getValue("appointment.totalAmount")))}
+               {formatCurrency(Number(row.original.appointment.totalAmount))}
             </div>
          ),
       },
@@ -123,7 +114,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({ row }) => (
             <PaymentMethodBadge
-               paymentMethod={row.getValue("appointment.paymentMethod")}
+               paymentMethod={row.original.appointment.paymentMethod}
             />
          ),
       },

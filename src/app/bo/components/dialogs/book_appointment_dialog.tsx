@@ -4,7 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash } from "@phosphor-icons/react/dist/ssr";
 import { SelectValue } from "@radix-ui/react-select";
 import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import {
+   type UseFieldArrayRemove,
+   type UseFormReturn,
+   useFieldArray,
+   useForm,
+} from "react-hook-form";
 import { Button } from "~/components/bo/ui/button";
 import { Card } from "~/components/bo/ui/card";
 import { DatePicker } from "~/components/bo/ui/date_picker";
@@ -50,6 +55,10 @@ import type { IPackage } from "~/types/packages";
 
 interface IBookAppointmentDialog {}
 
+type InputObject = Parameters<
+   ReturnType<typeof api.appointments.book.useMutation>["mutate"]
+>["0"];
+
 export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
    const [isOpen, setIsOpen] = useState(false);
 
@@ -65,13 +74,11 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       },
    });
 
-   type InputObject = Parameters<typeof mutate>["0"];
-
    const form = useForm<InputObject>({
       resolver: zodResolver(bookAppointmentSchema),
       defaultValues: {
          reference: "",
-         status: "PENDING"
+         status: "PENDING",
       },
       disabled: isPending,
    });
@@ -97,10 +104,6 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       });
 
       setTotalSum(sum);
-   }
-
-   function updateDaySelected(i: number) {
-      form.setValue(`packages.${i}.packageId`, "");
    }
 
    return (
@@ -182,113 +185,15 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                      </div>
                      <div className="grid gap-4 rounded-lg bg-gray-50 p-2">
                         {fields.map((row, i) => (
-                           <Card
-                              key={i}
-                              className="grid w-full grid-cols-[auto_1fr] gap-2 p-2"
-                           >
-                              <Button
-                                 aria-label="delete package"
-                                 type="button"
-                                 className="bg-destructive text-white hover:bg-destructive/80"
-                                 onClick={() => remove(i)}
-                              >
-                                 <Trash />
-                              </Button>
-                              <FormField
-                                 control={form.control}
-                                 name={`packages.${i}.date`}
-                                 render={({ field }) => (
-                                    <FormItem>
-                                       <FormLabel>Fecha</FormLabel>
-                                       <FormControl>
-                                          <DatePicker
-                                             disabled={field.disabled}
-                                             className="w-full"
-                                             date={field.value}
-                                             setDate={parseDateToMidnightStartOfDay(
-                                                field.onChange,
-                                                () => updateDaySelected(i),
-                                             )}
-                                          />
-                                       </FormControl>
-                                       <FormMessage />
-                                    </FormItem>
-                                 )}
-                              />
-                              <FormField
-                                 control={form.control}
-                                 name={`packages.${i}.packageId`}
-                                 render={({ field }) => (
-                                    <FormItem>
-                                       <Select
-                                          {...field}
-                                          onValueChange={props => {
-                                             field.onChange(props);
-                                             updateTotalSum();
-                                          }}
-                                          defaultValue={field.value}
-                                          disabled={
-                                             isLoading ||
-                                             !row.date ||
-                                             field.disabled
-                                          }
-                                       >
-                                          <FormControl>
-                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecciona un paquete" />
-                                             </SelectTrigger>
-                                          </FormControl>
-                                          <SelectContent>
-                                             {packages
-                                                ?.filter(
-                                                   ({ availability }) =>
-                                                      row.date &&
-                                                      verifyAvailability(
-                                                         availability,
-                                                         row.date,
-                                                      ),
-                                                )
-                                                .map(pkg => (
-                                                   <SelectItem
-                                                      key={pkg.id}
-                                                      value={pkg.id}
-                                                   >
-                                                      {pkg.name}
-                                                   </SelectItem>
-                                                ))}
-                                          </SelectContent>
-                                       </Select>
-                                       <FormMessage className="text-end" />
-                                    </FormItem>
-                                 )}
-                              />
-                              <FormField
-                                 control={form.control}
-                                 name={`packages.${i}.extraMinutes`}
-                                 render={({ field }) => (
-                                    <FormItem className="col-span-2 flex w-full items-center justify-between gap-2 space-y-0">
-                                       <FormLabel className="flex-none">
-                                          Minutos extra
-                                       </FormLabel>
-                                       <div className="grid w-full gap-3">
-                                          <FormControl>
-                                             <Input
-                                                {...field}
-                                                value={field.value ?? undefined}
-                                                onChange={parseEventForNumber(
-                                                   field.onChange,
-                                                   updateTotalSum,
-                                                )}
-                                                min={0}
-                                                className="max-w-40 justify-self-end"
-                                             />
-                                          </FormControl>
-                                          <FormMessage className="w-full text-end" />
-                                       </div>
-                                    </FormItem>
-                                 )}
-                              />
-                           </Card>
+                           <BookingPackageCard
+                              key={row.id}
+                              form={form}
+                              i={i}
+                              isLoading={isLoading}
+                              packages={packages}
+                              remove={remove}
+                              updateTotalSum={updateTotalSum}
+                           />
                         ))}
                      </div>
                   </div>
@@ -374,5 +279,132 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
             </Form>
          </DialogContent>
       </Dialog>
+   );
+}
+
+interface IBookingPackageCard {
+   remove: UseFieldArrayRemove;
+   form: UseFormReturn<InputObject>;
+   i: number;
+   updateTotalSum(): void;
+   isLoading: boolean;
+   packages?: IPackage[];
+}
+
+function BookingPackageCard({
+   remove,
+   form,
+   i,
+   updateTotalSum,
+   isLoading,
+   packages,
+}: IBookingPackageCard) {
+   const [daySelected, setDaySelected] = useState<Date>();
+
+   function updateDaySelected() {
+      form.setValue(`packages.${i}.packageId`, "");
+
+      setDaySelected(form.getValues().packages.at(i)?.date);
+   }
+
+   return (
+      <>
+         <Card className="grid w-full grid-cols-2 gap-2 p-2">
+            <div className="col-span-2">
+               <Button
+                  aria-label="delete package"
+                  type="button"
+                  className="bg-destructive text-white hover:bg-destructive/80"
+                  onClick={() => remove(i)}
+               >
+                  <Trash />
+               </Button>
+            </div>
+            <FormField
+               control={form.control}
+               name={`packages.${i}.date`}
+               render={({ field }) => (
+                  <FormItem>
+                     <FormControl>
+                        <DatePicker
+                           disabled={field.disabled}
+                           className="w-full"
+                           date={field.value}
+                           setDate={parseDateToMidnightStartOfDay(
+                              field.onChange,
+                              updateDaySelected,
+                           )}
+                        />
+                     </FormControl>
+                     <FormMessage />
+                  </FormItem>
+               )}
+            />
+            <FormField
+               control={form.control}
+               name={`packages.${i}.packageId`}
+               render={({ field }) => (
+                  <FormItem>
+                     <Select
+                        {...field}
+                        onValueChange={props => {
+                           field.onChange(props);
+                           updateTotalSum();
+                        }}
+                        defaultValue={field.value}
+                        disabled={isLoading || !daySelected || field.disabled}
+                     >
+                        <FormControl>
+                           <SelectTrigger>
+                              <SelectValue placeholder="Selecciona un paquete" />
+                           </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                           {packages
+                              ?.filter(
+                                 ({ availability }) =>
+                                    daySelected &&
+                                    verifyAvailability(
+                                       availability,
+                                       daySelected,
+                                    ),
+                              )
+                              .map(pkg => (
+                                 <SelectItem key={pkg.id} value={pkg.id}>
+                                    {pkg.name}
+                                 </SelectItem>
+                              ))}
+                        </SelectContent>
+                     </Select>
+                     <FormMessage className="text-end" />
+                  </FormItem>
+               )}
+            />
+            <FormField
+               control={form.control}
+               name={`packages.${i}.extraMinutes`}
+               render={({ field }) => (
+                  <FormItem className="col-span-2 grid w-full grid-cols-2 items-center gap-2 space-y-0">
+                     <FormLabel className="flex-none">Minutos extra</FormLabel>
+                     <div className="grid w-full gap-3">
+                        <FormControl>
+                           <Input
+                              {...field}
+                              value={field.value ?? undefined}
+                              type="number"
+                              onChange={parseEventForNumber(
+                                 field.onChange,
+                                 updateTotalSum,
+                              )}
+                              min={0}
+                           />
+                        </FormControl>
+                        <FormMessage className="col-span-2 w-full text-end" />
+                     </div>
+                  </FormItem>
+               )}
+            />
+         </Card>
+      </>
    );
 }
