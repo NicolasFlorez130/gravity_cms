@@ -10,6 +10,7 @@ const Drawer = ({
    ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
    <DrawerPrimitive.Root
+      direction="right"
       shouldScaleBackground={shouldScaleBackground}
       {...props}
    />
@@ -43,13 +44,12 @@ const DrawerContent = React.forwardRef<
       <DrawerPrimitive.Content
          ref={ref}
          className={cn(
-            "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background-dark",
+            "xl:[60vw] fixed bottom-0 right-0 z-50 grid h-screen w-screen rounded-l-[10px] bg-bg_light after:hidden sm:w-[80vw] lg:w-[70vw] 2xl:w-[50vw]",
             className,
          )}
          {...props}
       >
-         <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-         {children}
+         <div className="inset-0">{children}</div>
       </DrawerPrimitive.Content>
    </DrawerPortal>
 ));
@@ -60,7 +60,10 @@ const DrawerHeader = ({
    ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
    <div
-      className={cn("grid gap-1.5 p-4 text-center sm:text-left", className)}
+      className={cn(
+         "grid gap-1.5 bg-background-dark p-5 text-center sm:text-left",
+         className,
+      )}
       {...props}
    />
 );

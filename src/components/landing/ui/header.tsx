@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { cn } from "~/lib/utils";
 import { PushPin } from "@phosphor-icons/react/dist/ssr";
 import Logo from "./logo";
-import { Button, buttonVariants } from "./button";
+import { Button } from "./button";
+import { DrawerDemo } from "./cart_drawer";
 
 interface IHeader {}
 
@@ -16,12 +15,7 @@ export default function Header({}: IHeader) {
             id="header_buttons"
             className="hidden h-max items-stretch gap-5 lg:flex"
          >
-            <Link
-               href="#"
-               className={cn(buttonVariants({ variant: "primary" }), "w-max")}
-            >
-               RESERVA AQUÍ
-            </Link>
+            <DrawerDemo />
             <Button className="aspect-square h-max border-white p-4">
                <PushPin size={26} />
             </Button>
