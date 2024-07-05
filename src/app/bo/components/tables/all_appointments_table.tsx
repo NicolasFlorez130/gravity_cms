@@ -20,7 +20,7 @@ import {
    getSortedRowModel,
    useReactTable,
 } from "@tanstack/react-table";
-import type { PopulatedAppointment } from "~/types/appointments";
+import type { Appointment } from "~/types/appointments";
 import PaymentMethodBadge from "~/components/bo/ui/payment_method_badge";
 import StatusBadge from "~/components/bo/ui/status_badge";
 import { useEffect, useState } from "react";
@@ -61,82 +61,72 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
       },
    });
 
-   const columns: ColumnDef<PopulatedAppointment>[] = [
+   const columns: ColumnDef<Appointment>[] = [
       {
-         accessorKey: "appointment.clientNames",
+         accessorKey: "clientNames",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Cliente
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.original.appointment.clientNames}</div>,
+         cell: ({ row }) => <div>{row.original.clientNames}</div>,
       },
       {
-         accessorKey: "appointment.clientEmail",
+         accessorKey: "clientEmail",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Email
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.original.appointment.clientEmail}</div>,
+         cell: ({ row }) => <div>{row.original.clientEmail}</div>,
       },
       {
-         accessorKey: "appointment.createdAt",
+         accessorKey: "createdAt",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Fecha de creación
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => (
-            <div>{row.original.appointment.createdAt.toDateString()}</div>
-         ),
+         cell: ({ row }) => <div>{row.original.createdAt.toDateString()}</div>,
          filterFn: dateFilterFunction,
       },
       {
-         accessorKey: "appointment.totalAmount",
+         accessorKey: "totalAmount",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Total pagado
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => (
-            <div>
-               {formatCurrency(Number(row.original.appointment.totalAmount))}
-            </div>
+            <div>{formatCurrency(Number(row.original.totalAmount))}</div>
          ),
       },
       {
-         accessorKey: "appointment.paymentMethod",
+         accessorKey: "paymentMethod",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Método de pago
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => (
-            <PaymentMethodBadge
-               paymentMethod={row.original.appointment.paymentMethod}
-            />
+            <PaymentMethodBadge paymentMethod={row.original.paymentMethod} />
          ),
       },
       {
-         accessorKey: "appointment.status",
+         accessorKey: "status",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Estado
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => (
-            <StatusBadge status={row.original.appointment.status} />
-         ),
+         cell: ({ row }) => <StatusBadge status={row.original.status} />,
       },
       {
          id: "actions",
          enableHiding: false,
          cell: ({
             row: {
-               original: {
-                  appointment: { status, id },
-               },
+               original: { status, id },
             },
          }) => {
             return (
@@ -180,7 +170,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
       },
    ];
 
-   const data = useStore.use.populatedAppointments();
+   const data = useStore.use.appointments();
 
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
    const [sorting, setSorting] = useState<SortingState>([]);
@@ -237,8 +227,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                      <TableRow
                         key={row.id}
                         className={cn(
-                           row.original.appointment.id === changingState &&
-                              "opacity-50",
+                           row.original.id === changingState && "opacity-50",
                         )}
                      >
                         {row.getVisibleCells().map(cell => (

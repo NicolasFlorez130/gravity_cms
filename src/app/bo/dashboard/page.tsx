@@ -63,7 +63,7 @@ export default function Page({}: IPage) {
                <DashboardCard className="grid gap-2">
                   <div className="flex items-center justify-between">
                      <h2 className="text-gray-700">
-                        Reservas recientes (online)
+                        Reservas recientes (landing)
                      </h2>
                      <AppointmentsDialog />
                   </div>

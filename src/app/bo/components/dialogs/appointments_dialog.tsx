@@ -34,7 +34,7 @@ export default function AppointmentsDialog({}: IAppointmentsDialog) {
    return (
       <Dialog>
          <DialogTrigger asChild>
-            <Button variant="secondary">Ver todos</Button>
+            <Button variant="secondary">Ver todas</Button>
          </DialogTrigger>
          <DialogContent className="grid h-[90vh] w-[90vw] max-w-none grid-rows-[auto_auto_1fr_auto_auto] gap-0 overflow-auto text-black">
             <DialogHeader>

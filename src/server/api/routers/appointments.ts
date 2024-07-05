@@ -55,17 +55,17 @@ export const appointmentsRouter = createTRPCRouter({
                   throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
                }
 
-               await Promise.all(
-                  input.packages.map(pkg =>
-                     tx.insert(appointmentsPackages).values({
-                        ...pkg,
-                        appointmentId,
-                     }),
-                  ),
+               await tx.insert(appointmentsPackages).values(
+                  input.packages.map(pkg => ({
+                     ...pkg,
+                     appointmentId,
+                  })),
                );
 
                return appointmentId;
             } catch (error) {
+               console.error(error);
+
                tx.rollback();
 
                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });

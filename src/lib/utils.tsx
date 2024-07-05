@@ -213,7 +213,7 @@ export function generateDates(startDate: Date, endDate: Date): Date[] {
  * @returns True if the row's date falls within the range, false otherwise.
  */
 export function dateFilterFunction(
-   row: Row<PopulatedAppointment>,
+   row: Row<any>,
    column: string,
    { from, to }: DateRange,
 ) {
