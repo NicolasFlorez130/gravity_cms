@@ -39,12 +39,6 @@ export default function UpdatePackageDialog({ data }: IUpdatePackageDialog) {
       disabled: isPending,
 
       defaultValues: {
-         forChildren: false,
-         description: "",
-         minutePrice: 0,
-         name: "",
-         usersQuantity: 1,
-         price: 0,
          ...data,
       },
    });
