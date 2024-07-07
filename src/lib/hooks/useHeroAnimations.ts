@@ -10,6 +10,7 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
 
    const scrubHeight = "1000vh";
 
+   const isLg = useMediaQuery("(min-width: 1024px)");
    const isXl = useMediaQuery("(min-width: 1280px)");
    const isFHD = useMediaQuery("(min-width: 1900px)");
 
@@ -493,6 +494,50 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
             }
          }
       },
-      { scope: container, dependencies: [isFHD, isXl], revertOnUpdate: true },
+      {
+         scope: container,
+         dependencies: [isFHD, isXl],
+         revertOnUpdate: true,
+      },
+   );
+
+   useGSAP(
+      () => {
+         if (isLg) {
+            const bookButton = document.getElementById("book_button");
+            const landingHeader = document.getElementById("landing_header");
+
+            if (bookButton && landingHeader) {
+               gsap.to(bookButton, {
+                  y: 100,
+                  autoAlpha: 0,
+                  duration: 0,
+               });
+
+               ScrollTrigger.create({
+                  trigger: landingHeader,
+                  start: "top top",
+                  end: "bottom top",
+                  onLeaveBack: () =>
+                     gsap.to(bookButton, {
+                        y: 100,
+                        autoAlpha: 0,
+                        duration: 0.5,
+                     }), // Hide
+                  onEnter: () =>
+                     gsap.to(bookButton, {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.5,
+                     }), // Show
+               });
+            }
+         }
+      },
+      {
+         scope: container,
+         dependencies: [isLg],
+         revertOnUpdate: true,
+      },
    );
 }

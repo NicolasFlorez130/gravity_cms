@@ -15,6 +15,7 @@ import {
 } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "~/lib/zod_lang";
+import { onlyNumbers } from "~/lib/regex";
 
 export const statusEnum = pgEnum("status", [
    "PAID",
@@ -80,7 +81,11 @@ export const appointmentsPackages = createTable("appointment_pack", {
    createdAt: createdAtColumn,
 });
 
-export const insertAppointmentSchema = createInsertSchema(appointments);
+export const insertAppointmentSchema = createInsertSchema(appointments, {
+   clientEmail: z.string().min(1).email(),
+   clientNames: z.string().min(1),
+   clientPhoneNumber: z.string().regex(onlyNumbers),
+});
 export const insertPackageSchema = createInsertSchema(packages, {
    name: z.string().min(1),
    price: z.number().min(0),

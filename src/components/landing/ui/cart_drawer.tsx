@@ -31,11 +31,11 @@ import {
    FormMessage,
 } from "./form";
 import { Input } from "./input";
-import { formatCurrency } from "~/lib/utils";
+import { cn, formatCurrency } from "~/lib/utils";
 import { useToast } from "./use-toast";
 import Loading from "~/components/shared/loading";
 
-export function DrawerDemo() {
+export function CartDrawer() {
    const { toast } = useToast();
 
    const { refresh } = useRouterRefresh();
@@ -123,7 +123,17 @@ export function DrawerDemo() {
    return (
       <Drawer>
          <DrawerTrigger asChild>
-            <Button variant="primary" className="w-max backdrop-blur-sm">
+            <Button variant="primary" className="relative w-max backdrop-blur">
+               {
+                  <div
+                     className={cn(
+                        "absolute -left-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-black opacity-0 transition-all",
+                        !!cart.length && "opacity-100",
+                     )}
+                  >
+                     {cart.length}
+                  </div>
+               }
                RESERVA AQUÍ
             </Button>
          </DrawerTrigger>
@@ -147,20 +157,24 @@ export function DrawerDemo() {
                   onSubmit={form.handleSubmit(data => mutate(data))}
                >
                   <div className="grid gap-4 p-4">
-                     {fields.map((item, i) => (
-                        <CartItemCard
-                           key={item.id}
-                           item={item}
-                           form={form}
-                           i={i}
-                           remove={remove}
-                           updateTotalSum={updateTotalSum}
-                        />
-                     ))}
+                     {fields.length ? (
+                        fields.map((item, i) => (
+                           <CartItemCard
+                              key={item.id}
+                              item={item}
+                              form={form}
+                              i={i}
+                              remove={remove}
+                              updateTotalSum={updateTotalSum}
+                           />
+                        ))
+                     ) : (
+                        <>No has agregado ningún paquete</>
+                     )}
                   </div>
 
-                  <div className="grid gap-4 bg-background-black p-4">
-                     <p className="font-semibold">
+                  <div className="grid gap-4 bg-background-black p-4 lg:grid-cols-2">
+                     <p className="font-semibold lg:col-span-2">
                         Datos para programar la reserva
                      </p>
                      <FormField
@@ -214,6 +228,7 @@ export function DrawerDemo() {
                         type="submit"
                         variant="muted"
                         className="flex items-center justify-center"
+                        disabled={isPending || !fields.length}
                      >
                         {isPending ? <Loading /> : <>PROGRAMAR AHORA</>}
                      </Button>

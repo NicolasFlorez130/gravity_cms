@@ -74,15 +74,13 @@ export default function CartItemCard({
                <Trash />
             </Button>
          </CardHeader>
-         <CardContent className="grid grid-cols-1 gap-4 p-0">
+         <CardContent className="grid grid-cols-1 gap-4 p-0 lg:grid-cols-2 lg:items-end lg:gap-8">
             <FormField
                control={form.control}
                name={`packages.${i}.extraMinutes`}
                render={({ field }) => (
-                  <FormItem className="col-span-2 grid w-full grid-cols-2 items-center gap-2 space-y-0">
-                     <FormLabel>
-                        Minutos extra
-                     </FormLabel>
+                  <FormItem className="grid w-full grid-cols-2 items-center gap-2 space-y-0">
+                     <FormLabel>Minutos extra</FormLabel>
                      <FormControl>
                         <Input
                            {...field}
