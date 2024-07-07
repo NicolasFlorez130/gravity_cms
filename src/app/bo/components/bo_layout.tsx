@@ -64,12 +64,6 @@ export default function BoLayout({ children }: IBoLayout) {
                     label: "Cerrar sesión",
                     type: "button",
                  },
-                 {
-                    action: () => true,
-                    icon: <Dot className="invisible" size={14} />,
-                    label: "Cambiar contraseña",
-                    type: "button",
-                 },
               ],
            }
          : {

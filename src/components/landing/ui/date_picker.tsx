@@ -6,8 +6,8 @@ import type { Dispatch, SetStateAction } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Button, type ButtonProps } from "./button";
 import { cn } from "~/lib/utils";
-import { Calendar } from "../../shared/calendar";
 import type { Matcher } from "react-day-picker";
+import { Calendar } from "~/components/shared/calendar";
 
 interface IDatePicker extends ButtonProps {
    date: Date | undefined;
@@ -26,16 +26,16 @@ export function DatePicker({
       <Popover>
          <PopoverTrigger asChild>
             <Button
-               variant={"outline"}
                {...props}
+               variant="ghost"
                className={cn(
-                  "w-[280px] justify-start text-left font-normal",
+                  "flex h-10 w-full items-center justify-between rounded-full border-b-2 border-input bg-background-dark px-3 py-2 text-sm !text-white ring-offset-background-dark placeholder:text-gray-300 hover:!bg-background-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
                   !date && "text-muted-foreground",
                   className,
                )}
             >
-               <CalendarIcon className="mr-2 h-4 w-4" />
                {date ? format(date, "PPP") : <span>Selecciona una fecha</span>}
+               <CalendarIcon className="mr-2 h-4 w-4" />
             </Button>
          </PopoverTrigger>
          <PopoverContent className="w-auto p-0">

@@ -41,6 +41,11 @@ export default function CreatePackageDialog({ active }: ICreatePackageDialog) {
       defaultValues: {
          active,
          forChildren: false,
+         description: "",
+         minutePrice: 0,
+         name: "",
+         usersQuantity: 1,
+         price: 0,
       },
    });
 

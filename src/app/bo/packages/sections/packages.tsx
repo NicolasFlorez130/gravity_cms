@@ -2,9 +2,10 @@
 
 import { api } from "~/trpc/react";
 import PackagesRow from "../../components/common/packages_row";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import Loading from "~/components/shared/loading";
 import React, { createContext, useContext } from "react";
+import { useStore } from "~/lib/features/store";
 
 const RefetchContext = createContext<() => any>(() => undefined);
 
@@ -13,7 +14,15 @@ export const useRefetch = () => useContext(RefetchContext);
 interface IPackages {}
 
 export default function Packages({}: IPackages) {
+   const setPackages = useStore.use.setPackages();
+
    const { data, refetch, isLoading } = api.packages.getAll.useQuery();
+
+   useEffect(() => {
+      if (data) {
+         setPackages(data);
+      }
+   }, [data, setPackages]);
 
    const activePackages = useMemo(
       () => data?.filter(pkg => pkg.active) ?? [],

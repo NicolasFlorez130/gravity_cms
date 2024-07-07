@@ -46,7 +46,10 @@ export default function CreateNoteDialog({ refetch }: ICreateNoteDialog) {
 
    const form = useForm<InsertNote>({
       resolver: zodResolver(insertNoteSchema),
-      defaultValues: {},
+      defaultValues: {
+         description: "",
+         title: "",
+      },
       disabled: isPending,
    });
 

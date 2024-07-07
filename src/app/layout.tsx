@@ -6,6 +6,8 @@ import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
 import Body from "~/components/shared/body";
 import AuthProvider from "~/components/shared/providers/auth_provider";
+import GlobalsGetter from "~/components/shared/getters/globals_getter";
+import { Toaster } from "~/components/landing/ui/toaster";
 
 const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
@@ -44,8 +46,10 @@ export default async function RootLayout({
             )}
          >
             <TRPCReactProvider>
+               <GlobalsGetter />
                <AuthProvider>{children}</AuthProvider>
             </TRPCReactProvider>
+            <Toaster />
          </Body>
       </html>
    );

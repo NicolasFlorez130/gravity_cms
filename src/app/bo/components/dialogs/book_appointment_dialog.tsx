@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash } from "@phosphor-icons/react/dist/ssr";
 import { SelectValue } from "@radix-ui/react-select";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
    type UseFieldArrayRemove,
    type UseFormReturn,
@@ -38,8 +38,10 @@ import {
    SelectTrigger,
 } from "~/components/bo/ui/select";
 import Loading from "~/components/shared/loading";
+import { useStore } from "~/lib/features/store";
 import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import {
+   findDatesWithOccurrences,
    formatCurrency,
    parseDateToMidnightStartOfDay,
    parseEventForNumber,
@@ -64,8 +66,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
 
    const { refresh } = useRouterRefresh();
 
-   const { data: packages, isLoading } =
-      api.packages.getActivePackages.useQuery();
+   const packages = useStore.use.packages();
 
    const { mutate, isPending } = api.appointments.book.useMutation({
       onSuccess: async () => {
@@ -79,6 +80,11 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
       defaultValues: {
          reference: "",
          status: "PENDING",
+         clientEmail: "",
+         clientNames: "",
+         clientPhoneNumber: "",
+         totalAmount: 0,
+         paymentMethod: "ONLINE",
       },
       disabled: isPending,
    });
@@ -93,7 +99,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
    function updateTotalSum() {
       const pkgs = new Map<string, IPackage>();
 
-      packages?.map(pkg => pkgs.set(pkg.id, pkg));
+      packages.forEach(pkg => pkgs.set(pkg.id, pkg));
 
       let sum = 0;
 
@@ -119,10 +125,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
             </DialogHeader>
             <Form {...form}>
                <form
-                  onSubmit={form.handleSubmit(
-                     data => mutate(data),
-                     console.log,
-                  )}
+                  onSubmit={form.handleSubmit(data => mutate(data))}
                   className="grid gap-5 p-6 pt-0"
                >
                   <FormField
@@ -189,8 +192,6 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                               key={row.id}
                               form={form}
                               i={i}
-                              isLoading={isLoading}
-                              packages={packages}
                               remove={remove}
                               updateTotalSum={updateTotalSum}
                            />
@@ -287,8 +288,6 @@ interface IBookingPackageCard {
    form: UseFormReturn<InputObject>;
    i: number;
    updateTotalSum(): void;
-   isLoading: boolean;
-   packages?: IPackage[];
 }
 
 function BookingPackageCard({
@@ -296,8 +295,6 @@ function BookingPackageCard({
    form,
    i,
    updateTotalSum,
-   isLoading,
-   packages,
 }: IBookingPackageCard) {
    const [daySelected, setDaySelected] = useState<Date>();
 
@@ -306,6 +303,18 @@ function BookingPackageCard({
 
       setDaySelected(form.getValues().packages.at(i)?.date);
    }
+
+   const servicesBooked = useStore.use.services();
+   const packages = useStore.use.packages();
+
+   const unavailableDates = useMemo(
+      () =>
+         findDatesWithOccurrences(
+            servicesBooked,
+            ({ appointment_pack: { date } }) => date,
+         ),
+      [servicesBooked],
+   );
 
    return (
       <>
@@ -334,6 +343,7 @@ function BookingPackageCard({
                               field.onChange,
                               updateDaySelected,
                            )}
+                           disabledDates={unavailableDates}
                         />
                      </FormControl>
                      <FormMessage />
@@ -352,7 +362,7 @@ function BookingPackageCard({
                            updateTotalSum();
                         }}
                         defaultValue={field.value}
-                        disabled={isLoading || !daySelected || field.disabled}
+                        disabled={!daySelected || field.disabled}
                      >
                         <FormControl>
                            <SelectTrigger>
@@ -362,7 +372,8 @@ function BookingPackageCard({
                         <SelectContent>
                            {packages
                               ?.filter(
-                                 ({ availability }) =>
+                                 ({ availability, active }) =>
+                                    active &&
                                     daySelected &&
                                     verifyAvailability(
                                        availability,

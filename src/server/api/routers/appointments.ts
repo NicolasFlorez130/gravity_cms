@@ -3,18 +3,21 @@ import {
    appointmentsPackages,
    bookAppointmentSchema,
 } from "~/server/db/schemas/packages_appointments";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { and, asc, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { setDateTimeTo0 } from "~/lib/utils";
+import type { api } from "~/trpc/server";
+
+export type InputObject = Parameters<typeof api.appointments.book>["0"];
 
 export const appointmentsRouter = createTRPCRouter({
-   getAll: protectedProcedure.query(({ ctx }) =>
+   getAll: publicProcedure.query(({ ctx }) =>
       ctx.db.query.appointments.findMany(),
    ),
 
-   getAllServices: protectedProcedure.query(({ ctx }) =>
+   getAllServices: publicProcedure.query(({ ctx }) =>
       ctx.db
          .select()
          .from(appointmentsPackages)
@@ -45,7 +48,7 @@ export const appointmentsRouter = createTRPCRouter({
             .limit(input),
       ),
 
-   book: protectedProcedure
+   book: publicProcedure
       .input(bookAppointmentSchema)
       .mutation(({ ctx, input }) =>
          ctx.db.transaction(async tx => {

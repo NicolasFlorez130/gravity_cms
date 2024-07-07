@@ -9,7 +9,7 @@ import {
    CaretDown,
    CaretUp,
 } from "@phosphor-icons/react/dist/ssr";
-import { useEffect, useRef, useState } from "react";
+import { type PropsWithChildren, useEffect, useRef, useState } from "react";
 import { cn } from "~/lib/utils";
 import type { Group, ItemButton, ItemLink } from "~/lib/routes";
 
@@ -46,12 +46,20 @@ export default function Sidebar({ navButtons }: ISidebar) {
       if (!flipState.current) return;
 
       Flip.from(flipState.current, {
-         duration: .2,
+         duration: 0.2,
          ease: "sine.out",
       });
 
       flipState.current = undefined;
    }, [isExpanded]);
+
+   function ExpandableLabel({ children }: PropsWithChildren) {
+      return (
+         <span className={cn("expandable", !isExpanded && "hidden")}>
+            {children}
+         </span>
+      );
+   }
 
    function ItemLink({ icon, label, url }: ItemLink) {
       const isThisRoute = pathname === url;
@@ -67,7 +75,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
             href={url}
          >
             <span className="flex-none">{icon}</span>
-            {isExpanded && label}
+            <ExpandableLabel>{label}</ExpandableLabel>
          </Link>
       );
    }
@@ -76,12 +84,12 @@ export default function Sidebar({ navButtons }: ISidebar) {
       return (
          <Button
             variant="ghost"
-            className="expandable disabled:text-gray-400 flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60"
+            className="expandable flex w-full justify-start gap-2 truncate hover:bg-bo-blue-light/60 disabled:text-gray-400"
             onClick={action}
             disabled={disabled}
          >
             <span className="flex-none">{icon}</span>
-            {isExpanded && label}
+            <ExpandableLabel>{label}</ExpandableLabel>
          </Button>
       );
    }
@@ -107,7 +115,7 @@ export default function Sidebar({ navButtons }: ISidebar) {
             >
                <span className="flex items-center gap-2">
                   {icon}
-                  {isExpanded && label}
+                  <ExpandableLabel>{label}</ExpandableLabel>
                </span>
                {isExpanded && (isOpen ? <CaretUp /> : <CaretDown />)}
             </Button>

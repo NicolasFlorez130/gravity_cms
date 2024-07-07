@@ -86,7 +86,7 @@ export default function Opinions({ images, opinions }: IOpinions) {
                   className="opinions grid w-full flex-none items-center justify-items-center gap-6 overflow-hidden transition-all sm:grid-cols-[1fr_2fr] sm:pl-4 xl:w-auto xl:grid-cols-[1fr_auto] xl:gap-0"
                >
                   <div className="relative z-10 bg-background-dark">
-                     <div className="relative aspect-square w-1/2 max-w-screen-sm overflow-hidden rounded-full sm:w-full xl:w-[calc(100vw/6)]">
+                     <div className="relative flex-none aspect-square w-[calc(100vw/2)] max-w-screen-sm overflow-hidden rounded-full sm:w-full xl:w-[calc(100vw/6)]">
                         <Image
                            alt={`${opinion.name} picture`}
                            src={

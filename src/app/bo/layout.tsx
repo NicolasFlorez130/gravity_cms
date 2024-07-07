@@ -1,7 +1,5 @@
 import { type PropsWithChildren } from "react";
 import BoLayout from "./components/bo_layout";
-import { api } from "~/trpc/server";
-import BoSetter from "./components/bo_setter";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import BoAuthObserver from "./components/bo_auth_observer";
@@ -15,18 +13,10 @@ export default async function Layout({ children }: PropsWithChildren<unknown>) {
       redirect("/auth");
    }
 
-   try {
-      const appointments = await api.appointments.getAll();
-      const services = await api.appointments.getAllServices();
-
-      return (
-         <>
-            <BoAuthObserver user={user} />
-            <BoSetter appointments={appointments} services={services} />
-            <BoLayout>{children}</BoLayout>
-         </>
-      );
-   } catch (error) {
-      redirect("/auth");
-   }
+   return (
+      <>
+         <BoAuthObserver user={user} />
+         <BoLayout>{children}</BoLayout>
+      </>
+   );
 }

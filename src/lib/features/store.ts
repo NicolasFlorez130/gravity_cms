@@ -5,6 +5,7 @@ import {
 } from "./slices/appointments_slice";
 import { type CartSlice, cartSlice } from "./slices/cart_slice";
 import type { StoreApi, UseBoundStore } from "zustand";
+import { type PackagesSlice, packagesSlice } from "./slices/packages_slice";
 
 type WithSelectors<S> = S extends { getState: () => infer T }
    ? S & { use: { [K in keyof T]: () => T[K] } }
@@ -23,9 +24,12 @@ const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
    return store;
 };
 
-export const store = create<AppointmentsSlice & CartSlice>((...a) => ({
-   ...appointmentsSlice(...a),
-   ...cartSlice(...a),
-}));
+export const store = create<AppointmentsSlice & CartSlice & PackagesSlice>(
+   (...a) => ({
+      ...appointmentsSlice(...a),
+      ...cartSlice(...a),
+      ...packagesSlice(...a),
+   }),
+);
 
 export const useStore = createSelectors(store);

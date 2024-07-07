@@ -6,7 +6,7 @@ import { type DateRange } from "react-day-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Button } from "./button";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "./calendar";
+import { Calendar } from "../../shared/calendar";
 import { cn } from "~/lib/utils";
 
 interface IDateRangePicker {

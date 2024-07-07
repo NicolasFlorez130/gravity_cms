@@ -1,24 +1,23 @@
 import { type StateCreator } from "zustand";
 
-interface BookingPackage {
-   packageId: number;
-   date: Date | null;
+export interface BookingPackage {
+   id: string;
+   packageId: string;
 }
 
 export interface CartSlice {
-   packages: BookingPackage[];
+   cart: BookingPackage[];
    setCart: (arr: BookingPackage[]) => any;
    addPackageToCart: (arr: BookingPackage[]) => any;
    removeFromCart: (index: number) => any;
 }
 
 export const cartSlice: StateCreator<CartSlice> = set => ({
-   packages: [],
-   setCart: arr => set(state => ({ ...state, packages: arr })),
-   addPackageToCart: arr =>
-      set(state => ({ packages: [...state.packages, ...arr] })),
+   cart: [],
+   setCart: arr => set(state => ({ ...state, cart: arr })),
+   addPackageToCart: arr => set(state => ({ cart: [...state.cart, ...arr] })),
    removeFromCart: index =>
       set(state => ({
-         packages: state.packages.filter((_, i) => i !== index),
+         cart: state.cart.filter((_, i) => i !== index),
       })),
 });

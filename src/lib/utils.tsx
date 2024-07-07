@@ -1,13 +1,10 @@
 import type { Row } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
-import { set, type Day } from "date-fns";
+import { format, set, type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
-import type {
-   AppointmentPaymentMethod,
-   Service,
-} from "~/types/appointments";
+import type { AppointmentPaymentMethod, Service } from "~/types/appointments";
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { onlyNumbersAndEmpty } from "./regex";
@@ -40,6 +37,22 @@ export function translateDays(days: number[]) {
    }
 }
 
+export function generateRandomString(length = 10) {
+   const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+   let randomString = "";
+
+   for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters.charAt(randomIndex);
+   }
+
+   return randomString;
+}
+
+export const week_end = [0, 5, 6];
+export const work_days = [1, 2, 3, 4];
+
 /**
  * Verifies if a package is available on a specific day based on its availability settings.
  * @param availability The availability setting of the package.
@@ -59,8 +72,8 @@ export function verifyAvailability(
    const aux = isHoliday(date);
 
    return (
-      (availability === "WEEKEND" && (aux || [0, 5, 6].includes(weekDay))) ||
-      (availability === "WORK_DAYS" && [1, 2, 3, 4].includes(weekDay) && !aux)
+      (availability === "WEEKEND" && (aux || week_end.includes(weekDay))) ||
+      (availability === "WORK_DAYS" && work_days.includes(weekDay) && !aux)
    );
 }
 
@@ -406,4 +419,28 @@ export function setDateTimeTo0(date: Date) {
       seconds: 0,
       milliseconds: 0,
    });
+}
+
+export function findDatesWithOccurrences<T>(arr: T[], cb: (arg: T) => Date) {
+   const dateCounts: Record<string, number> = {};
+
+   for (const el of arr) {
+      const date = format(cb(el), "yyyy-MM-dd");
+
+      dateCounts[date] = (dateCounts[date] ?? 0) + 1;
+   }
+
+   return arr.reduce((filtered, el) => {
+      const date = cb(el);
+
+      const key = format(cb(el), "yyyy-MM-dd");
+
+      const aux = dateCounts[key];
+
+      if (aux && aux >= 15) {
+         filtered.push(date);
+      }
+
+      return filtered;
+   }, [] as Date[]);
 }

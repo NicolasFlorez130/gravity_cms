@@ -6,7 +6,10 @@ export interface AppointmentsSlice {
    services: Service[];
    setServices: (arr: Service[]) => any;
    setAppointments: (arr: Appointment[]) => any;
-   setAll: (data: { appointments: Appointment[]; services: Service[] }) => any;
+   setServicesAndAppointments: (data: {
+      appointments: Appointment[];
+      services: Service[];
+   }) => any;
 }
 
 export const appointmentsSlice: StateCreator<AppointmentsSlice> = set => ({
@@ -14,5 +17,5 @@ export const appointmentsSlice: StateCreator<AppointmentsSlice> = set => ({
    services: [],
    setServices: services => set(state => ({ ...state, services })),
    setAppointments: appointments => set(state => ({ ...state, appointments })),
-   setAll: data => set({ ...data }),
+   setServicesAndAppointments: data => set({ ...data }),
 });

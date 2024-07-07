@@ -95,7 +95,7 @@ export const insertAppointmentPackageSchema = createInsertSchema(
    },
 );
 export const bookAppointmentSchema = insertAppointmentSchema.extend({
-   packages: z.array(
-      insertAppointmentPackageSchema.omit({ appointmentId: true }),
-   ),
+   packages: z
+      .array(insertAppointmentPackageSchema.omit({ appointmentId: true }))
+      .min(1),
 });

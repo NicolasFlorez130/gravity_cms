@@ -10,12 +10,12 @@ import Veil from "~/components/landing/ui/veil";
 import { api } from "~/trpc/server";
 import Footer from "~/components/landing/ui/footer";
 import { groupBy } from "~/lib/utils";
+import { DrawerDemo } from "~/components/landing/ui/cart_drawer";
 
 export default async function Home() {
-   const [images, opinions, packages] = await Promise.all([
+   const [images, opinions] = await Promise.all([
       api.images.getAll(),
       api.opinions.getAll(),
-      api.packages.getActivePackages(),
    ]);
 
    const groupedImages = groupBy(images, "category");
@@ -24,9 +24,12 @@ export default async function Home() {
       <>
          <Veil />
          <main className="relative m-auto max-w-screen-3xl overflow-hidden">
+            <div className="fixed bottom-4 right-4 z-20 h-max w-max">
+               <DrawerDemo />
+            </div>
             <FollowSign />
             <Hero />
-            <Packages packages={packages} />
+            <Packages />
             <Opinions
                images={groupedImages.PROFILE_PICTURES ?? []}
                opinions={opinions}

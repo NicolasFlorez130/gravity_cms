@@ -18,7 +18,7 @@ import { cn, translatePaymentMethod } from "~/lib/utils";
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
-   const services = useStore(state => state.services);
+   const services = useStore.use.services();
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
