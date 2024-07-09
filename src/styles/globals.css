@@ -23,7 +23,7 @@
       --secondary: 190, 67%, 52%;
       --secondary-foreground: 0, 0%, 100%;
 
-      --muted: 192, 61%, 65%;
+      --muted: 192 61% 65%;
       --muted-foreground: 218, 15%, 11%, 1;
 
       --accent: 60 4.8% 95.9%;
@@ -36,7 +36,7 @@
       --destructive-foreground: 210 40% 98%;
 
       --border: 214.3 31.8% 91.4%;
-      --input: 192, 61%, 65%;
+      --input: 214.3 31.8% 91.4%;
       --ring: 222.2 84% 4.9%;
 
       --radius: 0.5rem;
@@ -107,7 +107,7 @@
    @apply !text-start;
 
    & .rbc-button-link {
-      @apply p-3 !rounded-br-xl mb-2;
+      @apply mb-2 !rounded-br-xl p-3;
    }
 }
 

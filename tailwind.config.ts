@@ -29,7 +29,9 @@ const config = {
             bo_close: "#6e7178",
 
             border: "hsl(var(--border))",
-            input: "hsl(var(--input))",
+            input: {
+               DEFAULT: "hsl(var(--input))",
+            },
             ring: "hsl(var(--ring))",
             background: {
                DEFAULT: "hsl(var(--background))",
