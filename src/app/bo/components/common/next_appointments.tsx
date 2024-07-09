@@ -28,7 +28,7 @@ export default function NextAppointments({}: INextAppointments) {
             ) : (
                data?.map((el) => (
                   <AppointmentCard
-                     key={el.appointment_pack.id}
+                     key={el.service.id}
                      data={el}
                      refetch={refetch}
                   />

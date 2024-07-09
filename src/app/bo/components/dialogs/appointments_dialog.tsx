@@ -13,18 +13,12 @@ import { convertAppointmentsToExcel } from "~/lib/utils";
 import type { DateRange } from "react-day-picker";
 import { DateRangePicker } from "~/components/bo/ui/date_range_picker";
 import { useStore } from "~/lib/features/store";
-import { api } from "~/trpc/react";
 import AllAppointmentsTable from "../tables/all_appointments_table";
 
 interface IAppointmentsDialog {}
 
 export default function AppointmentsDialog({}: IAppointmentsDialog) {
-   const services = useStore.use.services();
-
-   const { data, isFetching, isError } =
-      api.packages.getTotalPurchased.useQuery(undefined, {
-         refetchOnWindowFocus: false,
-      });
+   const services = useStore.use.appointments();
 
    const [dates, setDates] = useState<DateRange | undefined>({
       from: undefined,
@@ -47,13 +41,7 @@ export default function AppointmentsDialog({}: IAppointmentsDialog) {
                <div className="flex gap-10">
                   <div className="grid gap-1">
                      <p className="text-sm text-gray-500">Planes comprados</p>
-                     <p className="text-xl font-medium">
-                        {isFetching
-                           ? "Cargando..."
-                           : isError
-                             ? "Ocurrió un error"
-                             : data?.at(0)?.count}
-                     </p>
+                     <p className="text-xl font-medium">{services.length}</p>
                   </div>
                   <Button
                      variant="purple"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import type { Appointment } from "~/types/appointments";
+import type { Booking } from "~/types/appointments";
 import {
    cn,
    dashboardLineColor,
@@ -33,8 +33,8 @@ ChartJS.register(
    Legend,
 );
 
-function preprocessAppointments(
-   appointments: Appointment[],
+function preprocessBookings(
+   bookings: Booking[],
 ): Record<
    string,
    { landingSum: number; onlineSum: number; onsiteSum: number }
@@ -44,7 +44,7 @@ function preprocessAppointments(
       { landingSum: number; onlineSum: number; onsiteSum: number }
    > = {};
 
-   appointments.forEach(({ paymentMethod, totalAmount, createdAt }) => {
+   bookings.forEach(({ paymentMethod, totalAmount, createdAt }) => {
       const dateString = createdAt.toISOString().split("T")[0]!; // Format date as YYYY-MM-DD
 
       if (!earnings[dateString]) {
@@ -71,12 +71,12 @@ function preprocessAppointments(
    return earnings;
 }
 
-function calculateEarnings(days: Date[], appointments: Appointment[]) {
+function calculateEarnings(days: Date[], bookings: Booking[]) {
    const landingAux: number[] = [];
    const onlineAux: number[] = [];
    const onSiteAux: number[] = [];
 
-   const earnings = preprocessAppointments(appointments);
+   const earnings = preprocessBookings(bookings);
 
    days.forEach(day => {
       const dateString = day.toISOString().split("T")[0]!;
@@ -95,12 +95,12 @@ function calculateEarnings(days: Date[], appointments: Appointment[]) {
 }
 
 interface IDailyAppointmentsChart {
-   appointments: Appointment[];
+   bookings: Booking[];
    dates: DateRange | undefined;
 }
 
 export default function DailyAppointmentsChart({
-   appointments,
+   bookings,
    dates,
 }: IDailyAppointmentsChart) {
    const [isSorting, startTransition] = useTransition();
@@ -123,14 +123,14 @@ export default function DailyAppointmentsChart({
       startTransition(() => {
          const { landingAux, onlineAux, onSiteAux } = calculateEarnings(
             days,
-            appointments,
+            bookings,
          );
 
          setLandingAppointments(landingAux);
          setOnlineAppointments(onlineAux);
          setOnSiteAppointments(onSiteAux);
       });
-   }, [days, appointments]);
+   }, [days, bookings]);
 
    const data = {
       labels: days.map(date => format(date, "d MMM yy")),

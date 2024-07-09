@@ -18,7 +18,6 @@ import { api } from "~/trpc/react";
 import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { bookAppointmentSchema } from "~/server/db/schemas/appointments";
 import { useEffect, useState } from "react";
 import type { IPackage } from "~/types/packages";
 import type { InputObject } from "~/server/api/routers/appointments";
@@ -34,6 +33,7 @@ import { Input } from "./input";
 import { cn, formatCurrency } from "~/lib/utils";
 import { useToast } from "./use-toast";
 import Loading from "~/components/shared/loading";
+import { bookAppointmentSchema } from "~/server/db/schemas/bookings";
 
 export function CartDrawer() {
    const { toast } = useToast();

@@ -51,7 +51,7 @@ import {
 import {
    bookAppointmentSchema,
    paymentMethods,
-} from "~/server/db/schemas/appointments";
+} from "~/server/db/schemas/bookings";
 import { api } from "~/trpc/react";
 import type { IPackage } from "~/types/packages";
 
@@ -302,14 +302,14 @@ function BookingPackageCard({
       setDaySelected(form.getValues().packages.at(i)?.date);
    }
 
-   const servicesBooked = useStore.use.services();
+   const servicesBooked = useStore.use.appointments();
    const packages = useStore.use.packages();
 
    const unavailableDates = useMemo(
       () =>
          findDatesWithOccurrences(
             servicesBooked,
-            ({ appointment_pack: { date } }) => date,
+            ({ service: { date } }) => date,
          ),
       [servicesBooked],
    );

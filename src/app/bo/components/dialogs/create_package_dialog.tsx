@@ -13,10 +13,10 @@ import {
 } from "~/components/bo/ui/dialog";
 import { api } from "~/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertPackageSchema } from "~/server/db/schemas/appointments";
 import type { IPackage } from "~/types/packages";
 import PackageForm from "../common/package_form";
 import { useRefetch } from "../../packages/sections/packages";
+import { insertPackageSchema } from "~/server/db/schemas/packages";
 
 interface ICreatePackageDialog {
    active: boolean;

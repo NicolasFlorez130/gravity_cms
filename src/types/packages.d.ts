@@ -1,5 +1,5 @@
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import type { packages } from "~/server/db/schemas/appointments";
+import type { packages } from "~/server/db/schemas/packages";
 
 type IPackage = InferSelectModel<typeof packages>;
 

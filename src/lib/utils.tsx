@@ -4,7 +4,10 @@ import { format, set, type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
-import type { AppointmentPaymentMethod, Service } from "~/types/appointments";
+import type {
+   Appointment,
+   AppointmentPaymentMethod,
+} from "~/types/appointments";
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { onlyNumbersAndEmpty } from "./regex";
@@ -165,10 +168,10 @@ export function printAsSpans(text: string) {
  * @param transactions An array of appointments.
  * @returns An array of objects each representing a month with total sum and date.
  */
-export function getMonthlyTotals(transactions: Service[]) {
+export function getMonthlyTotals(transactions: Appointment[]) {
    const monthlyTotals: Record<string, { sum: number; date: Date }> = {};
 
-   transactions.forEach(({ appointment: { totalAmount, createdAt } }) => {
+   transactions.forEach(({ booking: { totalAmount, createdAt } }) => {
       const year = createdAt.getFullYear();
       const month = createdAt.getMonth() + 1;
       const monthYear = `${year}-${month.toString().padStart(2, "0")}`;
@@ -245,34 +248,32 @@ export function dateFilterFunction(
 
 /**
  * Converts an array of appointments to an Excel file.
- * @param services The appointments to convert.
+ * @param appointments The appointments to convert.
  * @param fileName The name of the resulting Excel file.
  * @param dates Optional date range to filter appointments.
  */
 export function convertAppointmentsToExcel(
-   services: Service[],
+   appointments: Appointment[],
    fileName: string,
    dates?: DateRange,
 ) {
-   const filteredServices = services.filter(
-      ({ appointment_pack: { date } }) =>
+   const filteredServices = appointments.filter(
+      ({ service: { date } }) =>
          (!dates?.from || date >= dates.from) &&
          (!dates?.to || date <= dates.to),
    );
 
    // Convert records to a format that can be used by xlsx
-   const formattedRecords = filteredServices.map(
-      ({ appointment, appointment_pack }) => ({
-         date: appointment_pack.date.toISOString(),
-         id: appointment.id,
-         clientNames: appointment.clientNames,
-         clientEmail: appointment.clientEmail,
-         clientPhoneNumber: appointment.clientPhoneNumber,
-         totalAmount: appointment.totalAmount,
-         paymentMethod: appointment.paymentMethod,
-         createdAt: appointment.createdAt.toISOString(),
-      }),
-   );
+   const formattedRecords = filteredServices.map(({ booking, service }) => ({
+      date: service.date.toISOString(),
+      id: booking.id,
+      clientNames: booking.clientNames,
+      clientEmail: booking.clientEmail,
+      clientPhoneNumber: booking.clientPhoneNumber,
+      totalAmount: booking.totalAmount,
+      paymentMethod: booking.paymentMethod,
+      createdAt: booking.createdAt.toISOString(),
+   }));
 
    // Create a worksheet from the records
    const worksheet = XLSX.utils.json_to_sheet(formattedRecords);

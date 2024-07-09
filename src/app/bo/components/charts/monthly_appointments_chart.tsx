@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import type { Appointment } from "~/types/appointments";
+import type { Booking } from "~/types/appointments";
 import {
    cn,
    dashboardLineColor,
@@ -33,13 +33,13 @@ ChartJS.register(
    Legend,
 );
 
-function preprocessAppointments(appointments: Appointment[]) {
+function preprocessBookings(bookings: Booking[]) {
    const earnings: Record<
       string,
       { landingSum: number; onlineSum: number; onsiteSum: number }
    > = {};
 
-   appointments.forEach(({ paymentMethod, totalAmount, createdAt }) => {
+   bookings.forEach(({ paymentMethod, totalAmount, createdAt }) => {
       const yearMonth = `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}`;
 
       if (!earnings[yearMonth]) {
@@ -62,11 +62,11 @@ function preprocessAppointments(appointments: Appointment[]) {
    return earnings;
 }
 
-function calculateMonthlyEarnings(days: Date[], appointments: Appointment[]) {
+function calculateMonthlyEarnings(days: Date[], bookings: Booking[]) {
    const start = new Date(days[0]!);
    const end = new Date(days[days.length - 1]!);
 
-   const earnings = preprocessAppointments(appointments);
+   const earnings = preprocessBookings(bookings);
    const monthlyEarnings = [];
 
    const currentDate = new Date(start);
@@ -94,12 +94,12 @@ function calculateMonthlyEarnings(days: Date[], appointments: Appointment[]) {
 }
 
 interface IMonthlyAppointmentsChart {
-   appointments: Appointment[];
+   bookings: Booking[];
    dates: DateRange | undefined;
 }
 
 export default function MonthlyAppointmentsChart({
-   appointments,
+   bookings,
    dates,
 }: IMonthlyAppointmentsChart) {
    const [isSorting, startTransition] = useTransition();
@@ -118,9 +118,9 @@ export default function MonthlyAppointmentsChart({
 
    useEffect(() => {
       startTransition(() => {
-         setMonthlyEarning(calculateMonthlyEarnings(days, appointments));
+         setMonthlyEarning(calculateMonthlyEarnings(days, bookings));
       });
-   }, [appointments, days]);
+   }, [bookings, days]);
 
    const data = {
       labels: monthlyEarnings.map(({ monthDate }) =>

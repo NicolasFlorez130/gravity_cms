@@ -43,7 +43,7 @@ export default function CartItemCard({
 }: ICartItemCard) {
    const packages = useStore.use.packages();
    const removeFromCart = useStore.use.removeFromCart();
-   const servicesBooked = useStore.use.services();
+   const servicesBooked = useStore.use.appointments();
 
    const pkg = packages.find(({ id }) => id === item.packageId);
 
@@ -51,7 +51,7 @@ export default function CartItemCard({
       () =>
          findDatesWithOccurrences(
             servicesBooked,
-            ({ appointment_pack: { date } }) => date,
+            ({ service: { date } }) => date,
          ),
       [servicesBooked],
    );

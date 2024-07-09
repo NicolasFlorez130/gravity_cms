@@ -18,7 +18,7 @@ import { cn, translatePaymentMethod } from "~/lib/utils";
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
-   const services = useStore.use.services();
+   const services = useStore.use.appointments();
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
@@ -115,23 +115,21 @@ export function BigCalendar({}: IBigCalendar) {
          <Calendar
             toolbar={false}
             localizer={localizer}
-            events={services.map(
-               ({ appointment, appointment_pack: { date } }) => ({
-                  end: addHours(date, 2),
-                  start: date,
-                  title: translatePaymentMethod(appointment.paymentMethod),
-                  className: cn(
-                     appointment.paymentMethod === "COURTESY" &&
-                        "bg-violet-100 text-violet-500",
-                     appointment.paymentMethod === "LANDING" &&
-                        "bg-blue-100 text-blue-500",
-                     appointment.paymentMethod === "ONLINE" &&
-                        "bg-orange-100 text-orange-500",
-                     appointment.paymentMethod === "ON_SITE" &&
-                        "bg-green-100 text-green-500",
-                  ),
-               }),
-            )}
+            events={services.map(({ booking, service: { date } }) => ({
+               end: addHours(date, 2),
+               start: date,
+               title: translatePaymentMethod(booking.paymentMethod),
+               className: cn(
+                  booking.paymentMethod === "COURTESY" &&
+                     "bg-violet-100 text-violet-500",
+                  booking.paymentMethod === "LANDING" &&
+                     "bg-blue-100 text-blue-500",
+                  booking.paymentMethod === "ONLINE" &&
+                     "bg-orange-100 text-orange-500",
+                  booking.paymentMethod === "ON_SITE" &&
+                     "bg-green-100 text-green-500",
+               ),
+            }))}
             views={["day", "week", "month"]}
             startAccessor="start"
             view={view}

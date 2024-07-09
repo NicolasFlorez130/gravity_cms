@@ -31,7 +31,7 @@ enum ChartMode {
 interface IPage {}
 
 export default function Page({}: IPage) {
-   const appointments = useStore.use.appointments();
+   const appointments = useStore.use.bookings();
 
    const [chartMode, setChartMode] = useState(ChartMode.monthly);
    const [dates, setDates] = useState<DateRange | undefined>({
@@ -99,12 +99,12 @@ export default function Page({}: IPage) {
                         arr.length ? (
                            chartMode === ChartMode.daily ? (
                               <DailyAppointmentsChart
-                                 appointments={arr}
+                                 bookings={arr}
                                  dates={dates}
                               />
                            ) : (
                               <MonthlyAppointmentsChart
-                                 appointments={arr}
+                                 bookings={arr}
                                  dates={dates}
                               />
                            )

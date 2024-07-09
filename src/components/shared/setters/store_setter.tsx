@@ -4,18 +4,18 @@ import { useEffect } from "react";
 import type { BookingPackage } from "~/lib/features/slices/cart_slice";
 import { useStore } from "~/lib/features/store";
 import { SAVED_CART_KEY } from "~/lib/keys";
-import type { Appointment, Service } from "~/types/appointments";
+import type { Appointment, Booking } from "~/types/appointments";
 import type { IPackage } from "~/types/packages";
 
 interface IStoreSetter {
+   bookings: Booking[];
    appointments: Appointment[];
-   services: Service[];
    packages: IPackage[];
 }
 
 export default function StoreSetter({
+   bookings,
    appointments,
-   services,
    packages,
 }: IStoreSetter) {
    const setAll = useStore.use.setServicesAndAppointments();
@@ -26,13 +26,13 @@ export default function StoreSetter({
 
    useEffect(() => {
       setAll({
+         bookings,
          appointments,
-         services,
       });
 
       setPackages(packages);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [appointments, services]);
+   }, [bookings, appointments]);
 
    useEffect(() => {
       const item = localStorage.getItem(SAVED_CART_KEY);

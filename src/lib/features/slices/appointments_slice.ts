@@ -1,21 +1,21 @@
 import { type StateCreator } from "zustand";
-import type { Appointment, Service } from "~/types/appointments";
+import type { Booking, Appointment } from "~/types/appointments";
 
 export interface AppointmentsSlice {
+   bookings: Booking[];
    appointments: Appointment[];
-   services: Service[];
-   setServices: (arr: Service[]) => any;
-   setAppointments: (arr: Appointment[]) => any;
+   setAppointment: (arr: Appointment[]) => any;
+   setBookings: (arr: Booking[]) => any;
    setServicesAndAppointments: (data: {
+      bookings: Booking[];
       appointments: Appointment[];
-      services: Service[];
    }) => any;
 }
 
 export const appointmentsSlice: StateCreator<AppointmentsSlice> = set => ({
+   bookings: [],
    appointments: [],
-   services: [],
-   setServices: services => set(state => ({ ...state, services })),
-   setAppointments: appointments => set(state => ({ ...state, appointments })),
+   setAppointment: appointments => set(state => ({ ...state, appointments })),
+   setBookings: bookings => set(state => ({ ...state, bookings })),
    setServicesAndAppointments: data => set({ ...data }),
 });

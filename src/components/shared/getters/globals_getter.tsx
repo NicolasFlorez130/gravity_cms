@@ -4,7 +4,7 @@ import { api } from "~/trpc/server";
 interface IGlobalsGetter {}
 
 export default async function GlobalsGetter({}: IGlobalsGetter) {
-   const [appointments, services, packages] = await Promise.all([
+   const [bookings, services, packages] = await Promise.all([
       api.appointments.getAllConfirmed(),
       api.appointments.getAllServicesConfirmed(),
       api.packages.getAll(),
@@ -12,9 +12,9 @@ export default async function GlobalsGetter({}: IGlobalsGetter) {
 
    return (
       <StoreSetter
-         appointments={appointments.map(({ appointment }) => appointment)}
+         bookings={bookings.map(({ booking }) => booking)}
          packages={packages}
-         services={services}
+         appointments={services}
       />
    );
 }

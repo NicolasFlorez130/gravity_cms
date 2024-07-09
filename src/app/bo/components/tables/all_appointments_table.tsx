@@ -20,7 +20,7 @@ import {
    getSortedRowModel,
    useReactTable,
 } from "@tanstack/react-table";
-import type { Service } from "~/types/appointments";
+import type { Appointment } from "~/types/appointments";
 import PaymentMethodBadge from "~/components/bo/ui/payment_method_badge";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/bo/ui/button";
@@ -51,9 +51,9 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          },
       });
 
-   const columns: ColumnDef<Service>[] = [
+   const columns: ColumnDef<Appointment>[] = [
       {
-         accessorKey: "appointment.clientNames",
+         accessorKey: "booking.clientNames",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Cliente
@@ -61,12 +61,12 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({
             row: {
-               original: { appointment },
+               original: { booking },
             },
-         }) => <div>{appointment.clientNames}</div>,
+         }) => <div>{booking.clientNames}</div>,
       },
       {
-         accessorKey: "appointment.clientEmail",
+         accessorKey: "booking.clientEmail",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Email
@@ -74,12 +74,12 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({
             row: {
-               original: { appointment },
+               original: { booking },
             },
-         }) => <div>{appointment.clientEmail}</div>,
+         }) => <div>{booking.clientEmail}</div>,
       },
       {
-         accessorKey: "appointment_pack.date",
+         accessorKey: "service.date",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Fecha
@@ -87,13 +87,13 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({
             row: {
-               original: { appointment_pack },
+               original: { service },
             },
-         }) => <div>{appointment_pack.date.toDateString()}</div>,
+         }) => <div>{service.date.toDateString()}</div>,
          filterFn: dateFilterFunction,
       },
       {
-         accessorKey: "appointment_pack.createdAt",
+         accessorKey: "service.createdAt",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Fecha de creación
@@ -101,13 +101,13 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({
             row: {
-               original: { appointment_pack },
+               original: { service },
             },
-         }) => <div>{appointment_pack.createdAt.toDateString()}</div>,
+         }) => <div>{service.createdAt.toDateString()}</div>,
          filterFn: dateFilterFunction,
       },
       {
-         accessorKey: "appointment.paymentMethod",
+         accessorKey: "booking.paymentMethod",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Método de pago
@@ -115,12 +115,12 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          ),
          cell: ({
             row: {
-               original: { appointment },
+               original: { booking },
             },
-         }) => <PaymentMethodBadge paymentMethod={appointment.paymentMethod} />,
+         }) => <PaymentMethodBadge paymentMethod={booking.paymentMethod} />,
       },
       {
-         accessorKey: "appointment_pack.attended",
+         accessorKey: "service.attended",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Atendido
@@ -130,7 +130,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          cell: ({
             row: {
                original: {
-                  appointment_pack: { id, attended },
+                  service: { id, attended },
                },
             },
          }) => {
@@ -148,7 +148,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
       },
    ];
 
-   const data = useStore.use.services();
+   const data = useStore.use.appointments();
 
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
    const [sorting, setSorting] = useState<SortingState>([]);
@@ -205,7 +205,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                      <TableRow
                         key={row.id}
                         className={cn(
-                           row.original.appointment_pack.id === changingState &&
+                           row.original.service.id === changingState &&
                               "opacity-50",
                         )}
                      >
