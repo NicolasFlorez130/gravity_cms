@@ -61,7 +61,6 @@ export function CartDrawer() {
    const form = useForm<InputObject>({
       resolver: zodResolver(bookAppointmentSchema),
       defaultValues: {
-         status: "PENDING",
          packages: [],
          paymentMethod: "LANDING",
          clientEmail: "",

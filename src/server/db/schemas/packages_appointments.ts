@@ -17,13 +17,6 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "~/lib/zod_lang";
 import { onlyNumbers } from "~/lib/regex";
 
-export const statusEnum = pgEnum("status", [
-   "PAID",
-   "PENDING",
-   // "ATTENDED",
-   "CANCELED",
-]);
-
 export const paymentMethods = [
    "ONLINE",
    "ON_SITE",
@@ -45,7 +38,6 @@ export const appointments = createTable("appointment", {
    clientPhoneNumber: text("client_phone_number").notNull(),
    totalAmount: real("total_amount").notNull(),
    paymentMethod: paymentMethodEnum("payment_method").notNull(),
-   status: statusEnum("status").notNull(),
 
    createdAt: createdAtColumn,
 });

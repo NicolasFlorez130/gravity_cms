@@ -5,14 +5,14 @@ interface IGlobalsGetter {}
 
 export default async function GlobalsGetter({}: IGlobalsGetter) {
    const [appointments, services, packages] = await Promise.all([
-      api.appointments.getAll(),
-      api.appointments.getAllServices(),
+      api.appointments.getAllConfirmed(),
+      api.appointments.getAllServicesConfirmed(),
       api.packages.getAll(),
    ]);
 
    return (
       <StoreSetter
-         appointments={appointments}
+         appointments={appointments.map(({ appointment }) => appointment)}
          packages={packages}
          services={services}
       />

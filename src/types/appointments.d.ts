@@ -13,5 +13,3 @@ type Service = {
 };
 
 type AppointmentPaymentMethod = Appointment["paymentMethod"];
-
-type AppointmentStatus = AppointmentsPackages["status"];

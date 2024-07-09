@@ -20,12 +20,13 @@ export default function AppointmentCard({
 }: IAppointmentCard) {
    const router = useRouter();
 
-   const { mutate, isPending } = api.appointments.markServiceAsAttended.useMutation({
-      onSuccess: async () => {
-         router.refresh();
-         await refetch();
-      },
-   });
+   const { mutate, isPending } =
+      api.appointments.markServiceAsAttended.useMutation({
+         onSuccess: async () => {
+            router.refresh();
+            await refetch();
+         },
+      });
 
    return (
       <Card
@@ -38,7 +39,6 @@ export default function AppointmentCard({
             <Checkbox
                disabled={isPending}
                onClick={() => mutate(appointment_pack.id)}
-               className="border-2 border-gray-400 data-[state=checked]:border-indigo-500 data-[state=checked]:bg-indigo-500 [&_svg]:text-white"
             />
             <p
                className={cn(

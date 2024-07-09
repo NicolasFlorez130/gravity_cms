@@ -269,7 +269,6 @@ export function convertAppointmentsToExcel(
          clientEmail: appointment.clientEmail,
          clientPhoneNumber: appointment.clientPhoneNumber,
          totalAmount: appointment.totalAmount,
-         status: appointment.status,
          paymentMethod: appointment.paymentMethod,
          createdAt: appointment.createdAt.toISOString(),
       }),

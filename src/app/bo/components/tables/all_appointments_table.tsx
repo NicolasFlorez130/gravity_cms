@@ -20,30 +20,19 @@ import {
    getSortedRowModel,
    useReactTable,
 } from "@tanstack/react-table";
-import type { Appointment } from "~/types/appointments";
+import type { Service } from "~/types/appointments";
 import PaymentMethodBadge from "~/components/bo/ui/payment_method_badge";
-import StatusBadge from "~/components/bo/ui/status_badge";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/bo/ui/button";
-import {
-   CaretLeft,
-   CaretRight,
-   DotsThree,
-} from "@phosphor-icons/react/dist/ssr";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { Input } from "~/components/bo/ui/input";
 import { Separator } from "~/components/bo/ui/separator";
 import type { DateRange } from "react-day-picker";
-import { cn, dateFilterFunction, formatCurrency } from "~/lib/utils";
-import {
-   DropdownMenu,
-   DropdownMenuContent,
-   DropdownMenuItem,
-   DropdownMenuLabel,
-   DropdownMenuTrigger,
-} from "~/components/bo/ui/dropdown-menu";
+import { cn, dateFilterFunction } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import TableHeaderSortingToggle from "~/components/bo/ui/table_header_sorting_toggle";
+import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
+import { Checkbox } from "~/components/bo/ui/checkbox";
 
 interface IAllAppointmentsTable {
    dates: DateRange | undefined;
@@ -51,126 +40,115 @@ interface IAllAppointmentsTable {
 
 export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
    const { refresh } = useRouterRefresh();
+
    const [changingState, setChangingState] = useState<string>();
 
-   const { mutate } = api.appointments.updateStatus.useMutation({
-      onError: () => setChangingState(undefined),
-      onSuccess: async () => {
-         await refresh();
-         setChangingState(undefined);
-      },
-   });
+   const { mutate, isPending } =
+      api.appointments.markServiceAsAttended.useMutation({
+         onSuccess: async () => {
+            await refresh();
+            setChangingState(undefined);
+         },
+      });
 
-   const columns: ColumnDef<Appointment>[] = [
+   const columns: ColumnDef<Service>[] = [
       {
-         accessorKey: "clientNames",
+         accessorKey: "appointment.clientNames",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Cliente
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.original.clientNames}</div>,
+         cell: ({
+            row: {
+               original: { appointment },
+            },
+         }) => <div>{appointment.clientNames}</div>,
       },
       {
-         accessorKey: "clientEmail",
+         accessorKey: "appointment.clientEmail",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Email
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.original.clientEmail}</div>,
+         cell: ({
+            row: {
+               original: { appointment },
+            },
+         }) => <div>{appointment.clientEmail}</div>,
       },
       {
-         accessorKey: "createdAt",
+         accessorKey: "appointment_pack.date",
+         header: ({ column }) => (
+            <TableHeaderSortingToggle column={column}>
+               Fecha
+            </TableHeaderSortingToggle>
+         ),
+         cell: ({
+            row: {
+               original: { appointment_pack },
+            },
+         }) => <div>{appointment_pack.date.toDateString()}</div>,
+         filterFn: dateFilterFunction,
+      },
+      {
+         accessorKey: "appointment_pack.createdAt",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Fecha de creación
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <div>{row.original.createdAt.toDateString()}</div>,
+         cell: ({
+            row: {
+               original: { appointment_pack },
+            },
+         }) => <div>{appointment_pack.createdAt.toDateString()}</div>,
          filterFn: dateFilterFunction,
       },
       {
-         accessorKey: "totalAmount",
-         header: ({ column }) => (
-            <TableHeaderSortingToggle column={column}>
-               Total pagado
-            </TableHeaderSortingToggle>
-         ),
-         cell: ({ row }) => (
-            <div>{formatCurrency(Number(row.original.totalAmount))}</div>
-         ),
-      },
-      {
-         accessorKey: "paymentMethod",
+         accessorKey: "appointment.paymentMethod",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Método de pago
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => (
-            <PaymentMethodBadge paymentMethod={row.original.paymentMethod} />
-         ),
+         cell: ({
+            row: {
+               original: { appointment },
+            },
+         }) => <PaymentMethodBadge paymentMethod={appointment.paymentMethod} />,
       },
       {
-         accessorKey: "status",
+         accessorKey: "appointment_pack.attended",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
-               Estado
+               Atendido
             </TableHeaderSortingToggle>
          ),
-         cell: ({ row }) => <StatusBadge status={row.original.status} />,
-      },
-      {
-         id: "actions",
          enableHiding: false,
          cell: ({
             row: {
-               original: { status, id },
+               original: {
+                  appointment_pack: { id, attended },
+               },
             },
          }) => {
             return (
-               <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                     <Button
-                        variant="secondary"
-                        disabled={status === "PAID" || id === changingState}
-                        className="h-8 w-8 p-0"
-                     >
-                        <span className="sr-only">Abrir menú</span>
-                        <DotsThree size={16} />
-                     </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                     <DropdownMenuLabel>Cambiar estado</DropdownMenuLabel>
-                     {status !== "PAID" && (
-                        <>
-                           <DropdownMenuItem
-                              onClick={() => {
-                                 setChangingState(id);
-                                 mutate({ id, status: "PAID" });
-                              }}
-                           >
-                              Pagado
-                           </DropdownMenuItem>
-                           <DropdownMenuItem
-                              onClick={() => {
-                                 setChangingState(id);
-                                 mutate({ id, status: "CANCELED" });
-                              }}
-                           >
-                              Cancelado
-                           </DropdownMenuItem>
-                        </>
-                     )}
-                  </DropdownMenuContent>
-               </DropdownMenu>
+               <Checkbox
+                  checked={!!attended}
+                  disabled={isPending || !!attended || id === changingState}
+                  onClick={() => {
+                     setChangingState(id);
+                     mutate(id);
+                  }}
+               />
             );
          },
       },
    ];
 
-   const data = useStore.use.appointments();
+   const data = useStore.use.services();
 
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
    const [sorting, setSorting] = useState<SortingState>([]);
@@ -227,7 +205,8 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
                      <TableRow
                         key={row.id}
                         className={cn(
-                           row.original.id === changingState && "opacity-50",
+                           row.original.appointment_pack.id === changingState &&
+                              "opacity-50",
                         )}
                      >
                         {row.getVisibleCells().map(cell => (

@@ -2,6 +2,7 @@ import {
    appointments,
    appointmentsPackages,
    bookAppointmentSchema,
+   confirmedAppointments,
 } from "~/server/db/schemas/packages_appointments";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { and, asc, eq, gt } from "drizzle-orm";
@@ -13,14 +14,27 @@ import type { api } from "~/trpc/server";
 export type InputObject = Parameters<typeof api.appointments.book>["0"];
 
 export const appointmentsRouter = createTRPCRouter({
-   getAll: publicProcedure.query(({ ctx }) =>
-      ctx.db.query.appointments.findMany(),
+   getAllConfirmed: publicProcedure.query(({ ctx }) =>
+      ctx.db
+         .select()
+         .from(confirmedAppointments)
+         .innerJoin(
+            appointments,
+            eq(confirmedAppointments.appointmentId, appointments.id),
+         ),
    ),
 
-   getAllServices: publicProcedure.query(({ ctx }) =>
+   getAllServicesConfirmed: publicProcedure.query(({ ctx }) =>
       ctx.db
          .select()
          .from(appointmentsPackages)
+         .innerJoin(
+            confirmedAppointments,
+            eq(
+               appointmentsPackages.appointmentId,
+               confirmedAppointments.appointmentId,
+            ),
+         )
          .innerJoin(
             appointments,
             eq(appointmentsPackages.appointmentId, appointments.id),
@@ -34,6 +48,13 @@ export const appointmentsRouter = createTRPCRouter({
          ctx.db
             .select()
             .from(appointmentsPackages)
+            .innerJoin(
+               confirmedAppointments,
+               eq(
+                  appointmentsPackages.appointmentId,
+                  confirmedAppointments.appointmentId,
+               ),
+            )
             .innerJoin(
                appointments,
                eq(appointmentsPackages.appointmentId, appointments.id),
@@ -80,20 +101,6 @@ export const appointmentsRouter = createTRPCRouter({
                throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
             }
          }),
-      ),
-
-   updateStatus: protectedProcedure
-      .input(
-         z.object({
-            id: z.string(),
-            status: z.enum(["PAID", "PENDING", "CANCELED"]),
-         }),
-      )
-      .mutation(({ ctx, input: { id, status } }) =>
-         ctx.db
-            .update(appointments)
-            .set({ status })
-            .where(eq(appointments.id, id)),
       ),
 
    markServiceAsAttended: protectedProcedure
