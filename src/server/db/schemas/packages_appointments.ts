@@ -45,7 +45,6 @@ export const appointments = createTable("appointment", {
    clientPhoneNumber: text("client_phone_number").notNull(),
    totalAmount: real("total_amount").notNull(),
    paymentMethod: paymentMethodEnum("payment_method").notNull(),
-   reference: text("reference").notNull(),
    status: statusEnum("status").notNull(),
 
    createdAt: createdAtColumn,
@@ -77,6 +76,17 @@ export const appointmentsPackages = createTable("appointment_pack", {
    extraMinutes: integer("extra_minutes").default(0),
    date: timestamp("date", { withTimezone: true }).notNull(),
    attended: boolean("attended").default(false),
+
+   createdAt: createdAtColumn,
+});
+
+export const confirmedAppointments = createTable("confirmed_appointment", {
+   id: uuidColumn,
+
+   appointmentId: uuid("appointment_id")
+      .notNull()
+      .references(() => appointments.id),
+   reference: text("reference").notNull(),
 
    createdAt: createdAtColumn,
 });

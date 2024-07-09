@@ -78,7 +78,6 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
    const form = useForm<InputObject>({
       resolver: zodResolver(bookAppointmentSchema),
       defaultValues: {
-         reference: "",
          status: "PENDING",
          clientEmail: "",
          clientNames: "",

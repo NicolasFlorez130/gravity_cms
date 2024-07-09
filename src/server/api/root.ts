@@ -3,7 +3,6 @@ import { appointmentsRouter } from "~/server/api/routers/appointments";
 import {
    createCallerFactory,
    createTRPCRouter,
-   protectedProcedure,
    publicProcedure,
 } from "~/server/api/trpc";
 import { packagesRouter } from "./routers/packages";

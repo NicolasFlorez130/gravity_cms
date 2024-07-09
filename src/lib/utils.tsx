@@ -271,7 +271,6 @@ export function convertAppointmentsToExcel(
          totalAmount: appointment.totalAmount,
          status: appointment.status,
          paymentMethod: appointment.paymentMethod,
-         reference: appointment.reference,
          createdAt: appointment.createdAt.toISOString(),
       }),
    );
