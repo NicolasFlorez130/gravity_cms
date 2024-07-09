@@ -1,9 +1,9 @@
 import {
-   appointments,
-   appointmentsPackages,
+   bookings,
+   services,
    bookAppointmentSchema,
-   confirmedAppointments,
-} from "~/server/db/schemas/packages_appointments";
+   appointmentConfirmations,
+} from "~/server/db/schemas/appointments";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { and, asc, eq, gt } from "drizzle-orm";
 import { z } from "zod";
@@ -17,29 +17,29 @@ export const appointmentsRouter = createTRPCRouter({
    getAllConfirmed: publicProcedure.query(({ ctx }) =>
       ctx.db
          .select()
-         .from(confirmedAppointments)
+         .from(appointmentConfirmations)
          .innerJoin(
-            appointments,
-            eq(confirmedAppointments.appointmentId, appointments.id),
+            bookings,
+            eq(appointmentConfirmations.bookingId, bookings.id),
          ),
    ),
 
    getAllServicesConfirmed: publicProcedure.query(({ ctx }) =>
       ctx.db
          .select()
-         .from(appointmentsPackages)
+         .from(services)
          .innerJoin(
-            confirmedAppointments,
+            appointmentConfirmations,
             eq(
-               appointmentsPackages.appointmentId,
-               confirmedAppointments.appointmentId,
+               services.bookingId,
+               appointmentConfirmations.bookingId,
             ),
          )
          .innerJoin(
-            appointments,
-            eq(appointmentsPackages.appointmentId, appointments.id),
+            bookings,
+            eq(services.bookingId, bookings.id),
          )
-         .orderBy(asc(appointmentsPackages.date)),
+         .orderBy(asc(services.date)),
    ),
 
    getNextServices: protectedProcedure
@@ -47,25 +47,25 @@ export const appointmentsRouter = createTRPCRouter({
       .query(({ ctx, input }) =>
          ctx.db
             .select()
-            .from(appointmentsPackages)
+            .from(services)
             .innerJoin(
-               confirmedAppointments,
+               appointmentConfirmations,
                eq(
-                  appointmentsPackages.appointmentId,
-                  confirmedAppointments.appointmentId,
+                  services.bookingId,
+                  appointmentConfirmations.bookingId,
                ),
             )
             .innerJoin(
-               appointments,
-               eq(appointmentsPackages.appointmentId, appointments.id),
+               bookings,
+               eq(services.bookingId, bookings.id),
             )
             .where(
                and(
-                  gt(appointmentsPackages.date, setDateTimeTo0(new Date())),
-                  eq(appointmentsPackages.attended, false),
+                  gt(services.date, setDateTimeTo0(new Date())),
+                  eq(services.attended, false),
                ),
             )
-            .orderBy(asc(appointmentsPackages.date))
+            .orderBy(asc(services.date))
             .limit(input),
       ),
 
@@ -75,9 +75,9 @@ export const appointmentsRouter = createTRPCRouter({
          ctx.db.transaction(async tx => {
             try {
                const appointmentReturning = await tx
-                  .insert(appointments)
+                  .insert(bookings)
                   .values(input)
-                  .returning({ id: appointments.id });
+                  .returning({ id: bookings.id });
 
                const appointmentId = appointmentReturning.at(-1)?.id;
 
@@ -85,7 +85,7 @@ export const appointmentsRouter = createTRPCRouter({
                   throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
                }
 
-               await tx.insert(appointmentsPackages).values(
+               await tx.insert(services).values(
                   input.packages.map(pkg => ({
                      ...pkg,
                      appointmentId,
@@ -107,8 +107,8 @@ export const appointmentsRouter = createTRPCRouter({
       .input(z.string())
       .mutation(({ ctx, input }) =>
          ctx.db
-            .update(appointmentsPackages)
+            .update(services)
             .set({ attended: true })
-            .where(eq(appointmentsPackages.id, input)),
+            .where(eq(services.id, input)),
       ),
 });

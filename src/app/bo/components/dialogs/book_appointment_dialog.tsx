@@ -51,7 +51,7 @@ import {
 import {
    bookAppointmentSchema,
    paymentMethods,
-} from "~/server/db/schemas/packages_appointments";
+} from "~/server/db/schemas/appointments";
 import { api } from "~/trpc/react";
 import type { IPackage } from "~/types/packages";
 

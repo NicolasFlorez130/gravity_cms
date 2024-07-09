@@ -1,8 +1,8 @@
 import {
-   appointmentsPackages,
+   services,
    insertPackageSchema,
    packages,
-} from "~/server/db/schemas/packages_appointments";
+} from "~/server/db/schemas/appointments";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { count, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -21,7 +21,7 @@ export const packagesRouter = createTRPCRouter({
       }),
    ),
    getTotalPurchased: protectedProcedure.query(({ ctx }) =>
-      ctx.db.select({ count: count() }).from(appointmentsPackages),
+      ctx.db.select({ count: count() }).from(services),
    ),
    create: protectedProcedure
       .input(insertPackageSchema)

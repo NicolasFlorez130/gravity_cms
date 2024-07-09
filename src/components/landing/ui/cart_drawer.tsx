@@ -18,7 +18,7 @@ import { api } from "~/trpc/react";
 import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { bookAppointmentSchema } from "~/server/db/schemas/packages_appointments";
+import { bookAppointmentSchema } from "~/server/db/schemas/appointments";
 import { useEffect, useState } from "react";
 import type { IPackage } from "~/types/packages";
 import type { InputObject } from "~/server/api/routers/appointments";
