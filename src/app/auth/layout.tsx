@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 import type { PropsWithChildren } from "react";
-import { getServerAuthSession } from "~/server/auth";
+import { api } from "~/trpc/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Layout({ children }: PropsWithChildren<unknown>) {
-   const session = await getServerAuthSession();
+   const session = await api.getSession();
 
-   if (!session?.user) {
+   if (!session) {
       return <>{children}</>;
    } else {
       redirect("/bo/dashboard");

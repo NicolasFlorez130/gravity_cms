@@ -1,6 +1,11 @@
 import { imagesRouter } from "~/server/api/routers/images";
 import { appointmentsRouter } from "~/server/api/routers/appointments";
-import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import {
+   createCallerFactory,
+   createTRPCRouter,
+   protectedProcedure,
+   publicProcedure,
+} from "~/server/api/trpc";
 import { packagesRouter } from "./routers/packages";
 import { notesRouter } from "./routers/notes";
 import { opinionsRouter } from "./routers/opinions";
@@ -11,6 +16,7 @@ import { opinionsRouter } from "./routers/opinions";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+   getSession: publicProcedure.query(({ ctx: { session } }) => session),
    images: imagesRouter,
    appointments: appointmentsRouter,
    packages: packagesRouter,
