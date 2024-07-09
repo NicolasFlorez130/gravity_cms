@@ -1,15 +1,13 @@
 import type { InferSelectModel } from "drizzle-orm";
-import type {
-   bookings,
-   services,
-} from "~/server/db/schemas/appointments";
+import type { bookings } from "~/server/db/schemas/bookings";
+import type { services } from "~/server/db/schemas/services";
 
-type Appointment = InferSelectModel<typeof bookings>;
-type AppointmentsPackages = InferSelectModel<typeof services>;
+type Booking = InferSelectModel<typeof bookings>;
+type Service = InferSelectModel<typeof services>;
 
-type Service = {
-   appointment_pack: AppointmentsPackages;
-   appointment: Appointment;
+type Appointment = {
+   service: Service;
+   booking: Booking;
 };
 
-type AppointmentPaymentMethod = Appointment["paymentMethod"];
+type AppointmentPaymentMethod = Booking["paymentMethod"];

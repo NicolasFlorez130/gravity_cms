@@ -1,15 +1,12 @@
-import {
-   bookings,
-   services,
-   bookAppointmentSchema,
-   appointmentConfirmations,
-} from "~/server/db/schemas/appointments";
+import { appointmentConfirmations } from "~/server/db/schemas/appointments";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { and, asc, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { setDateTimeTo0 } from "~/lib/utils";
 import type { api } from "~/trpc/server";
+import { bookAppointmentSchema, bookings } from "~/server/db/schemas/bookings";
+import { services } from "~/server/db/schemas/services";
 
 export type InputObject = Parameters<typeof api.appointments.book>["0"];
 
@@ -30,15 +27,9 @@ export const appointmentsRouter = createTRPCRouter({
          .from(services)
          .innerJoin(
             appointmentConfirmations,
-            eq(
-               services.bookingId,
-               appointmentConfirmations.bookingId,
-            ),
+            eq(services.bookingId, appointmentConfirmations.bookingId),
          )
-         .innerJoin(
-            bookings,
-            eq(services.bookingId, bookings.id),
-         )
+         .innerJoin(bookings, eq(services.bookingId, bookings.id))
          .orderBy(asc(services.date)),
    ),
 
@@ -50,15 +41,9 @@ export const appointmentsRouter = createTRPCRouter({
             .from(services)
             .innerJoin(
                appointmentConfirmations,
-               eq(
-                  services.bookingId,
-                  appointmentConfirmations.bookingId,
-               ),
+               eq(services.bookingId, appointmentConfirmations.bookingId),
             )
-            .innerJoin(
-               bookings,
-               eq(services.bookingId, bookings.id),
-            )
+            .innerJoin(bookings, eq(services.bookingId, bookings.id))
             .where(
                and(
                   gt(services.date, setDateTimeTo0(new Date())),
@@ -79,20 +64,20 @@ export const appointmentsRouter = createTRPCRouter({
                   .values(input)
                   .returning({ id: bookings.id });
 
-               const appointmentId = appointmentReturning.at(-1)?.id;
+               const bookingId = appointmentReturning.at(-1)?.id;
 
-               if (!appointmentId) {
+               if (!bookingId) {
                   throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
                }
 
                await tx.insert(services).values(
                   input.packages.map(pkg => ({
                      ...pkg,
-                     appointmentId,
+                     bookingId,
                   })),
                );
 
-               return appointmentId;
+               return bookingId;
             } catch (error) {
                console.error(error);
 
