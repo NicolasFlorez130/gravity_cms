@@ -1,7 +1,13 @@
 import Notes from "../components/common/notes";
 import Activity from "../components/common/activity";
-import Packages from "./sections/packages";
+import Packages from "./views/packages";
 import { BoPackagesContextProvider } from "./hocs/bo_packages_context";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+   title: "Paquetes",
+   description: "",
+};
 
 interface IPage {}
 

@@ -7,6 +7,12 @@ import { Card } from "~/components/landing/ui/card";
 import Logo from "~/components/landing/ui/logo";
 import { useSearchParams } from "next/navigation";
 import type { PropsWithChildren } from "react";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+   title: "Iniciar sesión",
+   description: "",
+};
 
 interface IPage {}
 

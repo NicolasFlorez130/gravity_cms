@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { BigCalendar } from "./sections/big_calendar";
+import { BigCalendar } from "./views/big_calendar";
 
 export const metadata: Metadata = {
-   title: "",
+   title: "Calendario",
    description: "",
 };
 

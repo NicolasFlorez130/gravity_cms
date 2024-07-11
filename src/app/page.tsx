@@ -11,6 +11,12 @@ import { api } from "~/trpc/server";
 import Footer from "~/components/landing/ui/footer";
 import { groupBy } from "~/lib/utils";
 import { CartDrawer } from "~/components/landing/ui/cart_drawer";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+   title: "Gravity",
+   description: "",
+};
 
 export default async function Home() {
    const [images, opinions] = await Promise.all([
@@ -24,7 +30,10 @@ export default async function Home() {
       <>
          <Veil />
          <main className="relative m-auto max-w-screen-3xl overflow-hidden">
-            <div id="book_button" className="fixed bottom-4 right-4 z-20 h-max w-max">
+            <div
+               id="book_button"
+               className="fixed bottom-4 right-4 z-20 h-max w-max"
+            >
                <CartDrawer />
             </div>
             <FollowSign />

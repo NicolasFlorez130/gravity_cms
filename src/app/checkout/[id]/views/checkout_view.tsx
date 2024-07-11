@@ -35,6 +35,8 @@ export default function CheckoutView({ appointment, hashHex }: ICheckoutView) {
          ) as HTMLElement | null;
 
          if (!!paymentButton.current && !!boldButton.current) {
+            boldButton.current.classList.remove("hidden");
+
             boldButton.current.classList.add("absolute");
 
             const rect = paymentButton.current.getBoundingClientRect();
@@ -72,6 +74,8 @@ export default function CheckoutView({ appointment, hashHex }: ICheckoutView) {
             ?.removeEventListener("load", repositionButton);
 
          window.removeEventListener("resize", repositionButton);
+
+         boldButton.current?.classList.add("hidden");
       };
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
