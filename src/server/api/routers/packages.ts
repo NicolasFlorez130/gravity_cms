@@ -1,8 +1,13 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { withId } from "~/lib/zod_lang";
-import { insertPackageSchema, packages } from "~/server/db/schemas/packages";
+import {
+   insertPackageChangeSchema,
+   insertPackageSchema,
+   packageChanges,
+   packages,
+} from "~/server/db/schemas/packages";
 
 export const packagesRouter = createTRPCRouter({
    getAll: publicProcedure.query(({ ctx }) =>
@@ -18,7 +23,9 @@ export const packagesRouter = createTRPCRouter({
    ),
    create: protectedProcedure
       .input(insertPackageSchema)
-      .mutation(({ ctx, input }) => ctx.db.insert(packages).values(input)),
+      .mutation(({ ctx, input }) =>
+         ctx.db.insert(packages).values(input).returning({ id: packages.id }),
+      ),
 
    updateStatus: protectedProcedure
       .input(z.object({ id: z.string(), active: z.boolean() }))
@@ -39,5 +46,21 @@ export const packagesRouter = createTRPCRouter({
       .input(withId(insertPackageSchema))
       .mutation(({ ctx, input }) =>
          ctx.db.update(packages).set(input).where(eq(packages.id, input.id)),
+      ),
+
+   getLastChanges: protectedProcedure
+      .input(z.number())
+      .query(({ ctx, input }) =>
+         ctx.db
+            .select()
+            .from(packageChanges)
+            .orderBy(desc(packageChanges.createdAt))
+            .limit(input),
+      ),
+
+   registerNewChange: protectedProcedure
+      .input(insertPackageChangeSchema)
+      .mutation(({ ctx, input }) =>
+         ctx.db.insert(packageChanges).values(input),
       ),
 });

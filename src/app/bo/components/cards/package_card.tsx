@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Card } from "~/components/bo/ui/card";
 import { cn, formatCurrency } from "~/lib/utils";
-import type { IPackage } from "~/types/packages";
+import type { IPackage, PackageChangeType } from "~/types/packages";
 import AvailabilityChip from "../chips/availability_chip";
 import { Chip } from "~/components/bo/ui/chip";
 import { api } from "~/trpc/react";
@@ -16,28 +16,37 @@ import {
 } from "~/components/bo/ui/dropdown-menu";
 import { Button } from "~/components/bo/ui/button";
 import { DotsThree } from "@phosphor-icons/react/dist/ssr";
-import { useRefetch } from "../../packages/sections/packages";
 import UpdatePackageDialog from "../dialogs/update_package_dialog";
+import { useBoPackagesContext } from "../../packages/hocs/bo_packages_context";
 
 interface IPackageCard {
    pkg: IPackage;
 }
 
 export default function PackageCard({ pkg }: IPackageCard) {
-   const refetch = useRefetch();
+   const { refreshPackages, refreshPackagesActivity } = useBoPackagesContext();
 
-   async function onSuccess() {
-      await refetch();
+   const { mutate: registerChange } =
+      api.packages.registerNewChange.useMutation({
+         onSuccess: refreshPackagesActivity,
+      });
+
+   async function onSuccess(changeType: PackageChangeType) {
+      registerChange({
+         changeType: changeType,
+         packageId: pkg.id,
+      });
+      await refreshPackages?.();
    }
 
    const { mutate: changeStatus, isPending: isChanging } =
       api.packages.updateStatus.useMutation({
-         onSuccess,
+         onSuccess: () => onSuccess("EDIT"),
       });
 
    const { mutate: deletePkg, isPending: isDeleting } =
       api.packages.deleteById.useMutation({
-         onSuccess,
+         onSuccess: () => onSuccess("DELETE"),
       });
 
    const isLoading = isChanging || isDeleting;

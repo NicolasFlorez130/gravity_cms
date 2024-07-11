@@ -15,21 +15,30 @@ import { api } from "~/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { IPackage } from "~/types/packages";
 import PackageForm from "../common/package_form";
-import { useRefetch } from "../../packages/sections/packages";
 import { insertPackageSchema } from "~/server/db/schemas/packages";
+import { useBoPackagesContext } from "../../packages/hocs/bo_packages_context";
 
 interface ICreatePackageDialog {
    active: boolean;
 }
 
 export default function CreatePackageDialog({ active }: ICreatePackageDialog) {
-   const refetch = useRefetch();
+   const { refreshPackages, refreshPackagesActivity } = useBoPackagesContext();
 
    const [isOpen, setIsOpen] = useState(false);
 
+   const { mutate: registerChange } =
+      api.packages.registerNewChange.useMutation({
+         onSuccess: refreshPackagesActivity,
+      });
+
    const { mutate, isPending } = api.packages.create.useMutation({
-      onSuccess: async () => {
-         await refetch();
+      onSuccess: async data => {
+         registerChange({
+            packageId: data.at(0)?.id ?? "",
+            changeType: "CREATE",
+         });
+         await refreshPackages?.();
          setIsOpen(false);
          form.reset();
       },

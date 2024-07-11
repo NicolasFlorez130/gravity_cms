@@ -13,22 +13,31 @@ import { api } from "~/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { IPackage } from "~/types/packages";
 import PackageForm from "../common/package_form";
-import { useRefetch } from "../../packages/sections/packages";
 import { DropdownMenuItem } from "~/components/bo/ui/dropdown-menu";
 import { insertPackageSchema } from "~/server/db/schemas/packages";
+import { useBoPackagesContext } from "../../packages/hocs/bo_packages_context";
 
 interface IUpdatePackageDialog {
    data: IPackage;
 }
 
 export default function UpdatePackageDialog({ data }: IUpdatePackageDialog) {
-   const refetch = useRefetch();
+   const { refreshPackages, refreshPackagesActivity } = useBoPackagesContext();
+
+   const { mutate: registerChange } =
+      api.packages.registerNewChange.useMutation({
+         onSuccess: refreshPackagesActivity,
+      });
 
    const [isOpen, setIsOpen] = useState(false);
 
    const { mutate, isPending } = api.packages.update.useMutation({
       onSuccess: async () => {
-         await refetch();
+         registerChange({
+            packageId: data.id,
+            changeType: "EDIT",
+         });
+         await refreshPackages?.();
          setIsOpen(false);
          form.reset();
       },

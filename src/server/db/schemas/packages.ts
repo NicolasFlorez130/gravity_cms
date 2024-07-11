@@ -54,3 +54,5 @@ export const insertPackageSchema = createInsertSchema(packages, {
    minutePrice: z.number().min(0),
    usersQuantity: z.number().min(1),
 });
+
+export const insertPackageChangeSchema = createInsertSchema(packageChanges);
