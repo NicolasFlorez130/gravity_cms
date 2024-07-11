@@ -6,7 +6,7 @@ import { Separator } from "~/components/bo/ui/separator";
 import RecentAppointmentsTable from "../components/tables/recent_appointments_table";
 import DailyAppointmentsChart from "../components/charts/daily_appointments_chart";
 import { useStore } from "~/lib/features/store";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
    Select,
    SelectContent,
@@ -20,8 +20,8 @@ import { subDays } from "date-fns";
 import MonthlyAppointmentsChart from "../components/charts/monthly_appointments_chart";
 import NextAppointments from "../components/common/next_appointments";
 import Notes from "../components/common/notes";
-import { metrics } from "./mock/dashboard_mocks";
 import AppointmentsDialog from "../components/dialogs/appointments_dialog";
+import { calculateGrowth, calculateGrowthByCount } from "~/lib/utils";
 
 enum ChartMode {
    monthly,
@@ -31,7 +31,23 @@ enum ChartMode {
 interface IPage {}
 
 export default function Page({}: IPage) {
-   const appointments = useStore.use.bookings();
+   const bookings = useStore.use.bookings();
+
+   const sellsAmountMetrics = useMemo(
+      () => ({
+         title: "Venta total",
+         ...calculateGrowth(bookings),
+      }),
+      [bookings],
+   );
+
+   const sellsCountMetrics = useMemo(
+      () => ({
+         title: "Total de compras",
+         ...calculateGrowthByCount(bookings),
+      }),
+      [bookings],
+   );
 
    const [chartMode, setChartMode] = useState(ChartMode.monthly);
    const [dates, setDates] = useState<DateRange | undefined>({
@@ -44,17 +60,17 @@ export default function Page({}: IPage) {
          <div className="grid h-max gap-5 px-12 py-10">
             <h2 className="text-4xl font-medium">Métricas generales</h2>
             <section className="grid grid-cols-3 gap-5">
-               {metrics.map((el, i) => (
+               {[sellsAmountMetrics, sellsCountMetrics].map((el, i) => (
                   <DashboardCard className="grid gap-2" key={i}>
                      <h3 className="text-sm">{el.title}</h3>
-                     <p className="text-xl font-semibold">{el.value}</p>
+                     <p className="text-xl font-semibold">{el.total}</p>
                      <p className="flex items-center gap-2 text-sm text-gray-700">
-                        {el.raise < 0 ? (
+                        {el.grow < 0 ? (
                            <CaretDown className="text-red-500" />
                         ) : (
                            <CaretUp className="text-green-500" />
                         )}{" "}
-                        {el.raise}%
+                        {el.grow}%
                      </p>
                   </DashboardCard>
                ))}
@@ -113,7 +129,7 @@ export default function Page({}: IPage) {
                               <p>No hay reservas para mostrar</p>
                            </div>
                         ))(
-                        appointments.filter(
+                        bookings.filter(
                            ({ createdAt }) =>
                               !dates ||
                               ((!dates.from || createdAt >= dates.from) &&

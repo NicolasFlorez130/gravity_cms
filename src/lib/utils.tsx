@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge";
 import type {
    Appointment,
    AppointmentPaymentMethod,
+   Booking,
 } from "~/types/appointments";
 import * as XLSX from "xlsx";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
@@ -338,14 +339,7 @@ export function parseDateToMidnight(
 ): Dispatch<SetStateAction<Date | undefined>> {
    return function (date) {
       if (typeof date === "object") {
-         onChange(
-            set(date, {
-               hours: 23,
-               minutes: 59,
-               seconds: 59,
-               milliseconds: 999,
-            }),
-         );
+         onChange(setDateTimeToMidnight(date));
       } else {
          onChange(date);
       }
@@ -411,6 +405,15 @@ export function groupBy<
    }, {}) as Record<X, T[]>;
 }
 
+export function setDateTimeToMidnight(date: Date) {
+   return set(date, {
+      hours: 23,
+      minutes: 59,
+      seconds: 59,
+      milliseconds: 999,
+   });
+}
+
 export function setDateTimeTo0(date: Date) {
    return set(date, {
       hours: 0,
@@ -446,4 +449,102 @@ export function findDatesWithOccurrences<T>(arr: T[], cb: (arg: T) => Date) {
 
 export function formatDateInSpanish(date: Date) {
    return format(date, "yyyy-MM-dd", { locale: es });
+}
+
+export function calculateGrowth(elements: Booking[]) {
+   const now = setDateTimeToMidnight(new Date());
+   const currentMonth = now.getMonth();
+   const currentYear = now.getFullYear();
+   const currentDay = now.getDate();
+
+   let currentMonthTotal = 0;
+   let previousMonthTotal = 0;
+
+   elements.forEach(element => {
+      const elementDate = new Date(element.createdAt);
+      const elementMonth = elementDate.getMonth();
+      const elementYear = elementDate.getFullYear();
+      const elementDay = elementDate.getDate();
+
+      if (
+         elementYear === currentYear &&
+         elementMonth === currentMonth &&
+         elementDay <= currentDay
+      ) {
+         currentMonthTotal += element.totalAmount;
+      } else if (
+         elementYear === currentYear &&
+         elementMonth === currentMonth - 1 &&
+         elementDay <= currentDay
+      ) {
+         previousMonthTotal += element.totalAmount;
+      } else if (
+         elementYear === currentYear - 1 &&
+         currentMonth === 0 &&
+         elementMonth === 11 &&
+         elementDay <= currentDay
+      ) {
+         previousMonthTotal += element.totalAmount;
+      }
+   });
+
+   const grow =
+      previousMonthTotal === 0
+         ? 100
+         : ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) *
+           100;
+
+   return {
+      total: formatCurrency(Number(currentMonthTotal.toFixed(2))),
+      grow: Number(grow.toFixed(2)),
+   };
+}
+
+export function calculateGrowthByCount(elements: Booking[]) {
+   const now = setDateTimeToMidnight(new Date());
+   const currentMonth = now.getMonth();
+   const currentYear = now.getFullYear();
+   const currentDay = now.getDate();
+
+   let currentMonthCount = 0;
+   let previousMonthCount = 0;
+
+   elements.forEach(element => {
+      const elementDate = new Date(element.createdAt);
+      const elementMonth = elementDate.getMonth();
+      const elementYear = elementDate.getFullYear();
+      const elementDay = elementDate.getDate();
+
+      if (
+         elementYear === currentYear &&
+         elementMonth === currentMonth &&
+         elementDay <= currentDay
+      ) {
+         currentMonthCount++;
+      } else if (
+         elementYear === currentYear &&
+         elementMonth === currentMonth - 1 &&
+         elementDay <= currentDay
+      ) {
+         previousMonthCount++;
+      } else if (
+         elementYear === currentYear - 1 &&
+         currentMonth === 0 &&
+         elementMonth === 11 &&
+         elementDay <= currentDay
+      ) {
+         previousMonthCount++;
+      }
+   });
+
+   const grow =
+      previousMonthCount === 0
+         ? 100
+         : ((currentMonthCount - previousMonthCount) / previousMonthCount) *
+           100;
+
+   return {
+      total: Number(currentMonthCount.toFixed(2)),
+      grow: Number(grow.toFixed(2)),
+   };
 }
