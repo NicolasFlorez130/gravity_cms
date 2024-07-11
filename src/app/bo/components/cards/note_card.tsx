@@ -10,7 +10,7 @@ import {
    DialogTrigger,
 } from "~/components/bo/ui/dialog";
 import Loading from "~/components/shared/loading";
-import { cn } from "~/lib/utils";
+import { cn, formatDateInSpanish } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import type { Note } from "~/types/notes";
 
@@ -35,7 +35,7 @@ export default function NoteCard({ data, refetch }: INoteCard) {
             <div className="flex items-center gap-2 text-gray-500">
                <FileText />
                <p className={cn(isDialog ? "text-sm" : "text-xs")}>
-                  {data.activeUntil.toDateString()}
+                  {formatDateInSpanish(data.activeUntil)}
                </p>
             </div>
             <div className="flex w-full items-center gap-2 truncate">
@@ -68,7 +68,7 @@ export default function NoteCard({ data, refetch }: INoteCard) {
                         isDialog ? "text-sm" : "text-xs",
                      )}
                   >
-                     Creada el: {data.createdAt.toDateString()}
+                     Creada el: {formatDateInSpanish(data.createdAt)}
                   </p>
                   <Button
                      className="mt-4"

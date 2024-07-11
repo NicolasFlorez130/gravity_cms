@@ -1,17 +1,27 @@
 "use client";
 
 import { Separator } from "~/components/bo/ui/separator";
-import { api } from "~/trpc/react";
 import AppointmentCard from "../cards/appointment_card";
-import Loading from "~/components/shared/loading";
+import { useStore } from "~/lib/features/store";
+import { setDateTimeTo0 } from "~/lib/utils";
 
 interface INextAppointments {}
 
 export default function NextAppointments({}: INextAppointments) {
-   const { data, refetch, isFetching, isRefetching } =
-      api.appointments.getNextServices.useQuery(4, {
-         refetchOnWindowFocus: false,
-      });
+   const today = setDateTimeTo0(new Date());
+
+   const services = useStore.use.appointments();
+
+   const filteredServices = services
+      .filter(
+         ({ service: { date, attended } }) =>
+            !attended && date.getTime() >= today.getTime(),
+      )
+      .sort(
+         ({ service: { date: date_1 } }, { service: { date: date_2 } }) =>
+            date_1.getTime() - date_2.getTime(),
+      )
+      .slice(0, 4);
 
    return (
       <div className="grid h-max w-full gap-4">
@@ -23,17 +33,9 @@ export default function NextAppointments({}: INextAppointments) {
          </div>
 
          <div className="grid place-items-center gap-2">
-            {isFetching && !isRefetching ? (
-               <Loading />
-            ) : (
-               data?.map((el) => (
-                  <AppointmentCard
-                     key={el.service.id}
-                     data={el}
-                     refetch={refetch}
-                  />
-               ))
-            )}
+            {filteredServices.map(el => (
+               <AppointmentCard key={el.service.id} data={el} />
+            ))}
          </div>
       </div>
    );

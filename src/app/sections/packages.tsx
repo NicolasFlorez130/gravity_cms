@@ -10,7 +10,10 @@ export default function Packages({}: IPackages) {
    const packages = useStore.use.packages();
 
    return (
-      <section className="relative xl:grid xl:grid-cols-[2fr_5fr] xl:bg-bg_veil/80 xl:p-36">
+      <section
+         id="packages_list"
+         className="relative xl:grid xl:grid-cols-[2fr_5fr] xl:bg-bg_veil/80 xl:p-36"
+      >
          <div className="relative grid aspect-square w-full place-items-center bg-bg_veil/80 sm:aspect-[744/344] lg:aspect-[1024/344] xl:static xl:aspect-auto xl:bg-transparent">
             <h2 className="text-center font-epilogue text-5xl font-light text-white">
                Reserva tu <br className="hidden sm:block" /> vuelo aquí

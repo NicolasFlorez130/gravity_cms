@@ -443,3 +443,7 @@ export function findDatesWithOccurrences<T>(arr: T[], cb: (arg: T) => Date) {
       return filtered;
    }, [] as Date[]);
 }
+
+export function formatDateInSpanish(date: Date) {
+   return format(date, "yyyy-MM-dd", { locale: es });
+}

@@ -1,31 +1,26 @@
 "use client";
 
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
 import { Card, CardContent, CardTitle } from "~/components/bo/ui/card";
 import { Checkbox } from "~/components/bo/ui/checkbox";
 import { Chip } from "~/components/bo/ui/chip";
+import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import type { Appointment } from "~/types/appointments";
 
 interface IAppointmentCard {
    data: Appointment;
-   refetch: () => Promise<any>;
 }
 
 export default function AppointmentCard({
    data: { booking, service },
-   refetch,
 }: IAppointmentCard) {
-   const router = useRouter();
+   const { refresh } = useRouterRefresh();
 
    const { mutate, isPending } =
       api.appointments.markServiceAsAttended.useMutation({
-         onSuccess: async () => {
-            router.refresh();
-            await refetch();
-         },
+         onSuccess: refresh,
       });
 
    return (

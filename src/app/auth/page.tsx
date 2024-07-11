@@ -52,7 +52,7 @@ export default function Page({}: IPage) {
          </Card>
          <div className="fixed aspect-square h-screen opacity-5">
             <Image
-               src="/backgrounds/login_background.png"
+               src="/backgrounds/back_circle_light.png"
                alt="auth background"
                fill
             />

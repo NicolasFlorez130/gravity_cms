@@ -1,9 +1,8 @@
 import { appointmentConfirmations } from "~/server/db/schemas/appointments";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { and, asc, eq, gt } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { setDateTimeTo0 } from "~/lib/utils";
 import type { api } from "~/trpc/server";
 import { bookAppointmentSchema, bookings } from "~/server/db/schemas/bookings";
 import { services } from "~/server/db/schemas/services";
@@ -11,6 +10,35 @@ import { services } from "~/server/db/schemas/services";
 export type InputObject = Parameters<typeof api.appointments.book>["0"];
 
 export const appointmentsRouter = createTRPCRouter({
+   getById: publicProcedure.input(z.string()).query(({ ctx, input }) =>
+      ctx.db.transaction(async tx => {
+         const booking = await tx
+            .select()
+            .from(bookings)
+            .where(eq(bookings.id, input))
+            .leftJoin(
+               appointmentConfirmations,
+               eq(bookings.id, appointmentConfirmations.id),
+            );
+
+         const el = booking.at(0);
+
+         if (!el) {
+            return null;
+         } else {
+            const bookingServices = await tx
+               .select()
+               .from(services)
+               .where(eq(services.bookingId, el.booking.id));
+
+            return {
+               ...el,
+               services: bookingServices,
+            };
+         }
+      }),
+   ),
+
    getAllConfirmed: publicProcedure.query(({ ctx }) =>
       ctx.db
          .select()
@@ -32,27 +60,6 @@ export const appointmentsRouter = createTRPCRouter({
          .innerJoin(bookings, eq(services.bookingId, bookings.id))
          .orderBy(asc(services.date)),
    ),
-
-   getNextServices: protectedProcedure
-      .input(z.number())
-      .query(({ ctx, input }) =>
-         ctx.db
-            .select()
-            .from(services)
-            .innerJoin(
-               appointmentConfirmations,
-               eq(services.bookingId, appointmentConfirmations.bookingId),
-            )
-            .innerJoin(bookings, eq(services.bookingId, bookings.id))
-            .where(
-               and(
-                  gt(services.date, setDateTimeTo0(new Date())),
-                  eq(services.attended, false),
-               ),
-            )
-            .orderBy(asc(services.date))
-            .limit(input),
-      ),
 
    book: publicProcedure
       .input(bookAppointmentSchema)

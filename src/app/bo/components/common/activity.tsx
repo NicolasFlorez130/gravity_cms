@@ -7,10 +7,9 @@ import { api } from "~/trpc/react";
 interface IActivity {}
 
 export default function Activity({}: IActivity) {
+   //TODO: finish this :)
    const { data, isFetching, isRefetching } =
-      api.appointments.getNextServices.useQuery(0, {
-         // refetchOnWindowFocus: false,
-      });
+      api.appointments.getAllServicesConfirmed.useQuery();
 
    return (
       <div className="grid h-max w-full gap-4">

@@ -9,8 +9,8 @@ interface ILogo {
 
 export default function Logo({ className }: ILogo) {
    return (
-      <div id="logo" className={cn("flex items-center", className)}>
-         <div className="relative aspect-square h-20">
+      <div id="logo" className={cn("flex items-center gap-2", className)}>
+         <div className="relative aspect-square h-12 lg:h-20">
             <Image
                alt="gravity logo"
                fill

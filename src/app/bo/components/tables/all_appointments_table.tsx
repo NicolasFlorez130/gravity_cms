@@ -28,7 +28,7 @@ import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { Input } from "~/components/bo/ui/input";
 import { Separator } from "~/components/bo/ui/separator";
 import type { DateRange } from "react-day-picker";
-import { cn, dateFilterFunction } from "~/lib/utils";
+import { cn, dateFilterFunction, formatDateInSpanish } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import TableHeaderSortingToggle from "~/components/bo/ui/table_header_sorting_toggle";
 import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
@@ -89,7 +89,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
             row: {
                original: { service },
             },
-         }) => <div>{service.date.toDateString()}</div>,
+         }) => <div>{formatDateInSpanish(service.date)}</div>,
          filterFn: dateFilterFunction,
       },
       {
@@ -103,7 +103,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
             row: {
                original: { service },
             },
-         }) => <div>{service.createdAt.toDateString()}</div>,
+         }) => <div>{formatDateInSpanish(service.createdAt)}</div>,
          filterFn: dateFilterFunction,
       },
       {
