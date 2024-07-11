@@ -1,6 +1,6 @@
 import type { Row } from "@tanstack/react-table";
 import { type ClassValue, clsx } from "clsx";
-import { format, set, type Day } from "date-fns";
+import { format, isSameDay, set, type Day } from "date-fns";
 import { es } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { twMerge } from "tailwind-merge";
@@ -547,4 +547,36 @@ export function calculateGrowthByCount(elements: Booking[]) {
       total: Number(currentMonthCount.toFixed(2)),
       grow: Number(grow.toFixed(2)),
    };
+}
+
+export function filterDates(
+   initialDate: Date,
+   finalDate: Date,
+   holidays: Date[],
+   filter: PackageAvailability,
+): Date[] {
+   const filteredDates: Date[] = [];
+
+   const isWeekend = (date: Date) =>
+      week_end.some(day => day === date.getDay());
+   const isHoliday = (date: Date) =>
+      holidays.some(holiday => isSameDay(holiday, date));
+
+   const currentDate = new Date(initialDate);
+
+   while (currentDate <= finalDate) {
+      if (filter === "WORK_DAYS") {
+         if (isWeekend(currentDate) || isHoliday(currentDate)) {
+            filteredDates.push(new Date(currentDate));
+         }
+      } else if (filter === "WEEKEND") {
+         if (!isWeekend(currentDate) && !isHoliday(currentDate)) {
+            filteredDates.push(new Date(currentDate));
+         }
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+   }
+
+   return filteredDates;
 }

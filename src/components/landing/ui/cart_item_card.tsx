@@ -6,12 +6,13 @@ import type { BookingPackage } from "~/lib/features/slices/cart_slice";
 import { Button } from "./button";
 import { Trash } from "@phosphor-icons/react/dist/ssr";
 import {
+   filterDates,
    findDatesWithOccurrences,
    formatCurrency,
    parseDateToMidnightStartOfDay,
    parseEventForNumber,
-   week_end,
-   work_days,
+   setDateTimeTo0,
+   setDateTimeToMidnight,
 } from "~/lib/utils";
 import type { UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import type { InputObject } from "~/server/api/routers/appointments";
@@ -25,6 +26,8 @@ import {
 } from "./form";
 import { Input } from "./input";
 import { DatePicker } from "./date_picker";
+import { holidaysWithinInterval } from "colombian-holidays/lib/utils/holidaysWithinInterval";
+import { addYears } from "date-fns";
 
 interface ICartItemCard {
    item: BookingPackage;
@@ -54,6 +57,25 @@ export default function CartItemCard({
             ({ service: { date } }) => date,
          ),
       [servicesBooked],
+   );
+
+   const now = new Date();
+
+   const dates = {
+      start: setDateTimeTo0(now),
+      end: setDateTimeToMidnight(addYears(now, 1)),
+   };
+
+   const holidaysDates = useMemo(
+      () =>
+         holidaysWithinInterval({
+            ...dates,
+            valueAsDate: true,
+         })
+            .map(({ date }) => date)
+            .filter(date => !!date),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
    );
 
    return (
@@ -115,13 +137,15 @@ export default function CartItemCard({
                            )}
                            disabledDates={[
                               {
-                                 dayOfWeek:
-                                    pkg?.availability === "WORK_DAYS"
-                                       ? week_end
-                                       : pkg?.availability === "WEEKEND"
-                                         ? work_days
-                                         : [],
+                                 before: dates.start,
+                                 after: dates.end,
                               },
+                              ...filterDates(
+                                 dates.start,
+                                 dates.end,
+                                 holidaysDates,
+                                 pkg?.availability ?? "EVERY_DAY",
+                              ),
                               ...unavailableDates,
                            ]}
                         />

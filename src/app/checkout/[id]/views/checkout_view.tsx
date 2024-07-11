@@ -10,6 +10,7 @@ import Loading from "~/components/shared/loading";
 import { env } from "~/env";
 import { useStore } from "~/lib/features/store";
 import { cn, formatCurrency, formatDateInSpanish } from "~/lib/utils";
+import { getBaseUrl } from "~/trpc/react";
 import { type api } from "~/trpc/server";
 
 interface ICheckoutView {
@@ -165,7 +166,7 @@ export default function CheckoutView({ appointment, hashHex }: ICheckoutView) {
             data-amount={appointment.booking.totalAmount}
             data-api-key={env.NEXT_PUBLIC_BOLD_KEY}
             data-integrity-signature={hashHex}
-            data-redirection-url="https://micomercio.com/pagos/resultado"
+            data-redirection-url={getBaseUrl()}
          />
       </div>
    );

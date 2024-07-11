@@ -15,7 +15,6 @@ import {
 import { useStore } from "~/lib/features/store";
 import CartItemCard from "./cart_item_card";
 import { api } from "~/trpc/react";
-import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -31,30 +30,22 @@ import {
 } from "./form";
 import { Input } from "./input";
 import { cn, formatCurrency } from "~/lib/utils";
-import { useToast } from "./use-toast";
 import Loading from "~/components/shared/loading";
 import { bookAppointmentSchema } from "~/server/db/schemas/bookings";
+import { useRouter } from "next/navigation";
 
 export function CartDrawer() {
-   const { toast } = useToast();
-
-   const { refresh } = useRouterRefresh();
+   const router = useRouter();
 
    const cart = useStore.use.cart();
    const setCart = useStore.use.setCart();
    const packages = useStore.use.packages();
 
    const { mutate, isPending } = api.appointments.book.useMutation({
-      onSuccess: async () => {
-         await refresh();
-         toast({
-            title: "Reserva agendada con éxito",
-            description:
-               "Preséntate el dia de las reservas con tu documento de identidad.",
-         });
-
+      onSuccess: async data => {
          form.reset();
          setCart([]);
+         router.push(`/checkout/${data}`);
       },
    });
 
