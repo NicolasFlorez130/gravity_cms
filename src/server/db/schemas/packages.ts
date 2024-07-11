@@ -1,4 +1,11 @@
-import { boolean, integer, pgEnum, real, text } from "drizzle-orm/pg-core";
+import {
+   boolean,
+   integer,
+   pgEnum,
+   real,
+   text,
+   uuid,
+} from "drizzle-orm/pg-core";
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -7,6 +14,12 @@ export const packageAvailabilityEnum = pgEnum("availability", [
    "EVERY_DAY",
    "WORK_DAYS",
    "WEEKEND",
+]);
+
+export const packageChangesTypeEnum = pgEnum("change_type", [
+   "DELETE",
+   "EDIT",
+   "CREATE",
 ]);
 
 export const packages = createTable("package", {
@@ -20,6 +33,17 @@ export const packages = createTable("package", {
    usersQuantity: integer("users_quantity").notNull(),
    forChildren: boolean("for_children").notNull(),
    description: text("description").notNull(),
+
+   createdAt: createdAtColumn,
+});
+
+export const packageChanges = createTable("package_change", {
+   id: uuidColumn,
+
+   packageId: uuid("package_id")
+      .notNull()
+      .references(() => packages.id),
+   changeType: packageChangesTypeEnum("change_type").notNull(),
 
    createdAt: createdAtColumn,
 });

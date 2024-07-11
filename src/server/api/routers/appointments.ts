@@ -18,7 +18,7 @@ export const appointmentsRouter = createTRPCRouter({
             .where(eq(bookings.id, input))
             .leftJoin(
                appointmentConfirmations,
-               eq(bookings.id, appointmentConfirmations.id),
+               eq(bookings.id, appointmentConfirmations.bookingId),
             );
 
          const el = booking.at(0);
