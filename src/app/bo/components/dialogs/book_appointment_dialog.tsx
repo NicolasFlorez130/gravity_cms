@@ -341,7 +341,12 @@ function BookingPackageCard({
                               field.onChange,
                               updateDaySelected,
                            )}
-                           disabledDates={unavailableDates}
+                           disabledDates={[
+                              {
+                                 before: new Date(),
+                              },
+                              ...unavailableDates,
+                           ]}
                         />
                      </FormControl>
                      <FormMessage />

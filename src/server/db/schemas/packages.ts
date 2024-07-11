@@ -50,7 +50,7 @@ export const packageChanges = createTable("package_change", {
 
 export const insertPackageSchema = createInsertSchema(packages, {
    name: z.string().min(1),
-   price: z.number().min(0),
+   price: z.number().min(1000),
    minutePrice: z.number().min(0),
    usersQuantity: z.number().min(1),
 });

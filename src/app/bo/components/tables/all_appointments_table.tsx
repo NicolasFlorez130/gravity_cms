@@ -53,6 +53,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
 
    const columns: ColumnDef<Appointment>[] = [
       {
+         id: "booking.clientNames",
          accessorKey: "booking.clientNames",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
@@ -66,19 +67,17 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          }) => <div>{booking.clientNames}</div>,
       },
       {
+         id: "booking.clientEmail",
          accessorKey: "booking.clientEmail",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
                Email
             </TableHeaderSortingToggle>
          ),
-         cell: ({
-            row: {
-               original: { booking },
-            },
-         }) => <div>{booking.clientEmail}</div>,
+         cell: ({ row }) => <div>{row.getValue("booking.clientEmail")}</div>,
       },
       {
+         id: "service.date",
          accessorKey: "service.date",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
@@ -93,6 +92,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          filterFn: dateFilterFunction,
       },
       {
+         id: "service.createdAt",
          accessorKey: "service.createdAt",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
@@ -107,6 +107,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          filterFn: dateFilterFunction,
       },
       {
+         id: "booking.paymentMethod",
          accessorKey: "booking.paymentMethod",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
@@ -120,6 +121,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
          }) => <PaymentMethodBadge paymentMethod={booking.paymentMethod} />,
       },
       {
+         id: "service.attended",
          accessorKey: "service.attended",
          header: ({ column }) => (
             <TableHeaderSortingToggle column={column}>
@@ -177,7 +179,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
    });
 
    useEffect(() => {
-      table.getColumn("date")?.setFilterValue(dates);
+      table.getColumn("service.date")?.setFilterValue(dates);
    }, [dates, table]);
 
    return (
