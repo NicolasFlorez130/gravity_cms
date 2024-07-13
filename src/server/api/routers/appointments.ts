@@ -1,7 +1,7 @@
 import { appointmentConfirmations } from "~/server/db/schemas/appointments";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { asc, eq } from "drizzle-orm";
-import { z } from "zod";
+import { z } from "~/lib/zod_lang";
 import { TRPCError } from "@trpc/server";
 import type { api } from "~/trpc/server";
 import { bookAppointmentSchema, bookings } from "~/server/db/schemas/bookings";

@@ -1,9 +1,9 @@
 import { pgEnum, real, text } from "drizzle-orm/pg-core";
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 import { onlyNumbers } from "~/lib/regex";
 import { insertServiceSchema } from "./services";
+import { z } from "~/lib/zod_lang";
 
 export const paymentMethods = [
    "ONLINE",

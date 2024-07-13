@@ -8,7 +8,7 @@ import {
 import { packages } from "./packages";
 import { bookings } from "./bookings";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { z } from "~/lib/zod_lang";
 
 export const services = createTable("service", {
    id: uuidColumn,
@@ -18,7 +18,7 @@ export const services = createTable("service", {
    packageId: uuid("package_id")
       .references(() => packages.id)
       .notNull(),
-   extraMinutes: integer("extra_minutes").default(0),
+   extraMinutes: integer("extra_minutes").notNull(),
    date: timestamp("date", { withTimezone: true }).notNull(),
    attended: boolean("attended").default(false),
 
@@ -27,5 +27,5 @@ export const services = createTable("service", {
 
 export const insertServiceSchema = createInsertSchema(services, {
    date: z.date().min(setDateTimeTo0(new Date())),
-   extraMinutes: z.number(),
+   extraMinutes: z.number().min(0),
 });

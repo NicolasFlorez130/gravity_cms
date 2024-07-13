@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { z } from "~/lib/zod_lang";
 
 export const packageAvailabilityEnum = pgEnum("availability", [
    "EVERY_DAY",

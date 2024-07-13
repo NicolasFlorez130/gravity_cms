@@ -176,7 +176,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                            onClick={() =>
                               append({
                                  packageId: "",
-                                 extraMinutes: undefined as unknown as number,
+                                 extraMinutes: 0,
                                  date: new Date(),
                               })
                            }
@@ -404,7 +404,7 @@ function BookingPackageCard({
                         <FormControl>
                            <Input
                               {...field}
-                              value={field.value ?? undefined}
+                              value={field.value}
                               type="number"
                               onChange={parseEventForNumber(
                                  field.onChange,

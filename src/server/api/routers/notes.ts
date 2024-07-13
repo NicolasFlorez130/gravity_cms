@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "~/lib/zod_lang";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { insertNoteSchema, notes } from "~/server/db/schemas/notes";
 import { eq } from "drizzle-orm";
