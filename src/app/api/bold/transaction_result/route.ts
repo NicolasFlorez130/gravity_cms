@@ -1,31 +1,30 @@
-import { headers } from "next/headers";
 import { db } from "~/server/db";
 import { appointmentConfirmations } from "~/server/db/schemas/appointments";
-import { createHmac, timingSafeEqual } from "crypto";
-import { env } from "~/env";
 
 export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
-   const headersList = headers();
+   // const headersList = headers();
 
-   const signature = headersList.get("x-bold-signature") ?? "";
+   // const signature = headersList.get("x-bold-signature") ?? "";
 
    const body = (await req.json()) as TransactionResult;
 
-   const strMessage = JSON.stringify(body);
+   // const strMessage = JSON.stringify(body);
 
-   const encoded = Buffer.from(strMessage).toString("base64");
+   // const encoded = Buffer.from(strMessage).toString("base64");
 
-   const hashed = createHmac("sha256", env.BOLD_SECRET_KEY)
-      .update(encoded)
-      .digest("hex");
+   // const hashed = createHmac("sha256", env.BOLD_SECRET_KEY)
+   //    .update(encoded)
+   //    .digest("hex");
 
-   const isValidRequest = timingSafeEqual(
-      Buffer.from(hashed),
-      Buffer.from(signature),
-   );
+   // const isValidRequest = timingSafeEqual(
+   //    Buffer.from(hashed),
+   //    Buffer.from(signature),
+   // );
 
-   console.log("isValidRequest:", isValidRequest);
+   // console.log("isValidRequest:", isValidRequest);
+
+   console.log("owo");
 
    //TODO: toggle this
    // if (isValidRequest) {
@@ -46,11 +45,15 @@ export async function POST(req: Request) {
 
             Response.json(insertResponse, { status: 200 });
          } catch (error) {
+            console.error(error);
             return new Response(null, {
                status: 500,
             });
          }
       }
+      return new Response(null, {
+         status: 200,
+      });
    } else {
       return new Response("Invalid signature", {
          status: 400,
