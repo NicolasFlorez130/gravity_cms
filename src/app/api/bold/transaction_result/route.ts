@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
             console.log("insertResponse:", insertResponse);
 
-            Response.json(insertResponse);
+            Response.json(insertResponse, { status: 200 });
          } catch (error) {
             return new Response(null, {
                status: 500,

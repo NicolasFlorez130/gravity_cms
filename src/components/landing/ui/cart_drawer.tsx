@@ -96,7 +96,11 @@ export function CartDrawer() {
 
       cart.forEach(({ packageId, id }) => {
          if (!addedPackages.some(el => el === id)) {
-            append({ packageId, date: undefined as unknown as Date });
+            append({
+               packageId,
+               date: undefined as unknown as Date,
+               extraMinutes: 0,
+            });
 
             aux.push(id);
          }
