@@ -13,7 +13,7 @@
     "lint": "next lint",
     "start": "next start",
     "format": "prettier . --write",
-    "email" : "email dev --dir src/emails"
+    "email": "email dev --dir src/emails"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.1.0",
@@ -69,6 +69,7 @@
     "react-dom": "^18.3.0",
     "react-email": "2.1.5",
     "react-hook-form": "^7.52.1",
+    "resend": "^3.4.0",
     "server-only": "^0.0.1",
     "sharp": "^0.33.4",
     "superjson": "^2.2.1",

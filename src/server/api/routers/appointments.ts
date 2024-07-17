@@ -6,6 +6,9 @@ import { TRPCError } from "@trpc/server";
 import type { api } from "~/trpc/server";
 import { bookAppointmentSchema, bookings } from "~/server/db/schemas/bookings";
 import { services } from "~/server/db/schemas/services";
+import { sendEmail } from "~/server/actions/sendEmail";
+import { getBookingEmail } from "~/emails/booking_email";
+import { getBaseUrl } from "~/server/db/utils";
 
 export type InputObject = Parameters<typeof api.appointments.book>["0"];
 
@@ -83,6 +86,24 @@ export const appointmentsRouter = createTRPCRouter({
                      bookingId,
                   })),
                );
+
+               const emailProps = {
+                  ...input,
+                  paymentLink:
+                     input.paymentMethod === "ONLINE"
+                        ? `${getBaseUrl()}/checkout/${bookingId}`
+                        : undefined,
+               } as Parameters<typeof getBookingEmail>[0];
+
+               await sendEmail({
+                  from: "diego@gravitytunnel.co",
+                  to: input.clientEmail,
+                  subject:
+                     input.paymentMethod === "ONLINE"
+                        ? "Vuelo pendiente de pago"
+                        : "Vuelo agendado",
+                  react: getBookingEmail(emailProps),
+               });
 
                return bookingId;
             } catch (error) {

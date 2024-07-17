@@ -29,6 +29,8 @@ export const env = createEnv({
       AUTH_GOOGLE_SECRET: z.string(),
 
       BOLD_SECRET_KEY: z.string(),
+
+      RESEND_KEY: z.string(),
    },
 
    /**
@@ -56,6 +58,7 @@ export const env = createEnv({
       AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
       BOLD_SECRET_KEY: process.env.BOLD_SECRET_KEY,
       NEXT_PUBLIC_BOLD_KEY: process.env.NEXT_PUBLIC_BOLD_KEY,
+      RESEND_KEY: process.env.RESEND_KEY,
    },
 
    /**

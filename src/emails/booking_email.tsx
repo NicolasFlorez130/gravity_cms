@@ -60,7 +60,7 @@ export default function BookingEmail({
                   : "Vuelo agendado"}{" "}
                - Gravity
             </Preview>
-            <Container className="bg-background-black-email max-w-2xl px-6 py-10 text-white">
+            <Container className="max-w-2xl bg-background-black-email px-6 py-10 text-white">
                <Section className="flex items-center justify-center">
                   <Column>
                      <Img
@@ -128,7 +128,7 @@ export default function BookingEmail({
                               borderWidth: 10,
                            }}
                            href={paymentLink}
-                           className="bg-muted-email h-max rounded-full border-3 px-6 py-4 font-bold tracking-widest text-white transition-all hover:-translate-y-1 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:brightness-75 disabled:pointer-events-none disabled:opacity-50"
+                           className="h-max rounded-full border-3 bg-muted-email px-6 py-4 font-bold tracking-widest text-white transition-all hover:-translate-y-1 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:brightness-75 disabled:pointer-events-none disabled:opacity-50"
                         >
                            Pagar ahora
                         </a>
@@ -149,3 +149,7 @@ BookingEmail.PreviewProps = {
    paymentMethod: "ONLINE",
    paymentLink: "https://www.google.com",
 } satisfies IBookingEmail;
+
+export function getBookingEmail(props: IBookingEmail) {
+   return <BookingEmail {...props} />;
+}

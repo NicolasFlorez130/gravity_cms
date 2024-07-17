@@ -71,6 +71,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
    const { mutate, isPending } = api.appointments.book.useMutation({
       onSuccess: async () => {
          await refresh();
+         form.reset();
          setIsOpen(false);
       },
    });
