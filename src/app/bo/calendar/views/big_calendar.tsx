@@ -18,7 +18,8 @@ import { cn, translatePaymentMethod } from "~/lib/utils";
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
-   const services = useStore.use.appointments();
+   const appointments = useStore.use.appointments();
+   const packages = useStore.use.packages();
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
@@ -115,21 +116,30 @@ export function BigCalendar({}: IBigCalendar) {
          <Calendar
             toolbar={false}
             localizer={localizer}
-            events={services.map(({ booking, service: { date } }) => ({
-               end: addHours(date, 2),
-               start: date,
-               title: translatePaymentMethod(booking.paymentMethod),
-               className: cn(
-                  booking.paymentMethod === "COURTESY" &&
-                     "bg-violet-100 text-violet-500",
-                  booking.paymentMethod === "LANDING" &&
-                     "bg-blue-100 text-blue-500",
-                  booking.paymentMethod === "ONLINE" &&
-                     "bg-orange-100 text-orange-500",
-                  booking.paymentMethod === "ON_SITE" &&
-                     "bg-green-100 text-green-500",
-               ),
-            }))}
+            events={appointments.map(
+               ({
+                  booking: { paymentMethod, clientNames, clientPhoneNumber },
+                  service: { date, packageId },
+               }) => ({
+                  end: addHours(date, 2),
+                  start: date,
+                  paymentMethod,
+                  clientNames,
+                  clientPhoneNumber,
+                  packageName: packages.find(({ id }) => id === packageId)
+                     ?.name,
+                  className: cn(
+                     paymentMethod === "COURTESY" &&
+                        "bg-violet-100 text-violet-500 border-violet-500",
+                     paymentMethod === "LANDING" &&
+                        "bg-blue-100 text-blue-500 border-blue-500",
+                     paymentMethod === "ONLINE" &&
+                        "bg-orange-100 text-orange-500 border-orange-500",
+                     paymentMethod === "ON_SITE" &&
+                        "bg-green-100 text-green-500 border-green-500",
+                  ),
+               }),
+            )}
             views={["day", "week", "month"]}
             startAccessor="start"
             view={view}
@@ -142,14 +152,35 @@ export function BigCalendar({}: IBigCalendar) {
                timeGutterWrapper: () => <></>,
                timeGutterHeader: ({}) => <></>,
                timeSlotWrapper: ({}) => <></>,
-               eventWrapper: ({ event: { className, title } }) => (
+               eventWrapper: ({
+                  event: {
+                     className,
+                     paymentMethod,
+                     clientNames,
+                     clientPhoneNumber,
+                     packageName,
+                  },
+               }) => (
                   <div
                      className={cn(
-                        "ml-2 flex h-10 flex-col justify-center gap-2 rounded-l-lg px-3 py-1",
+                        "relative ml-2 flex w-[calc(100%-.5rem)] flex-col justify-center gap-1 truncate rounded-l-lg border-b-3 px-3 py-1",
+                        view === "week" && "-right-[10px]",
+                        view === "day" ? "-right-4 h-20" : "h-10",
                         className,
                      )}
                   >
-                     {title}
+                     {view === "day" && (
+                        <>
+                           <span className="w-full truncate text-lg font-semibold">
+                              {packageName} -{" "}
+                              {translatePaymentMethod(paymentMethod)}
+                           </span>
+                           <span className="w-full truncate">
+                              {clientNames} - {clientPhoneNumber}
+                           </span>
+                        </>
+                     )}
+                     {view !== "day" && translatePaymentMethod(paymentMethod)}
                   </div>
                ),
             }}
