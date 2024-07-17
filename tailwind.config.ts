@@ -36,12 +36,16 @@ const config = {
             background: {
                DEFAULT: "hsl(var(--background))",
                dark: "hsl(var(--background-dark))",
-               black: "hsl(var(--background-black))",
+               black: {
+                  DEFAULT: "hsl(var(--background-black))",
+                  email: "hsl(197 55% 5%)",
+               },
             },
             foreground: "hsl(var(--foreground))",
             primary: {
                DEFAULT: "hsl(var(--primary))",
                foreground: "hsl(var(--primary-foreground))",
+               email: "hsl(184 100% 50%)",
             },
             secondary: {
                DEFAULT: "hsl(var(--secondary))",
@@ -54,6 +58,7 @@ const config = {
             muted: {
                DEFAULT: "hsl(var(--muted))",
                foreground: "hsl(var(--muted-foreground))",
+               email: "hsl(192 61% 65%)",
             },
             accent: {
                DEFAULT: "hsl(var(--accent))",

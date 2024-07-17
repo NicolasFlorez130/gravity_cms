@@ -14,6 +14,7 @@ import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { onlyNumbersAndEmpty } from "./regex";
 import type { PackageAvailability } from "~/types/packages";
 import { isHoliday } from "colombian-holidays/lib/utils/isHoliday";
+import { InstagramLogo } from "@phosphor-icons/react/dist/ssr";
 
 /**
  * Translates an array of day indices to a human-readable string or JSX elements.
@@ -580,3 +581,7 @@ export function filterDates(
 
    return filteredDates;
 }
+
+export const socialMedia = [
+   { label: "Instagram", url: "#", icon: InstagramLogo },
+];
