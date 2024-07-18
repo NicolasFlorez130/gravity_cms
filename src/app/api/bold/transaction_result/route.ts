@@ -36,8 +36,8 @@ export async function POST(req: Request) {
             const insertResponse = await db
                .insert(appointmentConfirmations)
                .values({
-                  bookingId: body.data.payment_id,
-                  paymentReference: body.id,
+                  bookingId: body.data.metadata.reference as string,
+                  paymentReference: body.data.payment_id,
                })
                .returning({ id: appointmentConfirmations.id });
 

@@ -46,5 +46,5 @@ interface Card {
 }
 
 interface Metadata {
-   reference: null;
+   reference: unknown;
 }
