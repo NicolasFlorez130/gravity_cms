@@ -34,7 +34,9 @@ export default async function RootLayout({
 }>) {
    return (
       <html lang="es">
-         <link rel="icon" href="/favicon.ico" sizes="any" />
+         <head>
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+         </head>
          <Body
             className={cn(
                epilogue.variable,

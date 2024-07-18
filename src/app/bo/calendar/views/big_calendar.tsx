@@ -14,16 +14,31 @@ import { useCallback, useMemo, useState } from "react";
 import { Button } from "~/components/bo/ui/button";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { cn, translatePaymentMethod } from "~/lib/utils";
+import { api } from "~/trpc/react";
+import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
+import Loading from "~/components/shared/loading";
 
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
+   const [changingState, setChangingState] = useState<string>();
+
+   const { refresh } = useRouterRefresh();
+
    const appointments = useStore.use.appointments();
    const packages = useStore.use.packages();
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
    const [view, setView] = useState<View>(Views.MONTH);
+
+   const { mutate, isPending } =
+      api.appointments.markServiceAsAttended.useMutation({
+         onSuccess: async () => {
+            await refresh();
+            setChangingState(undefined);
+         },
+      });
 
    const dateText = useMemo(() => {
       try {
@@ -116,30 +131,39 @@ export function BigCalendar({}: IBigCalendar) {
          <Calendar
             toolbar={false}
             localizer={localizer}
-            events={appointments.map(
-               ({
-                  booking: { paymentMethod, clientNames, clientPhoneNumber },
-                  service: { date, packageId },
-               }) => ({
-                  end: addHours(date, 2),
-                  start: date,
-                  paymentMethod,
-                  clientNames,
-                  clientPhoneNumber,
-                  packageName: packages.find(({ id }) => id === packageId)
-                     ?.name,
-                  className: cn(
-                     paymentMethod === "COURTESY" &&
-                        "bg-violet-100 text-violet-500 border-violet-500",
-                     paymentMethod === "LANDING" &&
-                        "bg-blue-100 text-blue-500 border-blue-500",
-                     paymentMethod === "ONLINE" &&
-                        "bg-orange-100 text-orange-500 border-orange-500",
-                     paymentMethod === "ON_SITE" &&
-                        "bg-green-100 text-green-500 border-green-500",
-                  ),
-               }),
-            )}
+            events={appointments
+               .sort(
+                  (
+                     { service: { attended: a } },
+                     { service: { attended: b } },
+                  ) => (b === a ? 0 : b ? -1 : 1),
+               )
+               .map(
+                  ({
+                     booking: { paymentMethod, clientNames, clientPhoneNumber },
+                     service: { date, packageId, attended, id },
+                  }) => ({
+                     end: addHours(date, 2),
+                     start: date,
+                     paymentMethod,
+                     clientNames,
+                     clientPhoneNumber,
+                     attended,
+                     id,
+                     packageName: packages.find(({ id }) => id === packageId)
+                        ?.name,
+                     className: cn(
+                        paymentMethod === "COURTESY" &&
+                           "bg-violet-100 text-violet-500 border-violet-500",
+                        paymentMethod === "LANDING" &&
+                           "bg-blue-100 text-blue-500 border-blue-500",
+                        paymentMethod === "ONLINE" &&
+                           "bg-orange-100 text-orange-500 border-orange-500",
+                        paymentMethod === "ON_SITE" &&
+                           "bg-green-100 text-green-500 border-green-500",
+                     ),
+                  }),
+               )}
             views={["day", "week", "month"]}
             startAccessor="start"
             view={view}
@@ -159,6 +183,8 @@ export function BigCalendar({}: IBigCalendar) {
                      clientNames,
                      clientPhoneNumber,
                      packageName,
+                     attended,
+                     id,
                   },
                }) => (
                   <div
@@ -178,9 +204,37 @@ export function BigCalendar({}: IBigCalendar) {
                            <span className="w-full truncate">
                               {clientNames} - {clientPhoneNumber}
                            </span>
+                           <div className="absolute right-4 top-4 flex items-center gap-2">
+                              <Button
+                                 variant="link"
+                                 className={cn(
+                                    "h-max border-0 !bg-transparent transition hover:border hover:no-underline",
+                                    className,
+                                 )}
+                                 disabled={
+                                    isPending ||
+                                    !!attended ||
+                                    id === changingState
+                                 }
+                                 onClick={() => {
+                                    setChangingState(id);
+                                    mutate(id);
+                                 }}
+                              >
+                                 {isPending && id === changingState ? (
+                                    <Loading />
+                                 ) : attended ? (
+                                    <>Atendido</>
+                                 ) : (
+                                    <>Marcar asistencia</>
+                                 )}
+                              </Button>
+                           </div>
                         </>
                      )}
-                     {view !== "day" && translatePaymentMethod(paymentMethod)}
+                     {view !== "day" && (
+                        <span className="w-full truncate">{packageName}</span>
+                     )}
                   </div>
                ),
             }}

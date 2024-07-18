@@ -41,6 +41,8 @@ interface IAllAppointmentsTable {
 export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
    const { refresh } = useRouterRefresh();
 
+   const packages = useStore.use.packages();
+
    const [changingState, setChangingState] = useState<string>();
 
    const { mutate, isPending } =
@@ -75,6 +77,24 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
             </TableHeaderSortingToggle>
          ),
          cell: ({ row }) => <div>{row.getValue("booking.clientEmail")}</div>,
+      },
+      {
+         id: "service.packageId",
+         accessorKey: "service.packageId",
+         header: ({ column }) => (
+            <TableHeaderSortingToggle column={column}>
+               Servicio
+            </TableHeaderSortingToggle>
+         ),
+         cell: ({ row }) => (
+            <div>
+               {
+                  packages.find(
+                     ({ id }) => id === row.getValue("service.packageId"),
+                  )?.name
+               }
+            </div>
+         ),
       },
       {
          id: "service.date",

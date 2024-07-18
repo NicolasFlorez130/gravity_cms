@@ -14,8 +14,6 @@ export default async function Page({ params }: { params: { id: string } }) {
    try {
       const appointment = await api.appointments.getById(params.id);
 
-      console.log(appointment);
-
       if (!!appointment && !appointment.appointment_confirmation) {
          const nestedString = `${appointment.booking.id}${appointment.booking.totalAmount}COP${env.BOLD_SECRET_KEY}`;
 

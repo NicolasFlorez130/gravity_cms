@@ -17,8 +17,6 @@ function verifySignature(
    hmac.update(bodyBase64);
    const generatedSignature = hmac.digest("hex");
 
-   console.log(generatedSignature, headerSignature);
-
    // Comparar el resultado obtenido con el valor del encabezado
    return generatedSignature === headerSignature;
 }
@@ -41,8 +39,6 @@ export async function POST(req: Request) {
 
    if (isValidRequest) {
       if (body.type === "SALE_APPROVED") {
-         console.log("body request:", body);
-
          try {
             const insertResponse = await db
                .insert(appointmentConfirmations)
@@ -52,11 +48,8 @@ export async function POST(req: Request) {
                })
                .returning({ id: appointmentConfirmations.id });
 
-            console.log("insertResponse:", insertResponse);
-
             Response.json(insertResponse, { status: 200 });
          } catch (error) {
-            console.error(error);
             return new Response(null, {
                status: 500,
             });
