@@ -87,21 +87,25 @@ export const appointmentsRouter = createTRPCRouter({
                   })),
                );
 
+               if (input.paid) {
+                  await tx
+                     .insert(appointmentConfirmations)
+                     .values({ bookingId, paymentReference: null });
+               }
+
                const emailProps = {
                   ...input,
-                  paymentLink:
-                     input.paymentMethod === "ONLINE"
-                        ? `${getBaseUrl()}/checkout/${bookingId}`
-                        : undefined,
+                  paymentLink: !input.paid
+                     ? `${getBaseUrl()}/checkout/${bookingId}`
+                     : undefined,
                } as Parameters<typeof getBookingEmail>[0];
 
                await sendEmail({
-                  from: "diego@gravitytunnel.co",
+                  from: "Gravity <diego@gravitytunnel.co>",
                   to: input.clientEmail,
-                  subject:
-                     input.paymentMethod === "ONLINE"
-                        ? "Vuelo pendiente de pago"
-                        : "Vuelo agendado",
+                  subject: input.paid
+                     ? "Vuelo agendado"
+                     : "Vuelo pendiente de pago",
                   react: getBookingEmail(emailProps),
                });
 

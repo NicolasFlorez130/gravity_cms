@@ -33,4 +33,5 @@ export const insertBookingSchema = createInsertSchema(bookings, {
 
 export const bookAppointmentSchema = insertBookingSchema.extend({
    packages: z.array(insertServiceSchema.omit({ bookingId: true })).min(1),
+   paid: z.boolean(),
 });

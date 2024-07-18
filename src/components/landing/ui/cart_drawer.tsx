@@ -58,6 +58,7 @@ export function CartDrawer() {
          clientNames: "",
          clientPhoneNumber: "",
          totalAmount: 0,
+         paid: false,
       },
       disabled: isPending,
    });

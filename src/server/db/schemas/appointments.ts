@@ -10,7 +10,7 @@ export const appointmentConfirmations = createTable(
       bookingId: uuid("booking_id")
          .notNull()
          .references(() => bookings.id),
-      paymentReference: text("payment_reference").notNull(),
+      paymentReference: text("payment_reference"),
 
       createdAt: createdAtColumn,
    },

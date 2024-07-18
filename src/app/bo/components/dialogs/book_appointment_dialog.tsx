@@ -12,6 +12,7 @@ import {
 } from "react-hook-form";
 import { Button } from "~/components/bo/ui/button";
 import { Card } from "~/components/bo/ui/card";
+import { Checkbox } from "~/components/bo/ui/checkbox";
 import { DatePicker } from "~/components/bo/ui/date_picker";
 import {
    Dialog,
@@ -45,6 +46,7 @@ import {
    formatCurrency,
    parseDateToMidnightStartOfDay,
    parseEventForNumber,
+   setDateTimeTo0,
    translatePaymentMethod,
    verifyAvailability,
 } from "~/lib/utils";
@@ -84,6 +86,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
          clientPhoneNumber: "",
          totalAmount: 0,
          paymentMethod: "ONLINE",
+         paid: false,
       },
       disabled: isPending,
    });
@@ -178,7 +181,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                               append({
                                  packageId: "",
                                  extraMinutes: 0,
-                                 date: new Date(),
+                                 date: setDateTimeTo0(new Date()),
                               })
                            }
                         >
@@ -266,9 +269,26 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                         </FormItem>
                      )}
                   />
+                  <FormField
+                     control={form.control}
+                     name="paid"
+                     render={({ field }) => (
+                        <FormItem className="flex h-max items-center gap-2">
+                           <FormControl>
+                              <Checkbox
+                                 checked={field.value}
+                                 onCheckedChange={field.onChange}
+                              />
+                           </FormControl>
+                           <FormLabel className="!mt-0">
+                              Marcar reserva como pagada
+                           </FormLabel>
+                        </FormItem>
+                     )}
+                  />
                   <DialogFooter>
                      <Button
-                        disabled={isPending}
+                        disabled={isPending || !fields.length}
                         type="submit"
                         variant="purple"
                      >
@@ -295,7 +315,9 @@ function BookingPackageCard({
    i,
    updateTotalSum,
 }: IBookingPackageCard) {
-   const [daySelected, setDaySelected] = useState<Date>();
+   const [daySelected, setDaySelected] = useState(
+      form.getValues().packages?.at(i)?.date,
+   );
 
    function updateDaySelected() {
       form.setValue(`packages.${i}.packageId`, "");
