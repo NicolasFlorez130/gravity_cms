@@ -1,48 +1,43 @@
-import { createHmac, timingSafeEqual } from "crypto";
+import { createHmac } from "crypto";
 import { headers } from "next/headers";
 import { env } from "~/env";
 import { db } from "~/server/db";
 import { appointmentConfirmations } from "~/server/db/schemas/appointments";
 
+function verifySignature(
+   bodyString: string,
+   headerSignature: string,
+   secretKey: string,
+) {
+   // Convertir el cuerpo a formato Base64
+   const bodyBase64 = Buffer.from(bodyString).toString("base64");
+
+   // Cifrar el cuerpo en Base64 utilizando HMAC-SHA256
+   const hmac = createHmac("sha256", secretKey);
+   hmac.update(bodyBase64);
+   const generatedSignature = hmac.digest("hex");
+
+   console.log(generatedSignature, headerSignature);
+
+   // Comparar el resultado obtenido con el valor del encabezado
+   return generatedSignature === headerSignature;
+}
+
 export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
    const headersList = headers();
 
+   const bodyString = await req.text();
+
    const signature = headersList.get("x-bold-signature") ?? "";
 
-   const body = (await req.json()) as TransactionResult;
+   const body = JSON.parse(bodyString) as TransactionResult;
 
-   const strMessage = JSON.stringify(body);
-
-   const encoded = Buffer.from(strMessage).toString("base64");
-
-   const hashed = createHmac("sha256", env.BOLD_SECRET_KEY)
-      .update(encoded)
-      .digest("hex");
-
-   const isValidRequest = timingSafeEqual(
-      Buffer.from(hashed),
-      Buffer.from(signature),
-   );
-
-   console.log("body", body);
-
-   console.log("encoded", encoded);
-
-   console.log("isValidRequest:", isValidRequest);
-   console.log("signature:", signature);
-
-   console.log(
-      "aux",
-      Buffer.from(hashed),
-      Buffer.from(signature),
-      hashed,
+   const isValidRequest = verifySignature(
+      bodyString,
       signature,
+      env.BOLD_SECRET_KEY,
    );
-
-   console.log("strMessage", strMessage);
-
-   console.log("owo");
 
    if (isValidRequest) {
       if (body.type === "SALE_APPROVED") {
