@@ -1,34 +1,50 @@
+import { createHmac, timingSafeEqual } from "crypto";
+import { headers } from "next/headers";
+import { env } from "~/env";
 import { db } from "~/server/db";
 import { appointmentConfirmations } from "~/server/db/schemas/appointments";
 
 export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
-   // const headersList = headers();
+   const headersList = headers();
 
-   // const signature = headersList.get("x-bold-signature") ?? "";
+   const signature = headersList.get("x-bold-signature") ?? "";
 
    const body = (await req.json()) as TransactionResult;
 
-   // const strMessage = JSON.stringify(body);
+   const strMessage = JSON.stringify(body);
 
-   // const encoded = Buffer.from(strMessage).toString("base64");
+   const encoded = Buffer.from(strMessage).toString("base64");
 
-   // const hashed = createHmac("sha256", env.BOLD_SECRET_KEY)
-   //    .update(encoded)
-   //    .digest("hex");
+   const hashed = createHmac("sha256", env.BOLD_SECRET_KEY)
+      .update(encoded)
+      .digest("hex");
 
-   // const isValidRequest = timingSafeEqual(
-   //    Buffer.from(hashed),
-   //    Buffer.from(signature),
-   // );
+   const isValidRequest = timingSafeEqual(
+      Buffer.from(hashed),
+      Buffer.from(signature),
+   );
 
-   // console.log("isValidRequest:", isValidRequest);
+   console.log("body", body);
+
+   console.log("encoded", encoded);
+
+   console.log("isValidRequest:", isValidRequest);
+   console.log("signature:", signature);
+
+   console.log(
+      "aux",
+      Buffer.from(hashed),
+      Buffer.from(signature),
+      hashed,
+      signature,
+   );
+
+   console.log("strMessage", strMessage);
 
    console.log("owo");
 
-   //TODO: toggle this
-   // if (isValidRequest) {
-   if (true) {
+   if (isValidRequest) {
       if (body.type === "SALE_APPROVED") {
          console.log("body request:", body);
 
