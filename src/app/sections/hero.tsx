@@ -98,12 +98,9 @@ export default function Hero({}: IHero) {
                         id="title_text"
                         className="text-2xl text-primary xl:text-5xl"
                      >
-                        {printAsSpans("El primer ")}
-                        <i>{printAsSpans(" túnel ")}</i>
-                        {printAsSpans("de")}
+                        {printAsSpans("El primer túnel de")}
                         <br className="sm:hidden" />
-                        <i>{printAsSpans(" viento ")}</i>
-                        {printAsSpans("de COLOMBIA")}
+                        {printAsSpans(" viento de COLOMBIA")}
                      </h1>
                      <div id="description" className="relative overflow-hidden">
                         <div className="absolute bottom-0 left-0 hidden h-0 w-0 border-b-4 border-white xl:block" />
@@ -130,9 +127,6 @@ export default function Hero({}: IHero) {
                   id="about_text"
                   className="mx-4 grid h-max justify-items-center gap-7 text-center xl:my-8 xl:h-max xl:justify-items-start xl:text-start"
                >
-                  <TitleLabel>
-                     {printAsSpans("EL SEGUNDO TÚNEL DE LATINOAMÉRICA")}
-                  </TitleLabel>
                   <h2 className="whitespace-nowrap font-epilogue text-3xl font-medium xl:text-6xl">
                      {printAsSpans("Puedes hacer ")}
                      <br className="sm:hidden" />{" "}
@@ -142,7 +136,7 @@ export default function Hero({}: IHero) {
                   </h2>
                   <div className="relative overflow-hidden">
                      <div className="absolute bottom-0 left-0 hidden h-0 w-0 border-b-4 border-white xl:block" />
-                     <p className="text-sm xl:text-lg fhd:mb-4">
+                     <p className="text-justify text-sm xl:text-lg fhd:mb-4">
                         ¡Prepárate para una experiencia que te hará sentir como
                         si estuvieras volando sin alas! En nuestro túnel de
                         viento, la emoción alcanza nuevas alturas mientras te
@@ -202,7 +196,7 @@ export default function Hero({}: IHero) {
                   </h2>
                   <div className="relative overflow-hidden">
                      <div className="absolute bottom-0 left-0 hidden h-0 w-0 border-b-4 border-white xl:block" />
-                     <p className="text-sm xl:text-lg fhd:mb-4">
+                     <p className="text-justify text-sm xl:text-lg fhd:mb-4">
                         Ya sea que seas un novato buscando emociones nuevas o un
                         veterano en busca de tu próxima dosis de adrenalina,
                         nuestro túnel de viento es el lugar perfecto para
@@ -260,11 +254,18 @@ export default function Hero({}: IHero) {
                      <p className="font-medium leading-loose text-muted">
                         También puedes reservar telefónicamente o escribirnos
                         por Whatsapp al{" "}
-                        <i className="font-bold text-white">(310) 123 4567</i>
+                        <i className="font-bold text-white">350 555 0920</i>
                      </p>
-                     <Button variant="muted" className="text-lg">
+                     <Link
+                        className={cn(
+                           buttonVariants({ variant: "muted" }),
+                           "text-center text-lg",
+                        )}
+                        href="https://wa.me/573505550920"
+                        target="_blank"
+                     >
                         Abre WhatsApp
-                     </Button>
+                     </Link>
                   </Card>
                   <Button className="flex items-center justify-center gap-2 text-lg">
                      RESERVA AHORA
@@ -273,9 +274,11 @@ export default function Hero({}: IHero) {
                   <Card className="grid gap-6">
                      <MapPin size={36} />
                      <p className="font-medium leading-loose text-muted">
-                        Estamos en la oreja del puente de la{" "}
-                        <i className="font-bold text-white">calle 170</i>{" "}
-                        autonorte sentido norte sur
+                        Estamos en la{" "}
+                        <i className="font-bold text-white">
+                           Carrera 45 #169 - 81,{" "}
+                        </i>
+                        oreja sur occidental de la autopista norte
                      </p>
                      <Button variant="muted" className="text-lg">
                         Abre mapa

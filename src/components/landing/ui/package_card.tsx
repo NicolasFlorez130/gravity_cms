@@ -2,6 +2,7 @@
 
 import {
    Baby,
+   Question,
    User,
    Users,
    UsersFour,
@@ -18,6 +19,7 @@ import type { IPackage } from "~/types/packages";
 import { Card } from "./card";
 import { Button } from "./button";
 import { useStore } from "~/lib/features/store";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 
 interface IPackageCard {
    pkg: IPackage;
@@ -43,9 +45,19 @@ export default function PackageCard({ pkg }: IPackageCard) {
 
    return (
       <Card className={cn("grid gap-6 px-4", highlight && "border-foreground")}>
-         <div className="flex gap-4">
-            <UsersIcon size={41} className="text-white" />
-            {pkg.forChildren && <Baby size={41} className="text-white" />}
+         <div className="flex justify-between">
+            <div className="flex gap-4">
+               <UsersIcon size={41} className="text-white" />
+               {pkg.forChildren && <Baby size={41} className="text-white" />}
+            </div>
+            <HoverCard openDelay={0}>
+               <HoverCardTrigger>
+                  <Question className="text-2xl hover:cursor-pointer" />
+               </HoverCardTrigger>
+               <HoverCardContent>
+                  Aplican términos y condiciones por peso.
+               </HoverCardContent>
+            </HoverCard>
          </div>
          <Button
             className="w-full truncate"
