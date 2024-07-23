@@ -40,13 +40,15 @@ export default function Footer({}: IFooter) {
          </div>
          <div className="text-center font-epilogue lg:flex lg:items-end lg:justify-between lg:text-start">
             <p className="text-lg">
-               Ven a divertirte en el primer túnel de{" "}
+               Ven a volar en el primer túnel de{" "}
                <br className="hidden lg:block" /> Colombia y experimenta la{" "}
                <br className="hidden lg:block" />
-               experiencia de paracaidismo
+               sensación de caer de un avión, <br className="hidden lg:block" />{" "}
+               tal como lo haría un paracaidista.
             </p>
             <p className="mt-2 text-xs opacity-50">
-               Copyright 2023 Zero Gravity, Inc. Terms & Privacy
+               Copyright {new Date().getFullYear()} Zero Gravity, Inc. Terms &
+               Privacy
             </p>
          </div>
          <div className="relative aspect-[12/2] w-full">
