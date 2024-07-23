@@ -3,8 +3,6 @@
 import Image from "next/image";
 import {
    ArrowDown,
-   InstagramLogo,
-   XLogo,
    ArrowRight,
    PhoneCall,
    MapPin,
@@ -91,20 +89,6 @@ export default function Hero({}: IHero) {
                         />
                      </div>
                      <ArrowDown size={42} className="animate-jump xl:hidden" />
-                  </div>
-                  <div
-                     id="social_media"
-                     className="flex justify-center gap-6 xl:absolute xl:bottom-36 xl:left-8 xl:vertical-rl"
-                  >
-                     <Link className="font-bold" href="#">
-                        Follow us
-                     </Link>
-                     <Link className="font-bold" href="#">
-                        <InstagramLogo size={24} />
-                     </Link>
-                     <Link className="font-bold" href="#">
-                        <XLogo size={24} />
-                     </Link>
                   </div>
                   <div
                      id="title_text_container"

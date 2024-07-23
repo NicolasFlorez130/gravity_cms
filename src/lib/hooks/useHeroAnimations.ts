@@ -504,32 +504,45 @@ export function useHeroAnimations(container: MutableRefObject<null>) {
    useGSAP(
       () => {
          if (isLg) {
+            const socialMedia = document.getElementById("social_media");
             const bookButton = document.getElementById("book_button");
             const landingHeader = document.getElementById("landing_header");
 
-            if (bookButton && landingHeader) {
-               gsap.to(bookButton, {
-                  y: 100,
-                  autoAlpha: 0,
-                  duration: 0,
-               });
+            if (bookButton && landingHeader && socialMedia) {
+               function hideElements() {
+                  gsap.to(bookButton, {
+                     y: 100,
+                     autoAlpha: 0,
+                     duration: 0.5,
+                  });
+
+                  gsap.to(socialMedia, {
+                     x: -100,
+                     autoAlpha: 0,
+                     duration: 0.5,
+                  });
+               }
+
+               hideElements();
 
                ScrollTrigger.create({
                   trigger: landingHeader,
                   start: "top top",
                   end: "bottom top",
-                  onLeaveBack: () =>
-                     gsap.to(bookButton, {
-                        y: 100,
-                        autoAlpha: 0,
-                        duration: 0.5,
-                     }), // Hide
-                  onEnter: () =>
+                  onLeaveBack: hideElements,
+                  onEnter: () => {
                      gsap.to(bookButton, {
                         y: 0,
                         autoAlpha: 1,
                         duration: 0.5,
-                     }), // Show
+                     });
+
+                     gsap.to(socialMedia, {
+                        x: 0,
+                        autoAlpha: 1,
+                        duration: 0.5,
+                     });
+                  },
                });
             }
          }

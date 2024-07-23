@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import Logo from "./logo";
-import { InstagramLogo, XLogo } from "@phosphor-icons/react/dist/ssr";
+import {
+   FacebookLogo,
+   InstagramLogo,
+   TiktokLogo,
+} from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 interface IFooter {}
@@ -13,14 +17,24 @@ export default function Footer({}: IFooter) {
          <div className="flex flex-col items-center gap-6 lg:flex-row lg:justify-between">
             <Logo />
             <div className="flex justify-center gap-6">
-               <Link className="font-light text-primary" href="#">
-                  Follow us
-               </Link>
-               <Link className="font-bold" href="#">
+               <p className="font-bold">Follow us</p>
+               <Link
+                  href="https://www.instagram.com/gravitytunnel/"
+                  target="_blank"
+               >
                   <InstagramLogo size={24} />
                </Link>
-               <Link className="font-bold" href="#">
-                  <XLogo size={24} />
+               <Link
+                  href="https://www.facebook.com/profile.php?id=61553252461423"
+                  target="_blank"
+               >
+                  <FacebookLogo size={24} />
+               </Link>
+               <Link
+                  href="https://www.tiktok.com/@gravity.tunnel"
+                  target="_blank"
+               >
+                  <TiktokLogo size={24} />
                </Link>
             </div>
          </div>

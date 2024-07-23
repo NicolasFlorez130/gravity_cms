@@ -12,6 +12,7 @@ import Footer from "~/components/landing/ui/footer";
 import { groupBy } from "~/lib/utils";
 import { CartDrawer } from "~/components/landing/ui/cart_drawer";
 import { type Metadata } from "next";
+import FollowUs from "~/components/landing/ui/follow_us";
 
 export const metadata: Metadata = {
    title: "Gravity",
@@ -30,6 +31,7 @@ export default async function Home() {
       <>
          <Veil />
          <main className="relative m-auto max-w-screen-3xl overflow-hidden">
+            <FollowUs />
             <div
                id="book_button"
                className="fixed bottom-4 right-4 z-20 h-max w-max"
