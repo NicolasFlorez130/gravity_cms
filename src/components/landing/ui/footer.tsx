@@ -51,13 +51,16 @@ export default function Footer({}: IFooter) {
                Privacy
             </p>
          </div>
-         <div className="relative aspect-[12/2] w-full">
-            <Image
-               alt="footer title"
-               src="/title/footer_title.png"
-               fill
-               className="object-contain"
-            />
+         <div className="flex flex-col items-center justify-center gap-4">
+            <div className="relative aspect-[12/2] w-full">
+               <Image
+                  alt="footer title"
+                  src="/title/footer_title.png"
+                  fill
+                  className="object-contain"
+               />
+            </div>
+            <p className="font-din_alt text-9xl text-primary">TUNNEL</p>
          </div>
       </footer>
    );

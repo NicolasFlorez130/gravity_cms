@@ -117,7 +117,10 @@ export function CartDrawer() {
    return (
       <Drawer>
          <DrawerTrigger asChild>
-            <Button variant="primary" className="relative w-max backdrop-blur">
+            <Button
+               variant="primary"
+               className="relative w-max px-3 py-2 text-xs backdrop-blur md:px-6 md:py-4 xl:text-base"
+            >
                {
                   <div
                      className={cn(
