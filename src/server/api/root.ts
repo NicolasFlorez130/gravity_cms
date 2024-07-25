@@ -8,6 +8,7 @@ import {
 import { packagesRouter } from "./routers/packages";
 import { notesRouter } from "./routers/notes";
 import { opinionsRouter } from "./routers/opinions";
+import { disabledDaysRouter } from "./routers/disabled_days";
 
 /**
  * This is the primary router for your server.
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
    packages: packagesRouter,
    notes: notesRouter,
    opinions: opinionsRouter,
+   disabledDays: disabledDaysRouter,
 });
 
 // export type definition of API

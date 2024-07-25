@@ -47,16 +47,19 @@ export default function CartItemCard({
    const packages = useStore.use.packages();
    const removeFromCart = useStore.use.removeFromCart();
    const servicesBooked = useStore.use.appointments();
+   const disableDates = useStore.use.disabledDays();
 
    const pkg = packages.find(({ id }) => id === item.packageId);
 
    const unavailableDates = useMemo(
-      () =>
-         findDatesWithOccurrences(
+      () => [
+         ...findDatesWithOccurrences(
             servicesBooked,
             ({ service: { date } }) => date,
          ),
-      [servicesBooked],
+         ...disableDates.map(({ date }) => date),
+      ],
+      [servicesBooked, disableDates],
    );
 
    const now = new Date();

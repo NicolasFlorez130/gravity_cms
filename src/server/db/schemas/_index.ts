@@ -8,3 +8,5 @@ export * from "./notes";
 export * from "./bookings";
 export * from "./packages";
 export * from "./services";
+export * from "./hours";
+export * from "./disabled_days";

@@ -585,3 +585,15 @@ export function filterDates(
 export const socialMedia = [
    { label: "Instagram", url: "#", icon: InstagramLogo },
 ];
+
+export function getDatesBetween(startDate: Date, endDate: Date) {
+   const dates: Date[] = [];
+   const currentDate = new Date(startDate);
+
+   while (currentDate <= endDate) {
+      dates.push(setDateTimeTo0(new Date(currentDate)));
+      currentDate.setDate(currentDate.getDate() + 1);
+   }
+
+   return dates;
+}

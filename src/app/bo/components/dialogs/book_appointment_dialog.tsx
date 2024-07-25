@@ -327,14 +327,17 @@ function BookingPackageCard({
 
    const servicesBooked = useStore.use.appointments();
    const packages = useStore.use.packages();
+   const disableDates = useStore.use.disabledDays();
 
    const unavailableDates = useMemo(
-      () =>
-         findDatesWithOccurrences(
+      () => [
+         ...findDatesWithOccurrences(
             servicesBooked,
             ({ service: { date } }) => date,
          ),
-      [servicesBooked],
+         ...disableDates.map(({ date }) => date),
+      ],
+      [servicesBooked, disableDates],
    );
 
    return (

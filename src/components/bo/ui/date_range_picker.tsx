@@ -2,33 +2,37 @@
 
 import { format } from "date-fns";
 import type { Dispatch, SetStateAction } from "react";
-import { type DateRange } from "react-day-picker";
+import { type Matcher, type DateRange } from "react-day-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Button } from "./button";
+import { Button, type ButtonProps } from "./button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../../shared/calendar";
 import { cn } from "~/lib/utils";
 
-interface IDateRangePicker {
+interface IDateRangePicker extends ButtonProps {
    dates: DateRange | undefined;
    setDates: Dispatch<SetStateAction<DateRange | undefined>>;
    className?: string;
+   disabledDates?: Matcher | Matcher[];
 }
 
 export function DateRangePicker({
    dates,
    setDates,
    className,
+   disabledDates,
+   ...props
 }: IDateRangePicker) {
    return (
       <div className={cn("grid gap-2", className)}>
          <Popover>
             <PopoverTrigger asChild>
                <Button
+                  {...props}
                   id="dates"
                   variant={"outline"}
                   className={cn(
-                     "w-[300px] justify-start text-left font-normal",
+                     "justify-start text-left font-normal",
                      !dates && "text-muted-foreground",
                   )}
                >
@@ -55,6 +59,7 @@ export function DateRangePicker({
                   selected={dates}
                   onSelect={setDates}
                   numberOfMonths={2}
+                  disabled={disabledDates}
                />
             </PopoverContent>
          </Popover>

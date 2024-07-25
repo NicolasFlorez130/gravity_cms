@@ -17,11 +17,16 @@ import { cn, translatePaymentMethod } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import Loading from "~/components/shared/loading";
+import DisableDayDialog from "../../components/dialogs/disable_day_dialog";
+import type { AppointmentPaymentMethod } from "~/types/appointments";
 
 interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
+   const disabledDates = useStore.use.disabledDays();
+
    const [changingState, setChangingState] = useState<string>();
+   const [deleting, setDeleting] = useState<string>();
 
    const { refresh } = useRouterRefresh();
 
@@ -32,11 +37,19 @@ export function BigCalendar({}: IBigCalendar) {
    const [date, setDate] = useState<Date>(new Date());
    const [view, setView] = useState<View>(Views.MONTH);
 
-   const { mutate, isPending } =
+   const { mutate: markAsAttended, isPending: isMarking } =
       api.appointments.markServiceAsAttended.useMutation({
          onSuccess: async () => {
             await refresh();
             setChangingState(undefined);
+         },
+      });
+
+   const { mutate: deleteDay, isPending: isDeleting } =
+      api.disabledDays.deleteDisableDate.useMutation({
+         onSuccess: async () => {
+            await refresh();
+            setDeleting(undefined);
          },
       });
 
@@ -116,7 +129,7 @@ export function BigCalendar({}: IBigCalendar) {
                   </Button>
                </div>
             </div>
-            <div>
+            <div className="flex gap-4">
                <ToggleGroup
                   type="single"
                   value={view}
@@ -126,44 +139,59 @@ export function BigCalendar({}: IBigCalendar) {
                   <ToggleGroupItem value="week">Semana</ToggleGroupItem>
                   <ToggleGroupItem value="day">Dia</ToggleGroupItem>
                </ToggleGroup>
+               <DisableDayDialog />
             </div>
          </div>
          <Calendar
             toolbar={false}
             localizer={localizer}
-            events={appointments
-               .sort(
-                  (
-                     { service: { attended: a } },
-                     { service: { attended: b } },
-                  ) => (b === a ? 0 : b ? -1 : 1),
-               )
-               .map(
-                  ({
-                     booking: { paymentMethod, clientNames, clientPhoneNumber },
-                     service: { date, packageId, attended, id },
-                  }) => ({
-                     end: addHours(date, 2),
-                     start: date,
-                     paymentMethod,
-                     clientNames,
-                     clientPhoneNumber,
-                     attended,
-                     id,
-                     packageName: packages.find(({ id }) => id === packageId)
-                        ?.name,
-                     className: cn(
-                        paymentMethod === "COURTESY" &&
-                           "bg-violet-100 text-violet-500 border-violet-500",
-                        paymentMethod === "LANDING" &&
-                           "bg-blue-100 text-blue-500 border-blue-500",
-                        paymentMethod === "ONLINE" &&
-                           "bg-orange-100 text-orange-500 border-orange-500",
-                        paymentMethod === "ON_SITE" &&
-                           "bg-green-100 text-green-500 border-green-500",
-                     ),
-                  }),
-               )}
+            events={[
+               ...disabledDates.map(({ date, id }) => ({
+                  id,
+                  start: date,
+                  end: addHours(date, 10),
+                  className: cn("bg-gray-100 text-gray-500 border-gray-500"),
+                  type: "DISABLED_DATE",
+               })),
+               ...appointments
+                  .sort(
+                     (
+                        { service: { attended: a } },
+                        { service: { attended: b } },
+                     ) => (b === a ? 0 : b ? -1 : 1),
+                  )
+                  .map(
+                     ({
+                        booking: {
+                           paymentMethod,
+                           clientNames,
+                           clientPhoneNumber,
+                        },
+                        service: { date, packageId, attended, id },
+                     }) => ({
+                        type: "SERVICE",
+                        end: addHours(date, 2),
+                        start: date,
+                        paymentMethod,
+                        clientNames,
+                        clientPhoneNumber,
+                        attended,
+                        id,
+                        packageName: packages.find(({ id }) => id === packageId)
+                           ?.name,
+                        className: cn(
+                           paymentMethod === "COURTESY" &&
+                              "bg-violet-100 text-violet-500 border-violet-500",
+                           paymentMethod === "LANDING" &&
+                              "bg-blue-100 text-blue-500 border-blue-500",
+                           paymentMethod === "ONLINE" &&
+                              "bg-orange-100 text-orange-500 border-orange-500",
+                           paymentMethod === "ON_SITE" &&
+                              "bg-green-100 text-green-500 border-green-500",
+                        ),
+                     }),
+                  ),
+            ]}
             views={["day", "week", "month"]}
             startAccessor="start"
             view={view}
@@ -176,67 +204,138 @@ export function BigCalendar({}: IBigCalendar) {
                timeGutterWrapper: () => <></>,
                timeGutterHeader: ({}) => <></>,
                timeSlotWrapper: ({}) => <></>,
-               eventWrapper: ({
-                  event: {
-                     className,
-                     paymentMethod,
-                     clientNames,
-                     clientPhoneNumber,
-                     packageName,
-                     attended,
-                     id,
-                  },
-               }) => (
-                  <div
-                     className={cn(
-                        "relative ml-2 flex w-[calc(100%-.5rem)] flex-col justify-center gap-1 truncate rounded-l-lg border-b-3 px-3 py-1",
-                        view === "week" && "-right-[10px]",
-                        view === "day" ? "-right-4 h-20" : "h-10",
-                        className,
-                     )}
-                  >
-                     {view === "day" && (
-                        <>
-                           <span className="w-full truncate text-lg font-semibold">
-                              {packageName} -{" "}
-                              {translatePaymentMethod(paymentMethod)}
-                           </span>
-                           <span className="w-full truncate">
-                              {clientNames} - {clientPhoneNumber}
-                           </span>
-                           <div className="absolute right-4 top-4 flex items-center gap-2">
-                              <Button
-                                 variant="link"
-                                 className={cn(
-                                    "h-max border-0 !bg-transparent transition hover:border hover:no-underline",
-                                    className,
-                                 )}
-                                 disabled={
-                                    isPending ||
-                                    !!attended ||
-                                    id === changingState
-                                 }
-                                 onClick={() => {
-                                    setChangingState(id);
-                                    mutate(id);
-                                 }}
-                              >
-                                 {isPending && id === changingState ? (
-                                    <Loading />
-                                 ) : attended ? (
-                                    <>Atendido</>
-                                 ) : (
-                                    <>Marcar asistencia</>
-                                 )}
-                              </Button>
-                           </div>
-                        </>
-                     )}
-                     {view !== "day" && (
-                        <span className="w-full truncate">{packageName}</span>
-                     )}
-                  </div>
-               ),
+               eventWrapper: ({ event }) => {
+                  const tEvent = event as {
+                     id: string;
+                     className: string;
+                     end: Date;
+                     start: Date;
+                  } & (
+                     | {
+                          type: "SERVICE";
+                          paymentMethod: AppointmentPaymentMethod;
+                          clientNames: string;
+                          clientPhoneNumber: string;
+                          attended: boolean | null;
+                          packageName: string | undefined;
+                       }
+                     | {
+                          type: "DISABLED_DATE";
+                       }
+                  );
+
+                  const { className, type, id } = tEvent;
+
+                  return (
+                     <div
+                        className={cn(
+                           "relative ml-2 flex w-[calc(100%-.5rem)] flex-col justify-start gap-1 truncate rounded-l-lg border-b-3 px-3 py-1",
+                           view === "week" && "-right-[10px]",
+                           view === "day"
+                              ? type === "DISABLED_DATE"
+                                 ? "-right-4 h-full"
+                                 : "-right-4 h-20"
+                              : "h-10",
+                           className,
+                        )}
+                     >
+                        {(() => {
+                           if (tEvent.type === "SERVICE") {
+                              const {
+                                 attended,
+                                 className,
+                                 clientNames,
+                                 clientPhoneNumber,
+                                 packageName,
+                                 paymentMethod,
+                              } = tEvent;
+
+                              return (
+                                 <>
+                                    {view === "day" && (
+                                       <>
+                                          <span className="w-full truncate text-lg font-semibold">
+                                             {packageName} -{" "}
+                                             {translatePaymentMethod(
+                                                paymentMethod,
+                                             )}
+                                          </span>
+                                          <span className="w-full truncate">
+                                             {clientNames} - {clientPhoneNumber}
+                                          </span>
+                                          <div className="absolute right-4 top-4 flex items-center gap-2">
+                                             <Button
+                                                variant="link"
+                                                className={cn(
+                                                   "h-max border-0 !bg-transparent transition hover:border hover:no-underline",
+                                                   className,
+                                                )}
+                                                disabled={
+                                                   isMarking ||
+                                                   !!attended ||
+                                                   id === changingState
+                                                }
+                                                onClick={() => {
+                                                   setChangingState(id);
+                                                   markAsAttended(id);
+                                                }}
+                                             >
+                                                {isMarking &&
+                                                id === changingState ? (
+                                                   <Loading />
+                                                ) : attended ? (
+                                                   <>Atendido</>
+                                                ) : (
+                                                   <>Marcar asistencia</>
+                                                )}
+                                             </Button>
+                                          </div>
+                                       </>
+                                    )}
+                                    {view !== "day" && (
+                                       <span className="w-full truncate">
+                                          {packageName}
+                                       </span>
+                                    )}
+                                 </>
+                              );
+                           } else {
+                              return (
+                                 <>
+                                    <p className="w-full truncate">
+                                       Día deshabilitado
+                                    </p>
+                                    {view === "day" && (
+                                       <div className="absolute right-4 top-4 flex items-center gap-2">
+                                          <Button
+                                             variant="link"
+                                             className={cn(
+                                                "h-max border-0 !bg-transparent transition hover:border hover:no-underline",
+                                                className,
+                                             )}
+                                             disabled={
+                                                isDeleting || id === deleting
+                                             }
+                                             onClick={() => {
+                                                setDeleting(id);
+                                                deleteDay(id);
+                                             }}
+                                          >
+                                             {isDeleting && id === deleting ? (
+                                                <Loading />
+                                             ) : (
+                                                <>Habilitar día</>
+                                             )}
+                                          </Button>
+                                       </div>
+                                    )}
+                                 </>
+                              );
+                           }
+                        })()}
+                     </div>
+                  );
+               },
             }}
          />
       </div>
