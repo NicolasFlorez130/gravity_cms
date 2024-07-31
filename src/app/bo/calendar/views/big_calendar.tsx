@@ -7,10 +7,10 @@ import {
    Views,
 } from "react-big-calendar";
 import moment from "moment";
-import { addHours } from "date-fns";
+import { set } from "date-fns";
 import { useStore } from "~/lib/features/store";
 import { ToggleGroup, ToggleGroupItem } from "~/components/bo/ui/toggle-group";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Button } from "~/components/bo/ui/button";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { cn, translatePaymentMethod } from "~/lib/utils";
@@ -24,6 +24,8 @@ interface IBigCalendar {}
 
 export function BigCalendar({}: IBigCalendar) {
    const disabledDates = useStore.use.disabledDays();
+
+   const hours = useStore.use.hours();
 
    const [changingState, setChangingState] = useState<string>();
    const [deleting, setDeleting] = useState<string>();
@@ -149,7 +151,7 @@ export function BigCalendar({}: IBigCalendar) {
                ...disabledDates.map(({ date, id }) => ({
                   id,
                   start: date,
-                  end: addHours(date, 10),
+                  end: set(date, { hours: 23, minutes: 59 }),
                   className: cn("bg-gray-100 text-gray-500 border-gray-500"),
                   type: "DISABLED_DATE",
                })),
@@ -167,29 +169,40 @@ export function BigCalendar({}: IBigCalendar) {
                            clientNames,
                            clientPhoneNumber,
                         },
-                        service: { date, packageId, attended, id },
-                     }) => ({
-                        type: "SERVICE",
-                        end: addHours(date, 2),
-                        start: date,
-                        paymentMethod,
-                        clientNames,
-                        clientPhoneNumber,
-                        attended,
-                        id,
-                        packageName: packages.find(({ id }) => id === packageId)
-                           ?.name,
-                        className: cn(
-                           paymentMethod === "COURTESY" &&
-                              "bg-violet-100 text-violet-500 border-violet-500",
-                           paymentMethod === "LANDING" &&
-                              "bg-blue-100 text-blue-500 border-blue-500",
-                           paymentMethod === "ONLINE" &&
-                              "bg-orange-100 text-orange-500 border-orange-500",
-                           paymentMethod === "ON_SITE" &&
-                              "bg-green-100 text-green-500 border-green-500",
-                        ),
-                     }),
+                        service: { date, packageId, attended, id, hourId },
+                     }) => {
+                        const hour = hours.find(({ id }) => id === hourId)!;
+
+                        return {
+                           type: "SERVICE",
+                           end: set(date, {
+                              hours: hour.hour,
+                              minutes: hour.minute + 120,
+                           }),
+                           start: set(date, {
+                              hours: hour.hour,
+                              minutes: hour.minute,
+                           }),
+                           paymentMethod,
+                           clientNames,
+                           clientPhoneNumber,
+                           attended,
+                           id,
+                           packageName: packages.find(
+                              ({ id }) => id === packageId,
+                           )?.name,
+                           className: cn(
+                              paymentMethod === "COURTESY" &&
+                                 "bg-violet-100 text-violet-500 border-violet-500",
+                              paymentMethod === "LANDING" &&
+                                 "bg-blue-100 text-blue-500 border-blue-500",
+                              paymentMethod === "ONLINE" &&
+                                 "bg-orange-100 text-orange-500 border-orange-500",
+                              paymentMethod === "ON_SITE" &&
+                                 "bg-green-100 text-green-500 border-green-500",
+                           ),
+                        };
+                     },
                   ),
             ]}
             views={["day", "week", "month"]}
@@ -201,10 +214,12 @@ export function BigCalendar({}: IBigCalendar) {
             date={date}
             onView={setView}
             components={{
-               timeGutterWrapper: () => <></>,
-               timeGutterHeader: ({}) => <></>,
-               timeSlotWrapper: ({}) => <></>,
-               eventWrapper: ({ event }) => {
+               // timeGutterWrapper: () => <></>,
+               // timeGutterHeader: ({}) => <></>,
+               // timeSlotWrapper: ({}) => <></>,
+               // event: ({}) => <></>,
+               // eventContainerWrapper: () => <>uwu</>,
+               event: ({ event }) => {
                   const tEvent = event as {
                      id: string;
                      className: string;
@@ -234,7 +249,7 @@ export function BigCalendar({}: IBigCalendar) {
                            view === "day"
                               ? type === "DISABLED_DATE"
                                  ? "-right-4 h-full"
-                                 : "-right-4 h-20"
+                                 : "-right-4 !h-20"
                               : "h-10",
                            className,
                         )}
@@ -267,7 +282,7 @@ export function BigCalendar({}: IBigCalendar) {
                                              <Button
                                                 variant="link"
                                                 className={cn(
-                                                   "h-max border-0 !bg-transparent transition hover:border hover:no-underline",
+                                                   "mr-4 h-max border-0 !bg-transparent transition hover:border hover:no-underline",
                                                    className,
                                                 )}
                                                 disabled={
@@ -310,7 +325,7 @@ export function BigCalendar({}: IBigCalendar) {
                                           <Button
                                              variant="link"
                                              className={cn(
-                                                "h-max border-0 !bg-transparent transition hover:border hover:no-underline",
+                                                "mr-4 h-max border-0 !bg-transparent transition hover:border hover:no-underline",
                                                 className,
                                              )}
                                              disabled={

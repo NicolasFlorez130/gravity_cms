@@ -121,10 +121,22 @@
    @apply !bg-transparent;
 }
 
-.rbc-time-header-gutter {
+.rbc-allday-cell {
    @apply hidden;
 }
 
-.rbc-allday-cell {
-   @apply hidden;
+.rbc-event {
+   @apply !m-0 !cursor-default !border-none !bg-transparent !p-0 !outline-none;
+}
+
+.rbc-event-label {
+   @apply !hidden;
+}
+
+.rbc-events-container {
+   @apply !mr-0;
+}
+
+.rbc-event-content {
+   @apply !h-min;
 }
