@@ -101,6 +101,7 @@ export function CartDrawer() {
                packageId,
                date: undefined as unknown as Date,
                extraMinutes: 0,
+               hourId: "",
             });
 
             aux.push(id);

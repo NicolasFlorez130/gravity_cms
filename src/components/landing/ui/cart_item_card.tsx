@@ -7,6 +7,7 @@ import { Button } from "./button";
 import { Trash } from "@phosphor-icons/react/dist/ssr";
 import {
    filterDates,
+   filteredHours,
    findDatesWithOccurrences,
    formatCurrency,
    onChangeSetDateTimeTo0,
@@ -16,7 +17,7 @@ import {
 } from "~/lib/utils";
 import type { UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import type { InputObject } from "~/server/api/routers/appointments";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
    FormControl,
    FormField,
@@ -28,6 +29,13 @@ import { Input } from "./input";
 import { DatePicker } from "./date_picker";
 import { holidaysWithinInterval } from "colombian-holidays/lib/utils/holidaysWithinInterval";
 import { addYears } from "date-fns";
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue,
+} from "./select";
 
 interface ICartItemCard {
    item: BookingPackage;
@@ -48,8 +56,13 @@ export default function CartItemCard({
    const removeFromCart = useStore.use.removeFromCart();
    const servicesBooked = useStore.use.appointments();
    const disableDates = useStore.use.disabledDays();
+   const hours = useStore.use.hours();
 
    const pkg = packages.find(({ id }) => id === item.packageId);
+
+   const [daySelected, setDaySelected] = useState(
+      form.getValues().packages?.at(i)?.date,
+   );
 
    const unavailableDates = useMemo(
       () => [
@@ -81,6 +94,10 @@ export default function CartItemCard({
       [],
    );
 
+   function updateDaySelected() {
+      setDaySelected(form.getValues().packages.at(i)?.date);
+   }
+
    return (
       <Card className="grid gap-4 p-4">
          <CardHeader className="grid grid-cols-[1fr_auto] items-start gap-4 p-0">
@@ -99,12 +116,12 @@ export default function CartItemCard({
                <Trash />
             </Button>
          </CardHeader>
-         <CardContent className="grid grid-cols-1 gap-4 p-0 lg:grid-cols-2 lg:items-end lg:gap-8">
+         <CardContent className="grid grid-cols-1 gap-4 p-0 lg:grid-cols-2 lg:items-end lg:gap-6">
             <FormField
                control={form.control}
                name={`packages.${i}.extraMinutes`}
                render={({ field }) => (
-                  <FormItem className="grid w-full grid-cols-2 items-center gap-2 space-y-0">
+                  <FormItem className="grid w-full items-center gap-2 space-y-0">
                      <FormLabel>Minutos extra</FormLabel>
                      <FormControl>
                         <Input
@@ -137,6 +154,7 @@ export default function CartItemCard({
                            date={field.value}
                            setDate={onChangeSetDateTimeTo0(
                               field.onChange,
+                              updateDaySelected,
                            )}
                            disabledDates={[
                               {
@@ -154,6 +172,42 @@ export default function CartItemCard({
                         />
                      </FormControl>
                      <FormMessage />
+                  </FormItem>
+               )}
+            />
+            <FormField
+               control={form.control}
+               name={`packages.${i}.hourId`}
+               render={({ field }) => (
+                  <FormItem>
+                     <FormLabel className="flex-none">Hora</FormLabel>
+                     <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={!daySelected || field.disabled}
+                     >
+                        <FormControl>
+                           <SelectTrigger>
+                              <SelectValue placeholder="Selecciona una hora" />
+                           </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                           {filteredHours(
+                              hours,
+                              servicesBooked.filter(
+                                 ({ service: { date } }) =>
+                                    setDateTimeTo0(date).getTime() ===
+                                    daySelected?.getTime(),
+                              ),
+                           ).map(hour => (
+                              <SelectItem key={hour.id} value={hour.id}>
+                                 {hour.displayValue}
+                              </SelectItem>
+                           ))}
+                        </SelectContent>
+                     </Select>
+                     <FormMessage className="col-span-2 w-full text-end" />
                   </FormItem>
                )}
             />
