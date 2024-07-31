@@ -42,6 +42,7 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
    const { refresh } = useRouterRefresh();
 
    const packages = useStore.use.packages();
+   const hours = useStore.use.hours();
 
    const [changingState, setChangingState] = useState<string>();
 
@@ -110,6 +111,26 @@ export default function AllAppointmentsTable({ dates }: IAllAppointmentsTable) {
             },
          }) => <div>{formatDateInSpanish(service.date)}</div>,
          filterFn: dateFilterFunction,
+      },
+      {
+         id: "service.hourId",
+         accessorKey: "service.hourId",
+         enableSorting: false,
+         // header: ({ column }) => (
+         //    <TableHeaderSortingToggle column={column}>
+         //       Hora
+         //    </TableHeaderSortingToggle>
+         // ),
+         header: "Hora",
+         cell: ({
+            row: {
+               original: { service },
+            },
+         }) => (
+            <div>
+               {hours.find(({ id }) => id === service.hourId)?.displayValue}
+            </div>
+         ),
       },
       {
          id: "service.createdAt",
