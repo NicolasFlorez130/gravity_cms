@@ -42,9 +42,10 @@ import Loading from "~/components/shared/loading";
 import { useStore } from "~/lib/features/store";
 import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
 import {
+   filteredHours,
    findDatesWithOccurrences,
    formatCurrency,
-   parseDateToMidnightStartOfDay,
+   onChangeSetDateTimeTo0,
    parseEventForNumber,
    setDateTimeTo0,
    translatePaymentMethod,
@@ -182,6 +183,7 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
                                  packageId: "",
                                  extraMinutes: 0,
                                  date: setDateTimeTo0(new Date()),
+                                 hourId: "",
                               })
                            }
                         >
@@ -328,6 +330,7 @@ function BookingPackageCard({
    const servicesBooked = useStore.use.appointments();
    const packages = useStore.use.packages();
    const disableDates = useStore.use.disabledDays();
+   const hours = useStore.use.hours();
 
    const unavailableDates = useMemo(
       () => [
@@ -363,7 +366,7 @@ function BookingPackageCard({
                            disabled={field.disabled}
                            className="w-full"
                            date={field.value}
-                           setDate={parseDateToMidnightStartOfDay(
+                           setDate={onChangeSetDateTimeTo0(
                               field.onChange,
                               updateDaySelected,
                            )}
@@ -424,7 +427,7 @@ function BookingPackageCard({
                control={form.control}
                name={`packages.${i}.extraMinutes`}
                render={({ field }) => (
-                  <FormItem className="col-span-2 grid w-full grid-cols-2 items-center gap-2 space-y-0">
+                  <FormItem className="grid w-full items-center gap-2 space-y-0">
                      <FormLabel className="flex-none">Minutos extra</FormLabel>
                      <div className="grid w-full gap-3">
                         <FormControl>
@@ -439,6 +442,44 @@ function BookingPackageCard({
                               min={0}
                            />
                         </FormControl>
+                        <FormMessage className="col-span-2 w-full text-end" />
+                     </div>
+                  </FormItem>
+               )}
+            />
+            <FormField
+               control={form.control}
+               name={`packages.${i}.hourId`}
+               render={({ field }) => (
+                  <FormItem className="grid w-full items-center gap-2 space-y-0">
+                     <FormLabel className="flex-none">Hora</FormLabel>
+                     <div className="grid w-full gap-3">
+                        <Select
+                           {...field}
+                           onValueChange={field.onChange}
+                           defaultValue={field.value}
+                           disabled={!daySelected || field.disabled}
+                        >
+                           <FormControl>
+                              <SelectTrigger>
+                                 <SelectValue placeholder="Selecciona una hora" />
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              {filteredHours(
+                                 hours,
+                                 servicesBooked.filter(
+                                    ({ service: { date } }) =>
+                                       setDateTimeTo0(date).getTime() ===
+                                       daySelected?.getTime(),
+                                 ),
+                              ).map(hour => (
+                                 <SelectItem key={hour.id} value={hour.id}>
+                                    {hour.displayValue}
+                                 </SelectItem>
+                              ))}
+                           </SelectContent>
+                        </Select>
                         <FormMessage className="col-span-2 w-full text-end" />
                      </div>
                   </FormItem>

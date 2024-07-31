@@ -6,7 +6,7 @@ export interface DisabledDatesSlice {
    setDisabledDays: (arr: DisabledDate[]) => any;
 }
 
-export const disabledDates: StateCreator<DisabledDatesSlice> = set => ({
+export const disabledDatesSlice: StateCreator<DisabledDatesSlice> = set => ({
    disabledDays: [],
    setDisabledDays: arr => set(state => ({ ...state, disabledDays: arr })),
 });

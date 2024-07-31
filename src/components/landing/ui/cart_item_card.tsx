@@ -9,7 +9,7 @@ import {
    filterDates,
    findDatesWithOccurrences,
    formatCurrency,
-   parseDateToMidnightStartOfDay,
+   onChangeSetDateTimeTo0,
    parseEventForNumber,
    setDateTimeTo0,
    setDateTimeToMidnight,
@@ -135,7 +135,7 @@ export default function CartItemCard({
                            disabled={field.disabled}
                            className="w-full"
                            date={field.value}
-                           setDate={parseDateToMidnightStartOfDay(
+                           setDate={onChangeSetDateTimeTo0(
                               field.onChange,
                            )}
                            disabledDates={[

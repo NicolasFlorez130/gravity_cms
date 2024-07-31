@@ -4,12 +4,14 @@ import { api } from "~/trpc/server";
 interface IGlobalsGetter {}
 
 export default async function GlobalsGetter({}: IGlobalsGetter) {
-   const [bookings, services, packages, disabledDates] = await Promise.all([
-      api.appointments.getAllConfirmed(),
-      api.appointments.getAllServicesConfirmed(),
-      api.packages.getAll(),
-      api.disabledDays.getAllNext(),
-   ]);
+   const [bookings, services, packages, disabledDates, hours] =
+      await Promise.all([
+         api.appointments.getAllConfirmed(),
+         api.appointments.getAllServicesConfirmed(),
+         api.packages.getAll(),
+         api.disabledDays.getAllNext(),
+         api.hours.getAll(),
+      ]);
 
    return (
       <StoreSetter
@@ -17,6 +19,7 @@ export default async function GlobalsGetter({}: IGlobalsGetter) {
          packages={packages}
          appointments={services}
          disabledDates={disabledDates}
+         hours={hours}
       />
    );
 }

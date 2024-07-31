@@ -6,6 +6,7 @@ import { useStore } from "~/lib/features/store";
 import { SAVED_CART_KEY } from "~/lib/keys";
 import type { Appointment, Booking } from "~/types/appointments";
 import type { DisabledDate } from "~/types/disabled_dates";
+import type { IHour } from "~/types/hours";
 import type { IPackage } from "~/types/packages";
 
 interface IStoreSetter {
@@ -13,6 +14,7 @@ interface IStoreSetter {
    appointments: Appointment[];
    packages: IPackage[];
    disabledDates: DisabledDate[];
+   hours: IHour[];
 }
 
 export default function StoreSetter({
@@ -20,6 +22,7 @@ export default function StoreSetter({
    appointments,
    packages,
    disabledDates,
+   hours,
 }: IStoreSetter) {
    const setAll = useStore.use.setServicesAndAppointments();
    const setPackages = useStore.use.setPackages();
@@ -28,6 +31,8 @@ export default function StoreSetter({
    const cart = useStore.use.cart();
 
    const setDisabledDays = useStore.use.setDisabledDays();
+
+   const setHours = useStore.use.setHours();
 
    useEffect(() => {
       setAll({
@@ -38,8 +43,10 @@ export default function StoreSetter({
       setPackages(packages);
 
       setDisabledDays(disabledDates);
+
+      setHours(hours);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [bookings, appointments, disabledDates]);
+   }, [bookings, appointments, disabledDates, hours]);
 
    useEffect(() => {
       const item = localStorage.getItem(SAVED_CART_KEY);

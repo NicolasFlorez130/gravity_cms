@@ -15,6 +15,7 @@ import { onlyNumbersAndEmpty } from "./regex";
 import type { PackageAvailability } from "~/types/packages";
 import { isHoliday } from "colombian-holidays/lib/utils/isHoliday";
 import { InstagramLogo } from "@phosphor-icons/react/dist/ssr";
+import type { IHour } from "~/types/hours";
 
 /**
  * Translates an array of day indices to a human-readable string or JSX elements.
@@ -334,7 +335,7 @@ export function translatePaymentMethod(
  * @param onChange The function to call with the updated date.
  * @returns A function that sets the time of the date to midnight.
  */
-export function parseDateToMidnight(
+export function onChangeSetDateToMidnight(
    onChange: (...event: any[]) => void,
    cb?: () => any,
 ): Dispatch<SetStateAction<Date | undefined>> {
@@ -354,7 +355,7 @@ export function parseDateToMidnight(
  * @param onChange The function to call with the updated date.
  * @returns A function that sets the time of the date to midnight.
  */
-export function parseDateToMidnightStartOfDay(
+export function onChangeSetDateTimeTo0(
    onChange: (...event: any[]) => void,
    cb?: () => any,
 ): Dispatch<SetStateAction<Date | undefined>> {
@@ -596,4 +597,28 @@ export function getDatesBetween(startDate: Date, endDate: Date) {
    }
 
    return dates;
+}
+
+export function filteredHours(hours: IHour[], services: Appointment[]) {
+   const aux: Record<string, boolean> = {};
+
+   const unavailableHours: string[] = [];
+
+   for (
+      let i = 0;
+      i < services.length && unavailableHours.length < hours.length;
+      i++
+   ) {
+      const { hourId } = services.at(i)!.service;
+
+      if (!aux[hourId]) {
+         aux[hourId] = true;
+
+         unavailableHours.push(hourId);
+      }
+   }
+
+   return hours
+      .filter(({ id }) => !aux[id])
+      .sort((a, b) => Number(a.code) - Number(b.code));
 }

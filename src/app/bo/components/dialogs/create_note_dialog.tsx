@@ -27,7 +27,7 @@ import Loading from "~/components/shared/loading";
 import { Input } from "~/components/bo/ui/input";
 import { Textarea } from "~/components/bo/ui/textarea";
 import { insertNoteSchema } from "~/server/db/schemas/notes";
-import { parseDateToMidnight } from "~/lib/utils";
+import { onChangeSetDateToMidnight } from "~/lib/utils";
 
 interface ICreateNoteDialog {
    refetch: () => Promise<any>;
@@ -114,7 +114,7 @@ export default function CreateNoteDialog({ refetch }: ICreateNoteDialog) {
                                     disabled={field.disabled}
                                     className="w-full"
                                     date={field.value}
-                                    setDate={parseDateToMidnight(
+                                    setDate={onChangeSetDateToMidnight(
                                        field.onChange,
                                     )}
                                  />
