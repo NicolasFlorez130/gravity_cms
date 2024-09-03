@@ -17,7 +17,7 @@ import CartItemCard from "./cart_item_card";
 import { api } from "~/trpc/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { IPackage } from "~/types/packages";
 import type { InputObject } from "~/server/api/routers/appointments";
 import {
@@ -33,8 +33,11 @@ import { cn, formatCurrency } from "~/lib/utils";
 import Loading from "~/components/shared/loading";
 import { bookAppointmentSchema } from "~/server/db/schemas/bookings";
 import { useRouter } from "next/navigation";
+import { OPENED_CART_KEY } from "~/lib/keys";
 
 export function CartDrawer() {
+   const [isOpen, setIsOpen] = useState(false);
+
    const router = useRouter();
 
    const cart = useStore.use.cart();
@@ -115,12 +118,39 @@ export function CartDrawer() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [cart]);
 
+   const [animateButton, setAnimateButton] = useState(0);
+
+   const lastTimeout = useRef<NodeJS.Timeout>();
+
+   useEffect(() => {
+      if (cart.length > 0) {
+         if (!localStorage.getItem(OPENED_CART_KEY)) {
+            setIsOpen(true);
+
+            localStorage.setItem(OPENED_CART_KEY, "true");
+         }
+
+         !!lastTimeout.current && clearTimeout(lastTimeout.current);
+
+         setAnimateButton(prev => (prev === 1 ? 2 : 1));
+
+         lastTimeout.current = setTimeout(() => {
+            setAnimateButton(0);
+         }, 1000);
+      }
+   }, [cart.length]);
+
    return (
-      <Drawer>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
          <DrawerTrigger asChild>
             <Button
                variant="primary"
-               className="relative w-max px-3 py-2 text-xs backdrop-blur md:px-6 md:py-4 xl:text-base"
+               className={cn(
+                  "relative w-max px-3 py-2 text-xs backdrop-blur transition-all md:px-6 md:py-4 xl:text-base",
+                  animateButton === 1
+                     ? "animate-jump1 !border-white"
+                     : animateButton === 2 && "animate-jump2 !border-white",
+               )}
             >
                {
                   <div

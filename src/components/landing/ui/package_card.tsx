@@ -20,6 +20,7 @@ import { Card } from "./card";
 import { Button } from "./button";
 import { useStore } from "~/lib/features/store";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
+import { useMemo } from "react";
 
 interface IPackageCard {
    pkg: IPackage;
@@ -28,7 +29,7 @@ interface IPackageCard {
 export default function PackageCard({ pkg }: IPackageCard) {
    const highlight = verifyAvailability(pkg.availability, new Date());
 
-   const UsersIcon = (() => {
+   const UsersIcon = useMemo(() => {
       switch (pkg.usersQuantity) {
          case 1:
             return User;
@@ -39,7 +40,7 @@ export default function PackageCard({ pkg }: IPackageCard) {
          default:
             return UsersFour;
       }
-   })();
+   }, [pkg.usersQuantity]);
 
    const addPackageToCart = useStore.use.addPackageToCart();
 

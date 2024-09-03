@@ -88,7 +88,7 @@ export default function Hero({}: IHero) {
                            className="hidden xl:inline"
                         />
                      </div>
-                     <ArrowDown size={42} className="animate-jump xl:hidden" />
+                     <ArrowDown size={42} className="animate-move_down xl:hidden" />
                   </div>
                   <div
                      id="title_text_container"

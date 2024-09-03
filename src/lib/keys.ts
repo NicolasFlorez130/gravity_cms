@@ -1,1 +1,3 @@
 export const SAVED_CART_KEY = "SAVED_CART_KEY";
+
+export const OPENED_CART_KEY = "OPENED_CART_KEY";

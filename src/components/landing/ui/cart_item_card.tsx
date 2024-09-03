@@ -11,7 +11,6 @@ import {
    findDatesWithOccurrences,
    formatCurrency,
    onChangeSetDateTimeTo0,
-   parseEventForNumber,
    setDateTimeTo0,
    setDateTimeToMidnight,
 } from "~/lib/utils";
@@ -25,7 +24,6 @@ import {
    FormLabel,
    FormMessage,
 } from "./form";
-import { Input } from "./input";
 import { DatePicker } from "./date_picker";
 import { holidaysWithinInterval } from "colombian-holidays/lib/utils/holidaysWithinInterval";
 import { addYears } from "date-fns";
@@ -45,13 +43,7 @@ interface ICartItemCard {
    updateTotalSum(): void;
 }
 
-export default function CartItemCard({
-   item,
-   form,
-   i,
-   remove,
-   updateTotalSum,
-}: ICartItemCard) {
+export default function CartItemCard({ item, form, i, remove }: ICartItemCard) {
    const packages = useStore.use.packages();
    const removeFromCart = useStore.use.removeFromCart();
    const servicesBooked = useStore.use.appointments();
@@ -117,28 +109,6 @@ export default function CartItemCard({
             </Button>
          </CardHeader>
          <CardContent className="grid grid-cols-1 gap-4 p-0 lg:grid-cols-2 lg:items-end lg:gap-6">
-            <FormField
-               control={form.control}
-               name={`packages.${i}.extraMinutes`}
-               render={({ field }) => (
-                  <FormItem className="grid w-full items-center gap-2 space-y-0">
-                     <FormLabel>Minutos extra</FormLabel>
-                     <FormControl>
-                        <Input
-                           {...field}
-                           value={field.value ?? undefined}
-                           type="number"
-                           onChange={parseEventForNumber(
-                              field.onChange,
-                              updateTotalSum,
-                           )}
-                           min={0}
-                        />
-                     </FormControl>
-                     <FormMessage className="col-span-2 w-full text-end" />
-                  </FormItem>
-               )}
-            />
             <FormField
                control={form.control}
                name={`packages.${i}.date`}

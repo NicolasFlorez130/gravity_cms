@@ -115,7 +115,7 @@ const config = {
                from: { height: "var(--radix-accordion-content-height)" },
                to: { height: "0" },
             },
-            jump: {
+            move_down: {
                "0%, 40%, 80%": {
                   transform: "translateY(0)",
                },
@@ -123,11 +123,29 @@ const config = {
                   transform: "translateY(1rem)",
                },
             },
+            jump1: {
+               "0%, 40%, 80%": {
+                  transform: "translateY(0)",
+               },
+               "20%, 60%": {
+                  transform: "translateY(-1rem)",
+               },
+            },
+            jump2: {
+               "0%, 40%, 80%": {
+                  transform: "translateY(0)",
+               },
+               "20%, 60%": {
+                  transform: "translateY(-1rem)",
+               },
+            },
          },
          animation: {
             "accordion-down": "accordion-down 0.2s ease-out",
             "accordion-up": "accordion-up 0.2s ease-out",
-            jump: "jump 3s ease-in-out infinite",
+            move_down: "move_down 3s ease-in-out infinite",
+            jump1: "jump1 1s ease-in-out infinite",
+            jump2: "jump2 1s ease-in-out infinite",
          },
          fontFamily: {
             epilogue: ["var(--epilogue)"],
