@@ -61,6 +61,8 @@ export const packagesRouter = createTRPCRouter({
    registerNewChange: protectedProcedure
       .input(insertPackageChangeSchema)
       .mutation(({ ctx, input }) =>
-         ctx.db.insert(packageChanges).values(input),
+         ctx.db
+            .insert(packageChanges)
+            .values({ ...input, authorId: ctx.session.user.id }),
       ),
 });

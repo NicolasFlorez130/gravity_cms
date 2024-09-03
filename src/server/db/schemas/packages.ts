@@ -9,6 +9,7 @@ import {
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "~/lib/zod_lang";
+import { users } from "./session";
 
 export const packageAvailabilityEnum = pgEnum("availability", [
    "EVERY_DAY",
@@ -45,6 +46,10 @@ export const packageChanges = createTable("package_change", {
       .references(() => packages.id),
    changeType: packageChangesTypeEnum("change_type").notNull(),
 
+   authorId: uuid("author_id")
+      .notNull()
+      .references(() => users.id),
+
    createdAt: createdAtColumn,
 });
 
@@ -55,4 +60,6 @@ export const insertPackageSchema = createInsertSchema(packages, {
    usersQuantity: z.number().min(1),
 });
 
-export const insertPackageChangeSchema = createInsertSchema(packageChanges);
+export const insertPackageChangeSchema = createInsertSchema(packageChanges, {
+   authorId: z.null().optional(),
+});
