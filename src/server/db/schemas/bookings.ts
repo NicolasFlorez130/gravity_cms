@@ -1,9 +1,10 @@
-import { pgEnum, real, text } from "drizzle-orm/pg-core";
+import { pgEnum, real, text, uuid } from "drizzle-orm/pg-core";
 import { createTable, createdAtColumn, uuidColumn } from "../utils";
 import { createInsertSchema } from "drizzle-zod";
 import { onlyNumbers } from "~/lib/regex";
 import { insertServiceSchema } from "./services";
 import { z } from "~/lib/zod_lang";
+import { users } from "./session";
 
 export const paymentMethods = [
    "ONLINE",
@@ -21,6 +22,7 @@ export const bookings = createTable("booking", {
    clientPhoneNumber: text("client_phone_number").notNull(),
    totalAmount: real("total_amount").notNull(),
    paymentMethod: paymentMethodEnum("payment_method").notNull(),
+   createdBy: uuid("createdBy").references(() => users.id),
 
    createdAt: createdAtColumn,
 });

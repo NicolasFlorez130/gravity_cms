@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash } from "@phosphor-icons/react/dist/ssr";
 import { SelectValue } from "@radix-ui/react-select";
+import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 import {
    type UseFieldArrayRemove,
@@ -65,6 +66,8 @@ type InputObject = Parameters<
 >["0"];
 
 export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
+   const session = useSession();
+
    const [isOpen, setIsOpen] = useState(false);
 
    const { refresh } = useRouterRefresh();
@@ -128,7 +131,9 @@ export default function BookAppointmentDialog({}: IBookAppointmentDialog) {
             </DialogHeader>
             <Form {...form}>
                <form
-                  onSubmit={form.handleSubmit(data => mutate(data))}
+                  onSubmit={form.handleSubmit(data =>
+                     mutate({ ...data, createdBy: session.data?.user.id }),
+                  )}
                   className="grid gap-5 p-6 pt-0"
                >
                   <FormField

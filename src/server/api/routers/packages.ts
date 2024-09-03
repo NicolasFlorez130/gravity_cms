@@ -10,6 +10,11 @@ import {
 } from "~/server/db/schemas/packages";
 
 export const packagesRouter = createTRPCRouter({
+   getById: publicProcedure.input(z.string()).query(({ ctx, input }) =>
+      ctx.db.query.packages.findFirst({
+         where: ({ id }) => eq(id, input),
+      }),
+   ),
    getAll: publicProcedure.query(({ ctx }) =>
       ctx.db.query.packages.findMany({
          where: ({ removed }, { eq }) => eq(removed, false),

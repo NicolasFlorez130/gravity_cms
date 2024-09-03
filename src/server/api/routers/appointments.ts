@@ -13,6 +13,38 @@ import { getBaseUrl } from "~/server/db/utils";
 export type InputObject = Parameters<typeof api.appointments.book>["0"];
 
 export const appointmentsRouter = createTRPCRouter({
+   getServiceById: publicProcedure
+      .input(z.string())
+      .query(async ({ ctx, input }) => {
+         const service = await ctx.db.query.services.findFirst({
+            where: ({ id }) => eq(id, input),
+         });
+
+         if (!service) {
+            throw new TRPCError({ code: "NOT_FOUND" });
+         }
+
+         const booking = await ctx.db.query.bookings.findFirst({
+            where: ({ id }) => eq(id, service.bookingId),
+         });
+
+         if (!!booking?.createdBy) {
+            const user = await ctx.db.query.users.findFirst({
+               where: ({ id }) => eq(id, booking.createdBy!),
+            });
+
+            return {
+               service,
+               booking,
+               user,
+            };
+         }
+
+         return {
+            service,
+            booking,
+         };
+      }),
    getById: publicProcedure.input(z.string()).query(({ ctx, input }) =>
       ctx.db.transaction(async tx => {
          const booking = await tx

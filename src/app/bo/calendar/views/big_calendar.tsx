@@ -14,11 +14,10 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Button } from "~/components/bo/ui/button";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { cn, translatePaymentMethod } from "~/lib/utils";
-import { api } from "~/trpc/react";
-import { useRouterRefresh } from "~/lib/hooks/useRouterRefresh";
-import Loading from "~/components/shared/loading";
 import DisableDayDialog from "../../components/dialogs/disable_day_dialog";
 import type { AppointmentPaymentMethod } from "~/types/appointments";
+import { AppointmentDetailsDialog } from "../../components/dialogs/appointment_details_dialog";
+import { DisabledDayDialog } from "../../components/dialogs/disabled_day_dialog";
 
 interface IBigCalendar {}
 
@@ -27,33 +26,12 @@ export function BigCalendar({}: IBigCalendar) {
 
    const hours = useStore.use.hours();
 
-   const [changingState, setChangingState] = useState<string>();
-   const [deleting, setDeleting] = useState<string>();
-
-   const { refresh } = useRouterRefresh();
-
    const appointments = useStore.use.appointments();
    const packages = useStore.use.packages();
    const localizer = momentLocalizer(moment);
 
    const [date, setDate] = useState<Date>(new Date());
    const [view, setView] = useState<View>(Views.MONTH);
-
-   const { mutate: markAsAttended, isPending: isMarking } =
-      api.appointments.markServiceAsAttended.useMutation({
-         onSuccess: async () => {
-            await refresh();
-            setChangingState(undefined);
-         },
-      });
-
-   const { mutate: deleteDay, isPending: isDeleting } =
-      api.disabledDays.deleteDisableDate.useMutation({
-         onSuccess: async () => {
-            await refresh();
-            setDeleting(undefined);
-         },
-      });
 
    const dateText = useMemo(() => {
       try {
@@ -257,94 +235,47 @@ export function BigCalendar({}: IBigCalendar) {
                         {(() => {
                            if (tEvent.type === "SERVICE") {
                               const {
-                                 attended,
-                                 className,
                                  clientNames,
                                  clientPhoneNumber,
                                  packageName,
                                  paymentMethod,
+                                 id,
                               } = tEvent;
 
                               return (
-                                 <>
-                                    {view === "day" && (
-                                       <>
-                                          <span className="w-full truncate text-lg font-semibold">
-                                             {packageName} -{" "}
-                                             {translatePaymentMethod(
-                                                paymentMethod,
-                                             )}
-                                          </span>
+                                 <AppointmentDetailsDialog serviceId={id}>
+                                    <button className="grid h-full w-full gap-2 truncate text-start">
+                                       {view === "day" && (
+                                          <>
+                                             <span className="w-full truncate text-lg font-semibold">
+                                                {packageName} -{" "}
+                                                {translatePaymentMethod(
+                                                   paymentMethod,
+                                                )}
+                                             </span>
+                                             <span className="w-full truncate">
+                                                {clientNames} -{" "}
+                                                {clientPhoneNumber}
+                                             </span>
+                                          </>
+                                       )}
+                                       {view !== "day" && (
                                           <span className="w-full truncate">
-                                             {clientNames} - {clientPhoneNumber}
+                                             {packageName}
                                           </span>
-                                          <div className="absolute right-4 top-4 flex items-center gap-2">
-                                             <Button
-                                                variant="link"
-                                                className={cn(
-                                                   "mr-4 h-max border-0 !bg-transparent transition hover:border hover:no-underline",
-                                                   className,
-                                                )}
-                                                disabled={
-                                                   isMarking ||
-                                                   !!attended ||
-                                                   id === changingState
-                                                }
-                                                onClick={() => {
-                                                   setChangingState(id);
-                                                   markAsAttended(id);
-                                                }}
-                                             >
-                                                {isMarking &&
-                                                id === changingState ? (
-                                                   <Loading />
-                                                ) : attended ? (
-                                                   <>Atendido</>
-                                                ) : (
-                                                   <>Marcar asistencia</>
-                                                )}
-                                             </Button>
-                                          </div>
-                                       </>
-                                    )}
-                                    {view !== "day" && (
-                                       <span className="w-full truncate">
-                                          {packageName}
-                                       </span>
-                                    )}
-                                 </>
+                                       )}
+                                    </button>
+                                 </AppointmentDetailsDialog>
                               );
                            } else {
                               return (
-                                 <>
-                                    <p className="w-full truncate">
-                                       Día deshabilitado
-                                    </p>
-                                    {view === "day" && (
-                                       <div className="absolute right-4 top-4 flex items-center gap-2">
-                                          <Button
-                                             variant="link"
-                                             className={cn(
-                                                "mr-4 h-max border-0 !bg-transparent transition hover:border hover:no-underline",
-                                                className,
-                                             )}
-                                             disabled={
-                                                isDeleting || id === deleting
-                                             }
-                                             onClick={() => {
-                                                setDeleting(id);
-                                                deleteDay(id);
-                                             }}
-                                          >
-                                             {isDeleting && id === deleting ? (
-                                                <Loading />
-                                             ) : (
-                                                <>Habilitar día</>
-                                             )}
-                                          </Button>
-                                       </div>
-                                    )}
-                                 </>
+                                 <DisabledDayDialog id={id}>
+                                    <button className="flex h-full items-start text-start">
+                                       <p className="h-max w-full truncate">
+                                          Día deshabilitado
+                                       </p>
+                                    </button>
+                                 </DisabledDayDialog>
                               );
                            }
                         })()}

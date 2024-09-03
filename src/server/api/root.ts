@@ -10,6 +10,7 @@ import { notesRouter } from "./routers/notes";
 import { opinionsRouter } from "./routers/opinions";
 import { disabledDaysRouter } from "./routers/disabled_days";
 import { hoursRouter } from "./routers/hours";
+import { usersRouter } from "./routers/users";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ import { hoursRouter } from "./routers/hours";
  */
 export const appRouter = createTRPCRouter({
    getSession: publicProcedure.query(({ ctx: { session } }) => session),
+   users: usersRouter,
    images: imagesRouter,
    appointments: appointmentsRouter,
    packages: packagesRouter,
