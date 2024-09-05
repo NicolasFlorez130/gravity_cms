@@ -65,7 +65,7 @@ export default function BookingEmail({
                   <Section className="mx-auto block w-max items-center justify-center">
                      <Column>
                         <Img
-                           src="https://y5xkxdkbvyc13ocb.public.blob.vercel-storage.com/icons/gravity_icon-Nit1LTKm9phiO68z7NHZuwZgHhtVJ9.png"
+                           src="https://y5xkxdkbvyc13ocb.public.blob.vercel-storage.com/icons/gravity_icon-ONEQDJJdJrdhLHIpUzSFjXAWw1xvKM.png"
                            alt="gravity logo"
                            className="aspect-square h-20 object-contain"
                         />
