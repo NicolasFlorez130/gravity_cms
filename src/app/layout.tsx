@@ -8,6 +8,7 @@ import Body from "~/components/shared/body";
 import AuthProvider from "~/components/shared/providers/auth_provider";
 import GlobalsGetter from "~/components/shared/getters/globals_getter";
 import { Toaster } from "~/components/landing/ui/toaster";
+import { notFound } from "next/navigation";
 
 const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
@@ -32,27 +33,29 @@ export default async function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-   return (
-      <html lang="es">
-         <head>
-            <link rel="icon" href="/favicon.ico" sizes="any" />
-         </head>
-         <Body
-            className={cn(
-               epilogue.variable,
-               inter.variable,
-               dm_sans.variable,
-               din_condensed.variable,
-               din_alternate.variable,
-               "font-inter",
-            )}
-         >
-            <TRPCReactProvider>
-               <GlobalsGetter />
-               <AuthProvider>{children}</AuthProvider>
-            </TRPCReactProvider>
-            <Toaster />
-         </Body>
-      </html>
-   );
+   // return (
+   //    <html lang="es">
+   //       <head>
+   //          <link rel="icon" href="/favicon.ico" sizes="any" />
+   //       </head>
+   //       <Body
+   //          className={cn(
+   //             epilogue.variable,
+   //             inter.variable,
+   //             dm_sans.variable,
+   //             din_condensed.variable,
+   //             din_alternate.variable,
+   //             "font-inter",
+   //          )}
+   //       >
+   //          <TRPCReactProvider>
+   //             <GlobalsGetter />
+   //             <AuthProvider>{children}</AuthProvider>
+   //          </TRPCReactProvider>
+   //          <Toaster />
+   //       </Body>
+   //    </html>
+   // );
+
+   notFound();
 }
