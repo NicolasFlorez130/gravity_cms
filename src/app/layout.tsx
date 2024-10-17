@@ -2,6 +2,7 @@ import { Inter, DM_Sans, Epilogue } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { notFound } from "next/navigation";
 
 const epilogue = Epilogue({ subsets: ["latin"], variable: "--epilogue" });
 const inter = Inter({ subsets: ["latin"], variable: "--inter" });
@@ -26,21 +27,23 @@ export default function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-   return (
-      <html lang="es">
-         <link rel="icon" href="/favicon.ico" sizes="any" />
-         <body
-            className={cn(
-               epilogue.variable,
-               inter.variable,
-               dm_sans.variable,
-               din_condensed.variable,
-               din_alternate.variable,
-               "font-inter",
-            )}
-         >
-            {children}
-         </body>
-      </html>
-   );
+   // return (
+   //    <html lang="es">
+   //       <link rel="icon" href="/favicon.ico" sizes="any" />
+   //       <body
+   //          className={cn(
+   //             epilogue.variable,
+   //             inter.variable,
+   //             dm_sans.variable,
+   //             din_condensed.variable,
+   //             din_alternate.variable,
+   //             "font-inter",
+   //          )}
+   //       >
+   //          {children}
+   //       </body>
+   //    </html>
+   // );
+
+   notFound();
 }
